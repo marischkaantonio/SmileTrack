@@ -32,7 +32,7 @@
             this.panel3 = new System.Windows.Forms.Panel();
             this.button4 = new System.Windows.Forms.Button();
             this.button3 = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
+            this.btnWalkIn = new System.Windows.Forms.Button();
             this.btnAppoinment = new System.Windows.Forms.Button();
             this.btnBillings = new System.Windows.Forms.Button();
             this.lblWelcome = new System.Windows.Forms.Label();
@@ -66,7 +66,7 @@
             this.colStatus = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.button5 = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
-            this.panel5 = new System.Windows.Forms.Panel();
+            this.dgvWalkInQueue = new System.Windows.Forms.Panel();
             this.button8 = new System.Windows.Forms.Button();
             this.button7 = new System.Windows.Forms.Button();
             this.dataGridView2 = new System.Windows.Forms.DataGridView();
@@ -107,7 +107,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
             this.panel4.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
-            this.panel5.SuspendLayout();
+            this.dgvWalkInQueue.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).BeginInit();
             this.panel6.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView3)).BeginInit();
@@ -123,7 +123,7 @@
             this.panel1.Controls.Add(this.panel3);
             this.panel1.Controls.Add(this.button4);
             this.panel1.Controls.Add(this.button3);
-            this.panel1.Controls.Add(this.button2);
+            this.panel1.Controls.Add(this.btnWalkIn);
             this.panel1.Controls.Add(this.btnAppoinment);
             this.panel1.Controls.Add(this.btnBillings);
             this.panel1.Controls.Add(this.lblWelcome);
@@ -169,17 +169,18 @@
             this.button3.Text = "Reminders";
             this.button3.UseVisualStyleBackColor = false;
             // 
-            // button2
+            // btnWalkIn
             // 
-            this.button2.BackColor = System.Drawing.Color.Aquamarine;
-            this.button2.Font = new System.Drawing.Font("Gill Sans Ultra Bold", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button2.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.button2.Location = new System.Drawing.Point(12, 302);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(145, 38);
-            this.button2.TabIndex = 9;
-            this.button2.Text = "Walk-in Qeue";
-            this.button2.UseVisualStyleBackColor = false;
+            this.btnWalkIn.BackColor = System.Drawing.Color.Aquamarine;
+            this.btnWalkIn.Font = new System.Drawing.Font("Gill Sans Ultra Bold", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnWalkIn.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.btnWalkIn.Location = new System.Drawing.Point(12, 302);
+            this.btnWalkIn.Name = "btnWalkIn";
+            this.btnWalkIn.Size = new System.Drawing.Size(145, 38);
+            this.btnWalkIn.TabIndex = 9;
+            this.btnWalkIn.Text = "Walk-in Qeue";
+            this.btnWalkIn.UseVisualStyleBackColor = false;
+            this.btnWalkIn.Click += new System.EventHandler(this.btnWalkIn_Click);
             // 
             // btnAppoinment
             // 
@@ -192,6 +193,7 @@
             this.btnAppoinment.TabIndex = 8;
             this.btnAppoinment.Text = "Appoinment";
             this.btnAppoinment.UseVisualStyleBackColor = false;
+            this.btnAppoinment.Click += new System.EventHandler(this.btnAppoinment_Click);
             // 
             // btnBillings
             // 
@@ -219,7 +221,7 @@
             this.btnLogout.BackColor = System.Drawing.Color.Aquamarine;
             this.btnLogout.Font = new System.Drawing.Font("Gill Sans Ultra Bold", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnLogout.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.btnLogout.Location = new System.Drawing.Point(21, 619);
+            this.btnLogout.Location = new System.Drawing.Point(12, 692);
             this.btnLogout.Name = "btnLogout";
             this.btnLogout.Size = new System.Drawing.Size(145, 38);
             this.btnLogout.TabIndex = 5;
@@ -230,7 +232,7 @@
             // 
             this.pictureBox2.BackgroundImage = global::SmileTrack.Properties.Resources.istockphoto_1281615253_170667a;
             this.pictureBox2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.pictureBox2.Location = new System.Drawing.Point(21, 498);
+            this.pictureBox2.Location = new System.Drawing.Point(23, 484);
             this.pictureBox2.Name = "pictureBox2";
             this.pictureBox2.Size = new System.Drawing.Size(119, 99);
             this.pictureBox2.TabIndex = 4;
@@ -522,18 +524,18 @@
             this.label1.TabIndex = 0;
             this.label1.Text = "Today\'s Appoinment";
             // 
-            // panel5
+            // dgvWalkInQueue
             // 
-            this.panel5.BackColor = System.Drawing.Color.White;
-            this.panel5.Controls.Add(this.button8);
-            this.panel5.Controls.Add(this.button7);
-            this.panel5.Controls.Add(this.dataGridView2);
-            this.panel5.Controls.Add(this.button6);
-            this.panel5.Controls.Add(this.label7);
-            this.panel5.Location = new System.Drawing.Point(206, 379);
-            this.panel5.Name = "panel5";
-            this.panel5.Size = new System.Drawing.Size(582, 351);
-            this.panel5.TabIndex = 4;
+            this.dgvWalkInQueue.BackColor = System.Drawing.Color.White;
+            this.dgvWalkInQueue.Controls.Add(this.button8);
+            this.dgvWalkInQueue.Controls.Add(this.button7);
+            this.dgvWalkInQueue.Controls.Add(this.dataGridView2);
+            this.dgvWalkInQueue.Controls.Add(this.button6);
+            this.dgvWalkInQueue.Controls.Add(this.label7);
+            this.dgvWalkInQueue.Location = new System.Drawing.Point(206, 379);
+            this.dgvWalkInQueue.Name = "dgvWalkInQueue";
+            this.dgvWalkInQueue.Size = new System.Drawing.Size(582, 351);
+            this.dgvWalkInQueue.TabIndex = 4;
             // 
             // button8
             // 
@@ -839,7 +841,7 @@
             this.ClientSize = new System.Drawing.Size(1454, 742);
             this.Controls.Add(this.panel7);
             this.Controls.Add(this.panel6);
-            this.Controls.Add(this.panel5);
+            this.Controls.Add(this.dgvWalkInQueue);
             this.Controls.Add(this.panel4);
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.panel1);
@@ -860,8 +862,8 @@
             this.panel4.ResumeLayout(false);
             this.panel4.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
-            this.panel5.ResumeLayout(false);
-            this.panel5.PerformLayout();
+            this.dgvWalkInQueue.ResumeLayout(false);
+            this.dgvWalkInQueue.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).EndInit();
             this.panel6.ResumeLayout(false);
             this.panel6.PerformLayout();
@@ -901,7 +903,7 @@
         private System.Windows.Forms.Label lblNewPatient;
         private System.Windows.Forms.Label lblWelcome;
         private System.Windows.Forms.Button btnBillings;
-        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Button btnWalkIn;
         private System.Windows.Forms.Button btnAppoinment;
         private System.Windows.Forms.Button button4;
         private System.Windows.Forms.Button button3;
@@ -918,7 +920,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn colDentist;
         private System.Windows.Forms.DataGridViewTextBoxColumn colTreatment;
         private System.Windows.Forms.DataGridViewTextBoxColumn colStatus;
-        private System.Windows.Forms.Panel panel5;
+        private System.Windows.Forms.Panel dgvWalkInQueue;
         private System.Windows.Forms.DataGridView dataGridView2;
         private System.Windows.Forms.Button button6;
         private System.Windows.Forms.Label label7;

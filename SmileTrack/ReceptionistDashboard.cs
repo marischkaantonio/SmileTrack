@@ -101,9 +101,25 @@ namespace SmileTrack
 
             this.Show();
         }
-    }
+
+        private void btnAppoinment_Click(object sender, EventArgs e)
+        {
 
         }
+
+
+
+        private int walkInCounter = 0; // keeps track of walk-in patients
+
+        private void btnWalkIn_Click(object sender, EventArgs e)
+        {
+
+
+        }
+    }
+}
+
+
 
 
 

@@ -32,6 +32,11 @@
             this.label1 = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.lblEmailError = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
+            this.txtDentist = new System.Windows.Forms.TextBox();
+            this.dtpBdate = new System.Windows.Forms.DateTimePicker();
+            this.lblBirth = new System.Windows.Forms.Label();
             this.dtpRegistrationDate = new System.Windows.Forms.DateTimePicker();
             this.label3 = new System.Windows.Forms.Label();
             this.btnDelete = new System.Windows.Forms.Button();
@@ -58,12 +63,13 @@
             this.panel3 = new System.Windows.Forms.Panel();
             this.label2 = new System.Windows.Forms.Label();
             this.panel4 = new System.Windows.Forms.Panel();
+            this.label5 = new System.Windows.Forms.Label();
             this.btnLast = new System.Windows.Forms.Button();
             this.btnFirst = new System.Windows.Forms.Button();
             this.btnNext = new System.Windows.Forms.Button();
             this.btnPrev = new System.Windows.Forms.Button();
             this.lblPageInfo = new System.Windows.Forms.Label();
-            this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.dgv = new System.Windows.Forms.DataGridView();
             this.colID = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colGender = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -75,15 +81,13 @@
             this.maskedTextBox1 = new System.Windows.Forms.MaskedTextBox();
             this.panel5 = new System.Windows.Forms.Panel();
             this.lblPRecords = new System.Windows.Forms.Label();
-            this.lblBirth = new System.Windows.Forms.Label();
-            this.dtpBdate = new System.Windows.Forms.DateTimePicker();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numAge)).BeginInit();
             this.panel3.SuspendLayout();
             this.panel4.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dgv)).BeginInit();
             this.panel5.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -120,6 +124,9 @@
             // panel2
             // 
             this.panel2.BackColor = System.Drawing.Color.White;
+            this.panel2.Controls.Add(this.lblEmailError);
+            this.panel2.Controls.Add(this.label4);
+            this.panel2.Controls.Add(this.txtDentist);
             this.panel2.Controls.Add(this.dtpBdate);
             this.panel2.Controls.Add(this.lblBirth);
             this.panel2.Controls.Add(this.dtpRegistrationDate);
@@ -151,17 +158,60 @@
             this.panel2.Size = new System.Drawing.Size(514, 595);
             this.panel2.TabIndex = 1;
             // 
+            // lblEmailError
+            // 
+            this.lblEmailError.AutoSize = true;
+            this.lblEmailError.Location = new System.Drawing.Point(388, 356);
+            this.lblEmailError.Name = "lblEmailError";
+            this.lblEmailError.Size = new System.Drawing.Size(44, 16);
+            this.lblEmailError.TabIndex = 29;
+            this.lblEmailError.Text = "Email:";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(13, 425);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(51, 16);
+            this.label4.TabIndex = 28;
+            this.label4.Text = "Dentist:";
+            // 
+            // txtDentist
+            // 
+            this.txtDentist.Location = new System.Drawing.Point(158, 419);
+            this.txtDentist.Name = "txtDentist";
+            this.txtDentist.Size = new System.Drawing.Size(200, 22);
+            this.txtDentist.TabIndex = 27;
+            // 
+            // dtpBdate
+            // 
+            this.dtpBdate.Location = new System.Drawing.Point(158, 155);
+            this.dtpBdate.Name = "dtpBdate";
+            this.dtpBdate.Size = new System.Drawing.Size(200, 22);
+            this.dtpBdate.TabIndex = 26;
+            this.dtpBdate.ValueChanged += new System.EventHandler(this.dtpBdate_ValueChanged);
+            // 
+            // lblBirth
+            // 
+            this.lblBirth.AutoSize = true;
+            this.lblBirth.Location = new System.Drawing.Point(13, 155);
+            this.lblBirth.Name = "lblBirth";
+            this.lblBirth.Size = new System.Drawing.Size(63, 16);
+            this.lblBirth.TabIndex = 25;
+            this.lblBirth.Text = "Birthdate:";
+            // 
             // dtpRegistrationDate
             // 
-            this.dtpRegistrationDate.Location = new System.Drawing.Point(158, 460);
+            this.dtpRegistrationDate.Location = new System.Drawing.Point(162, 509);
             this.dtpRegistrationDate.Name = "dtpRegistrationDate";
             this.dtpRegistrationDate.Size = new System.Drawing.Size(200, 22);
             this.dtpRegistrationDate.TabIndex = 24;
+            this.dtpRegistrationDate.ValueChanged += new System.EventHandler(this.dtpRegistrationDate_ValueChanged);
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(17, 465);
+            this.label3.Location = new System.Drawing.Point(13, 509);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(114, 16);
             this.label3.TabIndex = 23;
@@ -178,6 +228,7 @@
             this.btnDelete.TabIndex = 22;
             this.btnDelete.Text = "Delete";
             this.btnDelete.UseVisualStyleBackColor = false;
+            this.btnDelete.Click += new System.EventHandler(this.btnDelete_Click);
             // 
             // btnClear
             // 
@@ -190,6 +241,7 @@
             this.btnClear.TabIndex = 21;
             this.btnClear.Text = "Clear";
             this.btnClear.UseVisualStyleBackColor = false;
+            this.btnClear.Click += new System.EventHandler(this.btnClear_Click);
             // 
             // btnUpdate
             // 
@@ -202,6 +254,7 @@
             this.btnUpdate.TabIndex = 20;
             this.btnUpdate.Text = "Update";
             this.btnUpdate.UseVisualStyleBackColor = false;
+            this.btnUpdate.Click += new System.EventHandler(this.btnUpdate_Click);
             // 
             // btnAddPatient
             // 
@@ -219,10 +272,11 @@
             // cmbTreatmentType
             // 
             this.cmbTreatmentType.FormattingEnabled = true;
-            this.cmbTreatmentType.Location = new System.Drawing.Point(158, 422);
+            this.cmbTreatmentType.Location = new System.Drawing.Point(158, 463);
             this.cmbTreatmentType.Name = "cmbTreatmentType";
             this.cmbTreatmentType.Size = new System.Drawing.Size(200, 24);
             this.cmbTreatmentType.TabIndex = 18;
+            this.cmbTreatmentType.SelectedIndexChanged += new System.EventHandler(this.cmbTreatmentType_SelectedIndexChanged);
             // 
             // rbFemale
             // 
@@ -234,6 +288,7 @@
             this.rbFemale.TabStop = true;
             this.rbFemale.Text = "Female";
             this.rbFemale.UseVisualStyleBackColor = true;
+            this.rbFemale.CheckedChanged += new System.EventHandler(this.rbFemale_CheckedChanged);
             // 
             // rbMale
             // 
@@ -245,6 +300,7 @@
             this.rbMale.TabStop = true;
             this.rbMale.Text = "Male";
             this.rbMale.UseVisualStyleBackColor = true;
+            this.rbMale.CheckedChanged += new System.EventHandler(this.rbMale_CheckedChanged);
             // 
             // lblGender
             // 
@@ -263,6 +319,7 @@
             this.txtAdd.ScrollBars = System.Windows.Forms.ScrollBars.Both;
             this.txtAdd.Size = new System.Drawing.Size(200, 19);
             this.txtAdd.TabIndex = 14;
+            this.txtAdd.TextChanged += new System.EventHandler(this.txtAdd_TextChanged);
             // 
             // txtEmail
             // 
@@ -270,6 +327,7 @@
             this.txtEmail.Name = "txtEmail";
             this.txtEmail.Size = new System.Drawing.Size(200, 22);
             this.txtEmail.TabIndex = 13;
+            this.txtEmail.TextChanged += new System.EventHandler(this.txtEmail_TextChanged);
             // 
             // txtContact
             // 
@@ -277,6 +335,7 @@
             this.txtContact.Name = "txtContact";
             this.txtContact.Size = new System.Drawing.Size(200, 22);
             this.txtContact.TabIndex = 12;
+            this.txtContact.TextChanged += new System.EventHandler(this.txtContact_TextChanged);
             // 
             // numAge
             // 
@@ -284,6 +343,7 @@
             this.numAge.Name = "numAge";
             this.numAge.Size = new System.Drawing.Size(200, 22);
             this.numAge.TabIndex = 11;
+            this.numAge.ValueChanged += new System.EventHandler(this.numAge_ValueChanged);
             // 
             // txtLname
             // 
@@ -291,6 +351,7 @@
             this.txtLname.Name = "txtLname";
             this.txtLname.Size = new System.Drawing.Size(196, 22);
             this.txtLname.TabIndex = 10;
+            this.txtLname.TextChanged += new System.EventHandler(this.txtLname_TextChanged);
             // 
             // txtFname
             // 
@@ -298,11 +359,12 @@
             this.txtFname.Name = "txtFname";
             this.txtFname.Size = new System.Drawing.Size(196, 22);
             this.txtFname.TabIndex = 9;
+            this.txtFname.TextChanged += new System.EventHandler(this.txtFname_TextChanged);
             // 
             // lblTreatmentType
             // 
             this.lblTreatmentType.AutoSize = true;
-            this.lblTreatmentType.Location = new System.Drawing.Point(17, 425);
+            this.lblTreatmentType.Location = new System.Drawing.Point(17, 466);
             this.lblTreatmentType.Name = "lblTreatmentType";
             this.lblTreatmentType.Size = new System.Drawing.Size(106, 16);
             this.lblTreatmentType.TabIndex = 8;
@@ -384,12 +446,13 @@
             // panel4
             // 
             this.panel4.BackColor = System.Drawing.Color.White;
+            this.panel4.Controls.Add(this.label5);
             this.panel4.Controls.Add(this.btnLast);
             this.panel4.Controls.Add(this.btnFirst);
             this.panel4.Controls.Add(this.btnNext);
             this.panel4.Controls.Add(this.btnPrev);
             this.panel4.Controls.Add(this.lblPageInfo);
-            this.panel4.Controls.Add(this.dataGridView1);
+            this.panel4.Controls.Add(this.dgv);
             this.panel4.Controls.Add(this.btnSearch);
             this.panel4.Controls.Add(this.txtSearch);
             this.panel4.Controls.Add(this.maskedTextBox1);
@@ -397,6 +460,15 @@
             this.panel4.Name = "panel4";
             this.panel4.Size = new System.Drawing.Size(787, 595);
             this.panel4.TabIndex = 2;
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(8, 69);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(50, 16);
+            this.label5.TabIndex = 30;
+            this.label5.Text = "Search";
             // 
             // btnLast
             // 
@@ -409,6 +481,7 @@
             this.btnLast.TabIndex = 29;
             this.btnLast.Text = ">";
             this.btnLast.UseVisualStyleBackColor = false;
+            this.btnLast.Click += new System.EventHandler(this.btnLast_Click);
             // 
             // btnFirst
             // 
@@ -421,6 +494,7 @@
             this.btnFirst.TabIndex = 28;
             this.btnFirst.Text = "1";
             this.btnFirst.UseVisualStyleBackColor = false;
+            this.btnFirst.Click += new System.EventHandler(this.btnFirst_Click);
             // 
             // btnNext
             // 
@@ -433,6 +507,7 @@
             this.btnNext.TabIndex = 27;
             this.btnNext.Text = ">";
             this.btnNext.UseVisualStyleBackColor = false;
+            this.btnNext.Click += new System.EventHandler(this.btnNext_Click);
             // 
             // btnPrev
             // 
@@ -445,6 +520,7 @@
             this.btnPrev.TabIndex = 26;
             this.btnPrev.Text = "<";
             this.btnPrev.UseVisualStyleBackColor = false;
+            this.btnPrev.Click += new System.EventHandler(this.btnPrev_Click);
             // 
             // lblPageInfo
             // 
@@ -455,22 +531,23 @@
             this.lblPageInfo.TabIndex = 25;
             this.lblPageInfo.Text = "Page 1 0f N";
             // 
-            // dataGridView1
+            // dgv
             // 
-            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.dgv.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgv.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.colID,
             this.colName,
             this.colGender,
             this.colContact,
             this.colLastVisit,
             this.colTreatment});
-            this.dataGridView1.Location = new System.Drawing.Point(15, 124);
-            this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.RowHeadersWidth = 51;
-            this.dataGridView1.RowTemplate.Height = 24;
-            this.dataGridView1.Size = new System.Drawing.Size(740, 264);
-            this.dataGridView1.TabIndex = 24;
+            this.dgv.Location = new System.Drawing.Point(15, 124);
+            this.dgv.Name = "dgv";
+            this.dgv.RowHeadersWidth = 51;
+            this.dgv.RowTemplate.Height = 24;
+            this.dgv.Size = new System.Drawing.Size(740, 264);
+            this.dgv.TabIndex = 24;
+            this.dgv.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellContentClick);
             // 
             // colID
             // 
@@ -526,18 +603,19 @@
             this.btnSearch.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
             this.btnSearch.Location = new System.Drawing.Point(302, 61);
             this.btnSearch.Name = "btnSearch";
-            this.btnSearch.Size = new System.Drawing.Size(63, 31);
+            this.btnSearch.Size = new System.Drawing.Size(87, 31);
             this.btnSearch.TabIndex = 23;
             this.btnSearch.Text = "Search";
             this.btnSearch.UseVisualStyleBackColor = false;
+            this.btnSearch.Click += new System.EventHandler(this.btnSearch_Click_1);
             // 
             // txtSearch
             // 
-            this.txtSearch.Location = new System.Drawing.Point(33, 65);
+            this.txtSearch.Location = new System.Drawing.Point(65, 65);
             this.txtSearch.Name = "txtSearch";
-            this.txtSearch.Size = new System.Drawing.Size(242, 22);
+            this.txtSearch.Size = new System.Drawing.Size(210, 22);
             this.txtSearch.TabIndex = 1;
-            this.txtSearch.Text = "🔍︎ Search";
+            this.txtSearch.TextChanged += new System.EventHandler(this.txtSearch_TextChanged);
             // 
             // maskedTextBox1
             // 
@@ -565,22 +643,6 @@
             this.lblPRecords.TabIndex = 0;
             this.lblPRecords.Text = "Patient Records";
             // 
-            // lblBirth
-            // 
-            this.lblBirth.AutoSize = true;
-            this.lblBirth.Location = new System.Drawing.Point(13, 155);
-            this.lblBirth.Name = "lblBirth";
-            this.lblBirth.Size = new System.Drawing.Size(63, 16);
-            this.lblBirth.TabIndex = 25;
-            this.lblBirth.Text = "Birthdate:";
-            // 
-            // dtpBdate
-            // 
-            this.dtpBdate.Location = new System.Drawing.Point(158, 155);
-            this.dtpBdate.Name = "dtpBdate";
-            this.dtpBdate.Size = new System.Drawing.Size(200, 22);
-            this.dtpBdate.TabIndex = 26;
-            // 
             // PatientForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -604,7 +666,7 @@
             this.panel3.PerformLayout();
             this.panel4.ResumeLayout(false);
             this.panel4.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dgv)).EndInit();
             this.panel5.ResumeLayout(false);
             this.panel5.PerformLayout();
             this.ResumeLayout(false);
@@ -646,7 +708,7 @@
         private System.Windows.Forms.MaskedTextBox maskedTextBox1;
         private System.Windows.Forms.Panel panel5;
         private System.Windows.Forms.Label lblPRecords;
-        private System.Windows.Forms.DataGridView dataGridView1;
+        private System.Windows.Forms.DataGridView dgv;
         private System.Windows.Forms.DataGridViewTextBoxColumn colID;
         private System.Windows.Forms.DataGridViewTextBoxColumn colName;
         private System.Windows.Forms.DataGridViewTextBoxColumn colGender;
@@ -662,5 +724,9 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.DateTimePicker dtpBdate;
         private System.Windows.Forms.Label lblBirth;
+        private System.Windows.Forms.TextBox txtDentist;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label lblEmailError;
+        private System.Windows.Forms.Label label5;
     }
 }
