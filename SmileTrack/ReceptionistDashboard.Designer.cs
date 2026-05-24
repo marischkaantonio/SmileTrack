@@ -68,12 +68,12 @@
             this.label1 = new System.Windows.Forms.Label();
             this.dgvWalkInQueue = new System.Windows.Forms.Panel();
             this.button8 = new System.Windows.Forms.Button();
-            this.button7 = new System.Windows.Forms.Button();
+            this.btnAddWalkIn = new System.Windows.Forms.Button();
             this.dataGridView2 = new System.Windows.Forms.DataGridView();
-            this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridViewTextBoxColumn3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridViewTextBoxColumn5 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.txtNo = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.txtPatientName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.txtTimeIn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.txtStatus = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.button6 = new System.Windows.Forms.Button();
             this.label7 = new System.Windows.Forms.Label();
             this.panel6 = new System.Windows.Forms.Panel();
@@ -134,15 +134,17 @@
             this.panel1.Controls.Add(this.pictureBox1);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Left;
             this.panel1.Location = new System.Drawing.Point(0, 0);
+            this.panel1.Margin = new System.Windows.Forms.Padding(2);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(200, 742);
+            this.panel1.Size = new System.Drawing.Size(150, 603);
             this.panel1.TabIndex = 0;
             // 
             // panel3
             // 
-            this.panel3.Location = new System.Drawing.Point(196, 83);
+            this.panel3.Location = new System.Drawing.Point(147, 67);
+            this.panel3.Margin = new System.Windows.Forms.Padding(2);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(327, 137);
+            this.panel3.Size = new System.Drawing.Size(245, 111);
             this.panel3.TabIndex = 3;
             // 
             // button4
@@ -150,9 +152,10 @@
             this.button4.BackColor = System.Drawing.Color.Aquamarine;
             this.button4.Font = new System.Drawing.Font("Gill Sans Ultra Bold", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.button4.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.button4.Location = new System.Drawing.Point(12, 434);
+            this.button4.Location = new System.Drawing.Point(9, 353);
+            this.button4.Margin = new System.Windows.Forms.Padding(2);
             this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(145, 38);
+            this.button4.Size = new System.Drawing.Size(120, 31);
             this.button4.TabIndex = 11;
             this.button4.Text = "Reports";
             this.button4.UseVisualStyleBackColor = false;
@@ -162,9 +165,10 @@
             this.button3.BackColor = System.Drawing.Color.Aquamarine;
             this.button3.Font = new System.Drawing.Font("Gill Sans Ultra Bold", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.button3.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.button3.Location = new System.Drawing.Point(12, 390);
+            this.button3.Location = new System.Drawing.Point(9, 317);
+            this.button3.Margin = new System.Windows.Forms.Padding(2);
             this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(145, 38);
+            this.button3.Size = new System.Drawing.Size(120, 31);
             this.button3.TabIndex = 10;
             this.button3.Text = "Reminders";
             this.button3.UseVisualStyleBackColor = false;
@@ -174,24 +178,25 @@
             this.btnWalkIn.BackColor = System.Drawing.Color.Aquamarine;
             this.btnWalkIn.Font = new System.Drawing.Font("Gill Sans Ultra Bold", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnWalkIn.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.btnWalkIn.Location = new System.Drawing.Point(12, 302);
+            this.btnWalkIn.Location = new System.Drawing.Point(9, 245);
+            this.btnWalkIn.Margin = new System.Windows.Forms.Padding(2);
             this.btnWalkIn.Name = "btnWalkIn";
-            this.btnWalkIn.Size = new System.Drawing.Size(145, 38);
+            this.btnWalkIn.Size = new System.Drawing.Size(120, 31);
             this.btnWalkIn.TabIndex = 9;
             this.btnWalkIn.Text = "Walk-in Qeue";
             this.btnWalkIn.UseVisualStyleBackColor = false;
-            this.btnWalkIn.Click += new System.EventHandler(this.btnWalkIn_Click);
             // 
             // btnAppoinment
             // 
             this.btnAppoinment.BackColor = System.Drawing.Color.Aquamarine;
             this.btnAppoinment.Font = new System.Drawing.Font("Gill Sans Ultra Bold", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnAppoinment.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.btnAppoinment.Location = new System.Drawing.Point(12, 258);
+            this.btnAppoinment.Location = new System.Drawing.Point(9, 210);
+            this.btnAppoinment.Margin = new System.Windows.Forms.Padding(2);
             this.btnAppoinment.Name = "btnAppoinment";
-            this.btnAppoinment.Size = new System.Drawing.Size(145, 38);
+            this.btnAppoinment.Size = new System.Drawing.Size(120, 31);
             this.btnAppoinment.TabIndex = 8;
-            this.btnAppoinment.Text = "Appoinment";
+            this.btnAppoinment.Text = "Patient";
             this.btnAppoinment.UseVisualStyleBackColor = false;
             this.btnAppoinment.Click += new System.EventHandler(this.btnAppoinment_Click);
             // 
@@ -200,9 +205,10 @@
             this.btnBillings.BackColor = System.Drawing.Color.Aquamarine;
             this.btnBillings.Font = new System.Drawing.Font("Gill Sans Ultra Bold", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnBillings.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.btnBillings.Location = new System.Drawing.Point(12, 346);
+            this.btnBillings.Location = new System.Drawing.Point(9, 281);
+            this.btnBillings.Margin = new System.Windows.Forms.Padding(2);
             this.btnBillings.Name = "btnBillings";
-            this.btnBillings.Size = new System.Drawing.Size(145, 38);
+            this.btnBillings.Size = new System.Drawing.Size(120, 31);
             this.btnBillings.TabIndex = 7;
             this.btnBillings.Text = "Billings";
             this.btnBillings.UseVisualStyleBackColor = false;
@@ -211,9 +217,10 @@
             // lblWelcome
             // 
             this.lblWelcome.AutoSize = true;
-            this.lblWelcome.Location = new System.Drawing.Point(50, 546);
+            this.lblWelcome.Location = new System.Drawing.Point(38, 444);
+            this.lblWelcome.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblWelcome.Name = "lblWelcome";
-            this.lblWelcome.Size = new System.Drawing.Size(0, 16);
+            this.lblWelcome.Size = new System.Drawing.Size(0, 13);
             this.lblWelcome.TabIndex = 6;
             // 
             // btnLogout
@@ -221,20 +228,23 @@
             this.btnLogout.BackColor = System.Drawing.Color.Aquamarine;
             this.btnLogout.Font = new System.Drawing.Font("Gill Sans Ultra Bold", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnLogout.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.btnLogout.Location = new System.Drawing.Point(12, 692);
+            this.btnLogout.Location = new System.Drawing.Point(9, 562);
+            this.btnLogout.Margin = new System.Windows.Forms.Padding(2);
             this.btnLogout.Name = "btnLogout";
-            this.btnLogout.Size = new System.Drawing.Size(145, 38);
+            this.btnLogout.Size = new System.Drawing.Size(109, 31);
             this.btnLogout.TabIndex = 5;
             this.btnLogout.Text = "Log-out";
             this.btnLogout.UseVisualStyleBackColor = false;
+            this.btnLogout.Click += new System.EventHandler(this.btnLogout_Click);
             // 
             // pictureBox2
             // 
             this.pictureBox2.BackgroundImage = global::SmileTrack.Properties.Resources.istockphoto_1281615253_170667a;
             this.pictureBox2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.pictureBox2.Location = new System.Drawing.Point(23, 484);
+            this.pictureBox2.Location = new System.Drawing.Point(17, 393);
+            this.pictureBox2.Margin = new System.Windows.Forms.Padding(2);
             this.pictureBox2.Name = "pictureBox2";
-            this.pictureBox2.Size = new System.Drawing.Size(119, 99);
+            this.pictureBox2.Size = new System.Drawing.Size(89, 80);
             this.pictureBox2.TabIndex = 4;
             this.pictureBox2.TabStop = false;
             // 
@@ -243,11 +253,12 @@
             this.btnPatients.BackColor = System.Drawing.Color.Aquamarine;
             this.btnPatients.Font = new System.Drawing.Font("Gill Sans Ultra Bold", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnPatients.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.btnPatients.Location = new System.Drawing.Point(12, 214);
+            this.btnPatients.Location = new System.Drawing.Point(9, 174);
+            this.btnPatients.Margin = new System.Windows.Forms.Padding(2);
             this.btnPatients.Name = "btnPatients";
-            this.btnPatients.Size = new System.Drawing.Size(145, 38);
+            this.btnPatients.Size = new System.Drawing.Size(120, 31);
             this.btnPatients.TabIndex = 3;
-            this.btnPatients.Text = "Patients";
+            this.btnPatients.Text = "Appontment";
             this.btnPatients.UseVisualStyleBackColor = false;
             this.btnPatients.Click += new System.EventHandler(this.btnPatients_Click);
             // 
@@ -256,9 +267,10 @@
             this.btnDashboard.BackColor = System.Drawing.Color.Aquamarine;
             this.btnDashboard.Font = new System.Drawing.Font("Gill Sans Ultra Bold", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnDashboard.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.btnDashboard.Location = new System.Drawing.Point(12, 170);
+            this.btnDashboard.Location = new System.Drawing.Point(9, 138);
+            this.btnDashboard.Margin = new System.Windows.Forms.Padding(2);
             this.btnDashboard.Name = "btnDashboard";
-            this.btnDashboard.Size = new System.Drawing.Size(145, 38);
+            this.btnDashboard.Size = new System.Drawing.Size(120, 31);
             this.btnDashboard.TabIndex = 2;
             this.btnDashboard.Text = "Dashboard";
             this.btnDashboard.UseVisualStyleBackColor = false;
@@ -268,8 +280,9 @@
             this.pictureBox1.BackgroundImage = global::SmileTrack.Properties.Resources._7fbf6c74_85d6_441b_b2e0_5faf4c8635f6;
             this.pictureBox1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.pictureBox1.Location = new System.Drawing.Point(0, 0);
+            this.pictureBox1.Margin = new System.Windows.Forms.Padding(2);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(200, 150);
+            this.pictureBox1.Size = new System.Drawing.Size(150, 122);
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
             // 
@@ -291,26 +304,29 @@
             this.panel2.Controls.Add(this.pictureBox4);
             this.panel2.Controls.Add(this.label2);
             this.panel2.Controls.Add(this.pictureBox3);
-            this.panel2.Location = new System.Drawing.Point(206, 0);
+            this.panel2.Location = new System.Drawing.Point(154, 0);
+            this.panel2.Margin = new System.Windows.Forms.Padding(2);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(1236, 77);
+            this.panel2.Size = new System.Drawing.Size(927, 63);
             this.panel2.TabIndex = 2;
             // 
             // lblWalkin
             // 
             this.lblWalkin.AutoSize = true;
-            this.lblWalkin.Location = new System.Drawing.Point(892, 44);
+            this.lblWalkin.Location = new System.Drawing.Point(669, 36);
+            this.lblWalkin.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblWalkin.Name = "lblWalkin";
-            this.lblWalkin.Size = new System.Drawing.Size(0, 16);
+            this.lblWalkin.Size = new System.Drawing.Size(0, 13);
             this.lblWalkin.TabIndex = 18;
             // 
             // label6
             // 
             this.label6.AutoSize = true;
             this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label6.Location = new System.Drawing.Point(889, 12);
+            this.label6.Location = new System.Drawing.Point(667, 10);
+            this.label6.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(119, 16);
+            this.label6.Size = new System.Drawing.Size(100, 13);
             this.label6.TabIndex = 17;
             this.label6.Text = "Walk-in Patients";
             // 
@@ -318,51 +334,57 @@
             // 
             this.pictureBox7.BackgroundImage = global::SmileTrack.Properties.Resources._7765670;
             this.pictureBox7.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.pictureBox7.Location = new System.Drawing.Point(666, 12);
+            this.pictureBox7.Location = new System.Drawing.Point(500, 10);
+            this.pictureBox7.Margin = new System.Windows.Forms.Padding(2);
             this.pictureBox7.Name = "pictureBox7";
-            this.pictureBox7.Size = new System.Drawing.Size(54, 50);
+            this.pictureBox7.Size = new System.Drawing.Size(40, 41);
             this.pictureBox7.TabIndex = 16;
             this.pictureBox7.TabStop = false;
             // 
             // lblReminders
             // 
             this.lblReminders.AutoSize = true;
-            this.lblReminders.Location = new System.Drawing.Point(736, 45);
+            this.lblReminders.Location = new System.Drawing.Point(552, 37);
+            this.lblReminders.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblReminders.Name = "lblReminders";
-            this.lblReminders.Size = new System.Drawing.Size(0, 16);
+            this.lblReminders.Size = new System.Drawing.Size(0, 13);
             this.lblReminders.TabIndex = 15;
             // 
             // lblPendingConfirmation
             // 
             this.lblPendingConfirmation.AutoSize = true;
-            this.lblPendingConfirmation.Location = new System.Drawing.Point(506, 46);
+            this.lblPendingConfirmation.Location = new System.Drawing.Point(380, 37);
+            this.lblPendingConfirmation.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblPendingConfirmation.Name = "lblPendingConfirmation";
-            this.lblPendingConfirmation.Size = new System.Drawing.Size(0, 16);
+            this.lblPendingConfirmation.Size = new System.Drawing.Size(0, 13);
             this.lblPendingConfirmation.TabIndex = 14;
             // 
             // lblNewPatient
             // 
             this.lblNewPatient.AutoSize = true;
-            this.lblNewPatient.Location = new System.Drawing.Point(301, 45);
+            this.lblNewPatient.Location = new System.Drawing.Point(226, 37);
+            this.lblNewPatient.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblNewPatient.Name = "lblNewPatient";
-            this.lblNewPatient.Size = new System.Drawing.Size(0, 16);
+            this.lblNewPatient.Size = new System.Drawing.Size(0, 13);
             this.lblNewPatient.TabIndex = 13;
             // 
             // lblTodaysAppoinment
             // 
             this.lblTodaysAppoinment.AutoSize = true;
-            this.lblTodaysAppoinment.Location = new System.Drawing.Point(94, 40);
+            this.lblTodaysAppoinment.Location = new System.Drawing.Point(70, 32);
+            this.lblTodaysAppoinment.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblTodaysAppoinment.Name = "lblTodaysAppoinment";
-            this.lblTodaysAppoinment.Size = new System.Drawing.Size(0, 16);
+            this.lblTodaysAppoinment.Size = new System.Drawing.Size(0, 13);
             this.lblTodaysAppoinment.TabIndex = 4;
             // 
             // label5
             // 
             this.label5.AutoSize = true;
             this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label5.Location = new System.Drawing.Point(726, 12);
+            this.label5.Location = new System.Drawing.Point(544, 10);
+            this.label5.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(82, 16);
+            this.label5.Size = new System.Drawing.Size(66, 13);
             this.label5.TabIndex = 11;
             this.label5.Text = "Reminders";
             // 
@@ -370,9 +392,10 @@
             // 
             this.pictureBox6.BackgroundImage = global::SmileTrack.Properties.Resources._6098813;
             this.pictureBox6.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.pictureBox6.Location = new System.Drawing.Point(829, 12);
+            this.pictureBox6.Location = new System.Drawing.Point(622, 10);
+            this.pictureBox6.Margin = new System.Windows.Forms.Padding(2);
             this.pictureBox6.Name = "pictureBox6";
-            this.pictureBox6.Size = new System.Drawing.Size(54, 50);
+            this.pictureBox6.Size = new System.Drawing.Size(40, 41);
             this.pictureBox6.TabIndex = 10;
             this.pictureBox6.TabStop = false;
             // 
@@ -380,9 +403,10 @@
             // 
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(492, 12);
+            this.label4.Location = new System.Drawing.Point(369, 10);
+            this.label4.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(154, 16);
+            this.label4.Size = new System.Drawing.Size(127, 13);
             this.label4.TabIndex = 8;
             this.label4.Text = "Pending Confirmation";
             // 
@@ -390,9 +414,10 @@
             // 
             this.pictureBox5.BackgroundImage = global::SmileTrack.Properties.Resources._4439741;
             this.pictureBox5.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.pictureBox5.Location = new System.Drawing.Point(432, 12);
+            this.pictureBox5.Location = new System.Drawing.Point(324, 10);
+            this.pictureBox5.Margin = new System.Windows.Forms.Padding(2);
             this.pictureBox5.Name = "pictureBox5";
-            this.pictureBox5.Size = new System.Drawing.Size(54, 50);
+            this.pictureBox5.Size = new System.Drawing.Size(40, 41);
             this.pictureBox5.TabIndex = 7;
             this.pictureBox5.TabStop = false;
             // 
@@ -400,9 +425,10 @@
             // 
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(287, 12);
+            this.label3.Location = new System.Drawing.Point(215, 10);
+            this.label3.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(89, 16);
+            this.label3.Size = new System.Drawing.Size(76, 13);
             this.label3.TabIndex = 5;
             this.label3.Text = "New Patient";
             // 
@@ -410,9 +436,10 @@
             // 
             this.pictureBox4.BackgroundImage = global::SmileTrack.Properties.Resources._10494340;
             this.pictureBox4.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.pictureBox4.Location = new System.Drawing.Point(227, 12);
+            this.pictureBox4.Location = new System.Drawing.Point(170, 10);
+            this.pictureBox4.Margin = new System.Windows.Forms.Padding(2);
             this.pictureBox4.Name = "pictureBox4";
-            this.pictureBox4.Size = new System.Drawing.Size(54, 50);
+            this.pictureBox4.Size = new System.Drawing.Size(40, 41);
             this.pictureBox4.TabIndex = 4;
             this.pictureBox4.TabStop = false;
             // 
@@ -420,9 +447,10 @@
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(75, 12);
+            this.label2.Location = new System.Drawing.Point(56, 10);
+            this.label2.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(146, 16);
+            this.label2.Size = new System.Drawing.Size(118, 13);
             this.label2.TabIndex = 2;
             this.label2.Text = "Todays Appoinment";
             // 
@@ -430,9 +458,10 @@
             // 
             this.pictureBox3.BackgroundImage = global::SmileTrack.Properties.Resources._5539724;
             this.pictureBox3.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.pictureBox3.Location = new System.Drawing.Point(13, 12);
+            this.pictureBox3.Location = new System.Drawing.Point(10, 10);
+            this.pictureBox3.Margin = new System.Windows.Forms.Padding(2);
             this.pictureBox3.Name = "pictureBox3";
-            this.pictureBox3.Size = new System.Drawing.Size(56, 50);
+            this.pictureBox3.Size = new System.Drawing.Size(42, 41);
             this.pictureBox3.TabIndex = 1;
             this.pictureBox3.TabStop = false;
             // 
@@ -442,9 +471,10 @@
             this.panel4.Controls.Add(this.dataGridView1);
             this.panel4.Controls.Add(this.button5);
             this.panel4.Controls.Add(this.label1);
-            this.panel4.Location = new System.Drawing.Point(206, 86);
+            this.panel4.Location = new System.Drawing.Point(154, 70);
+            this.panel4.Margin = new System.Windows.Forms.Padding(2);
             this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(646, 254);
+            this.panel4.Size = new System.Drawing.Size(484, 206);
             this.panel4.TabIndex = 3;
             // 
             // dataGridView1
@@ -456,11 +486,12 @@
             this.colDentist,
             this.colTreatment,
             this.colStatus});
-            this.dataGridView1.Location = new System.Drawing.Point(13, 47);
+            this.dataGridView1.Location = new System.Drawing.Point(10, 38);
+            this.dataGridView1.Margin = new System.Windows.Forms.Padding(2);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.RowHeadersWidth = 51;
             this.dataGridView1.RowTemplate.Height = 24;
-            this.dataGridView1.Size = new System.Drawing.Size(615, 174);
+            this.dataGridView1.Size = new System.Drawing.Size(461, 141);
             this.dataGridView1.TabIndex = 2;
             // 
             // colTime
@@ -507,9 +538,10 @@
             this.button5.BackColor = System.Drawing.Color.LightGray;
             this.button5.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.button5.ForeColor = System.Drawing.Color.LightSeaGreen;
-            this.button5.Location = new System.Drawing.Point(553, 9);
+            this.button5.Location = new System.Drawing.Point(415, 7);
+            this.button5.Margin = new System.Windows.Forms.Padding(2);
             this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(75, 23);
+            this.button5.Size = new System.Drawing.Size(56, 19);
             this.button5.TabIndex = 1;
             this.button5.Text = "View All";
             this.button5.UseVisualStyleBackColor = false;
@@ -518,9 +550,10 @@
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(10, 9);
+            this.label1.Location = new System.Drawing.Point(8, 7);
+            this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(150, 16);
+            this.label1.Size = new System.Drawing.Size(121, 13);
             this.label1.TabIndex = 0;
             this.label1.Text = "Today\'s Appoinment";
             // 
@@ -528,13 +561,14 @@
             // 
             this.dgvWalkInQueue.BackColor = System.Drawing.Color.White;
             this.dgvWalkInQueue.Controls.Add(this.button8);
-            this.dgvWalkInQueue.Controls.Add(this.button7);
+            this.dgvWalkInQueue.Controls.Add(this.btnAddWalkIn);
             this.dgvWalkInQueue.Controls.Add(this.dataGridView2);
             this.dgvWalkInQueue.Controls.Add(this.button6);
             this.dgvWalkInQueue.Controls.Add(this.label7);
-            this.dgvWalkInQueue.Location = new System.Drawing.Point(206, 379);
+            this.dgvWalkInQueue.Location = new System.Drawing.Point(154, 308);
+            this.dgvWalkInQueue.Margin = new System.Windows.Forms.Padding(2);
             this.dgvWalkInQueue.Name = "dgvWalkInQueue";
-            this.dgvWalkInQueue.Size = new System.Drawing.Size(582, 351);
+            this.dgvWalkInQueue.Size = new System.Drawing.Size(436, 285);
             this.dgvWalkInQueue.TabIndex = 4;
             // 
             // button8
@@ -542,90 +576,98 @@
             this.button8.BackColor = System.Drawing.Color.Aquamarine;
             this.button8.Font = new System.Drawing.Font("Gill Sans Ultra Bold", 7.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.button8.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.button8.Location = new System.Drawing.Point(352, 275);
+            this.button8.Location = new System.Drawing.Point(264, 223);
+            this.button8.Margin = new System.Windows.Forms.Padding(2);
             this.button8.Name = "button8";
-            this.button8.Size = new System.Drawing.Size(134, 38);
+            this.button8.Size = new System.Drawing.Size(100, 31);
             this.button8.TabIndex = 13;
             this.button8.Text = "Refresh Qeue";
             this.button8.UseVisualStyleBackColor = false;
             // 
-            // button7
+            // btnAddWalkIn
             // 
-            this.button7.BackColor = System.Drawing.Color.Aquamarine;
-            this.button7.Font = new System.Drawing.Font("Gill Sans Ultra Bold", 7.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button7.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.button7.Location = new System.Drawing.Point(64, 275);
-            this.button7.Name = "button7";
-            this.button7.Size = new System.Drawing.Size(136, 38);
-            this.button7.TabIndex = 12;
-            this.button7.Text = "+ Add Walk-in";
-            this.button7.UseVisualStyleBackColor = false;
+            this.btnAddWalkIn.BackColor = System.Drawing.Color.Aquamarine;
+            this.btnAddWalkIn.Font = new System.Drawing.Font("Gill Sans Ultra Bold", 7.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnAddWalkIn.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.btnAddWalkIn.Location = new System.Drawing.Point(48, 223);
+            this.btnAddWalkIn.Margin = new System.Windows.Forms.Padding(2);
+            this.btnAddWalkIn.Name = "btnAddWalkIn";
+            this.btnAddWalkIn.Size = new System.Drawing.Size(102, 31);
+            this.btnAddWalkIn.TabIndex = 12;
+            this.btnAddWalkIn.Text = "+ Add Walk-in";
+            this.btnAddWalkIn.UseVisualStyleBackColor = false;
+            this.btnAddWalkIn.Click += new System.EventHandler(this.btnAddWalkIn_Click);
             // 
             // dataGridView2
             // 
             this.dataGridView2.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView2.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.dataGridViewTextBoxColumn1,
-            this.dataGridViewTextBoxColumn2,
-            this.dataGridViewTextBoxColumn3,
-            this.dataGridViewTextBoxColumn5});
-            this.dataGridView2.Location = new System.Drawing.Point(13, 58);
+            this.txtNo,
+            this.txtPatientName,
+            this.txtTimeIn,
+            this.txtStatus});
+            this.dataGridView2.Location = new System.Drawing.Point(10, 42);
+            this.dataGridView2.Margin = new System.Windows.Forms.Padding(2);
             this.dataGridView2.Name = "dataGridView2";
             this.dataGridView2.RowHeadersWidth = 51;
             this.dataGridView2.RowTemplate.Height = 24;
-            this.dataGridView2.Size = new System.Drawing.Size(552, 151);
+            this.dataGridView2.Size = new System.Drawing.Size(396, 123);
             this.dataGridView2.TabIndex = 2;
+            this.dataGridView2.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView2_CellContentClick);
             // 
-            // dataGridViewTextBoxColumn1
+            // txtNo
             // 
-            this.dataGridViewTextBoxColumn1.HeaderText = "No.";
-            this.dataGridViewTextBoxColumn1.MaxInputLength = 100;
-            this.dataGridViewTextBoxColumn1.MinimumWidth = 6;
-            this.dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
-            this.dataGridViewTextBoxColumn1.Width = 125;
+            this.txtNo.HeaderText = "No.";
+            this.txtNo.MaxInputLength = 100;
+            this.txtNo.MinimumWidth = 6;
+            this.txtNo.Name = "txtNo";
+            this.txtNo.Width = 125;
             // 
-            // dataGridViewTextBoxColumn2
+            // txtPatientName
             // 
-            this.dataGridViewTextBoxColumn2.HeaderText = "Patient Name";
-            this.dataGridViewTextBoxColumn2.MinimumWidth = 6;
-            this.dataGridViewTextBoxColumn2.Name = "dataGridViewTextBoxColumn2";
-            this.dataGridViewTextBoxColumn2.Width = 125;
+            this.txtPatientName.HeaderText = "Patient Name";
+            this.txtPatientName.MinimumWidth = 6;
+            this.txtPatientName.Name = "txtPatientName";
+            this.txtPatientName.Width = 125;
             // 
-            // dataGridViewTextBoxColumn3
+            // txtTimeIn
             // 
-            this.dataGridViewTextBoxColumn3.HeaderText = "Time-in";
-            this.dataGridViewTextBoxColumn3.MaxInputLength = 200;
-            this.dataGridViewTextBoxColumn3.MinimumWidth = 6;
-            this.dataGridViewTextBoxColumn3.Name = "dataGridViewTextBoxColumn3";
-            this.dataGridViewTextBoxColumn3.Width = 125;
+            this.txtTimeIn.HeaderText = "Time-in";
+            this.txtTimeIn.MaxInputLength = 200;
+            this.txtTimeIn.MinimumWidth = 6;
+            this.txtTimeIn.Name = "txtTimeIn";
+            this.txtTimeIn.Width = 125;
             // 
-            // dataGridViewTextBoxColumn5
+            // txtStatus
             // 
-            this.dataGridViewTextBoxColumn5.HeaderText = "Status";
-            this.dataGridViewTextBoxColumn5.MaxInputLength = 100;
-            this.dataGridViewTextBoxColumn5.MinimumWidth = 6;
-            this.dataGridViewTextBoxColumn5.Name = "dataGridViewTextBoxColumn5";
-            this.dataGridViewTextBoxColumn5.Width = 125;
+            this.txtStatus.HeaderText = "Status";
+            this.txtStatus.MaxInputLength = 100;
+            this.txtStatus.MinimumWidth = 6;
+            this.txtStatus.Name = "txtStatus";
+            this.txtStatus.Width = 125;
             // 
             // button6
             // 
             this.button6.BackColor = System.Drawing.Color.LightGray;
             this.button6.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.button6.ForeColor = System.Drawing.Color.LightSeaGreen;
-            this.button6.Location = new System.Drawing.Point(482, 17);
+            this.button6.Location = new System.Drawing.Point(362, 14);
+            this.button6.Margin = new System.Windows.Forms.Padding(2);
             this.button6.Name = "button6";
-            this.button6.Size = new System.Drawing.Size(75, 23);
+            this.button6.Size = new System.Drawing.Size(56, 19);
             this.button6.TabIndex = 1;
             this.button6.Text = "View All";
             this.button6.UseVisualStyleBackColor = false;
+            this.button6.Click += new System.EventHandler(this.button6_Click);
             // 
             // label7
             // 
             this.label7.AutoSize = true;
             this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label7.Location = new System.Drawing.Point(10, 9);
+            this.label7.Location = new System.Drawing.Point(8, 7);
+            this.label7.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(100, 16);
+            this.label7.Size = new System.Drawing.Size(84, 13);
             this.label7.TabIndex = 0;
             this.label7.Text = "Walk-in Qeue";
             // 
@@ -635,9 +677,10 @@
             this.panel6.Controls.Add(this.dataGridView3);
             this.panel6.Controls.Add(this.button9);
             this.panel6.Controls.Add(this.label8);
-            this.panel6.Location = new System.Drawing.Point(872, 86);
+            this.panel6.Location = new System.Drawing.Point(654, 70);
+            this.panel6.Margin = new System.Windows.Forms.Padding(2);
             this.panel6.Name = "panel6";
-            this.panel6.Size = new System.Drawing.Size(570, 240);
+            this.panel6.Size = new System.Drawing.Size(428, 195);
             this.panel6.TabIndex = 4;
             // 
             // dataGridView3
@@ -648,11 +691,12 @@
             this.colPatient,
             this.colTime1,
             this.colType});
-            this.dataGridView3.Location = new System.Drawing.Point(13, 47);
+            this.dataGridView3.Location = new System.Drawing.Point(10, 38);
+            this.dataGridView3.Margin = new System.Windows.Forms.Padding(2);
             this.dataGridView3.Name = "dataGridView3";
             this.dataGridView3.RowHeadersWidth = 51;
             this.dataGridView3.RowTemplate.Height = 24;
-            this.dataGridView3.Size = new System.Drawing.Size(536, 150);
+            this.dataGridView3.Size = new System.Drawing.Size(402, 122);
             this.dataGridView3.TabIndex = 2;
             // 
             // colDate
@@ -691,9 +735,10 @@
             this.button9.BackColor = System.Drawing.Color.LightGray;
             this.button9.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.button9.ForeColor = System.Drawing.Color.LightSeaGreen;
-            this.button9.Location = new System.Drawing.Point(474, 9);
+            this.button9.Location = new System.Drawing.Point(356, 7);
+            this.button9.Margin = new System.Windows.Forms.Padding(2);
             this.button9.Name = "button9";
-            this.button9.Size = new System.Drawing.Size(75, 23);
+            this.button9.Size = new System.Drawing.Size(56, 19);
             this.button9.TabIndex = 1;
             this.button9.Text = "View All";
             this.button9.UseVisualStyleBackColor = false;
@@ -702,9 +747,10 @@
             // 
             this.label8.AutoSize = true;
             this.label8.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label8.Location = new System.Drawing.Point(10, 9);
+            this.label8.Location = new System.Drawing.Point(8, 7);
+            this.label8.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(82, 16);
+            this.label8.Size = new System.Drawing.Size(66, 13);
             this.label8.TabIndex = 0;
             this.label8.Text = "Reminders";
             // 
@@ -716,9 +762,10 @@
             this.panel7.Controls.Add(this.panel8);
             this.panel7.Controls.Add(this.button10);
             this.panel7.Controls.Add(this.label9);
-            this.panel7.Location = new System.Drawing.Point(810, 346);
+            this.panel7.Location = new System.Drawing.Point(608, 281);
+            this.panel7.Margin = new System.Windows.Forms.Padding(2);
             this.panel7.Name = "panel7";
-            this.panel7.Size = new System.Drawing.Size(632, 372);
+            this.panel7.Size = new System.Drawing.Size(474, 302);
             this.panel7.TabIndex = 14;
             // 
             // panel10
@@ -726,18 +773,20 @@
             this.panel10.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.panel10.Controls.Add(this.lblTotalRevenue);
             this.panel10.Controls.Add(this.label12);
-            this.panel10.Location = new System.Drawing.Point(440, 70);
+            this.panel10.Location = new System.Drawing.Point(330, 57);
+            this.panel10.Margin = new System.Windows.Forms.Padding(2);
             this.panel10.Name = "panel10";
-            this.panel10.Size = new System.Drawing.Size(171, 100);
+            this.panel10.Size = new System.Drawing.Size(128, 81);
             this.panel10.TabIndex = 16;
             // 
             // lblTotalRevenue
             // 
             this.lblTotalRevenue.AutoSize = true;
             this.lblTotalRevenue.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblTotalRevenue.Location = new System.Drawing.Point(52, 28);
+            this.lblTotalRevenue.Location = new System.Drawing.Point(39, 23);
+            this.lblTotalRevenue.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblTotalRevenue.Name = "lblTotalRevenue";
-            this.lblTotalRevenue.Size = new System.Drawing.Size(69, 20);
+            this.lblTotalRevenue.Size = new System.Drawing.Size(61, 17);
             this.lblTotalRevenue.TabIndex = 3;
             this.lblTotalRevenue.Text = "label13";
             // 
@@ -745,9 +794,10 @@
             // 
             this.label12.AutoSize = true;
             this.label12.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label12.Location = new System.Drawing.Point(32, 68);
+            this.label12.Location = new System.Drawing.Point(24, 55);
+            this.label12.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(109, 16);
+            this.label12.Size = new System.Drawing.Size(91, 13);
             this.label12.TabIndex = 2;
             this.label12.Text = "Total Revenue";
             // 
@@ -756,18 +806,20 @@
             this.panel9.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.panel9.Controls.Add(this.lblUnpaid);
             this.panel9.Controls.Add(this.label11);
-            this.panel9.Location = new System.Drawing.Point(225, 70);
+            this.panel9.Location = new System.Drawing.Point(169, 57);
+            this.panel9.Margin = new System.Windows.Forms.Padding(2);
             this.panel9.Name = "panel9";
-            this.panel9.Size = new System.Drawing.Size(192, 100);
+            this.panel9.Size = new System.Drawing.Size(144, 81);
             this.panel9.TabIndex = 15;
             // 
             // lblUnpaid
             // 
             this.lblUnpaid.AutoSize = true;
             this.lblUnpaid.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblUnpaid.Location = new System.Drawing.Point(72, 28);
+            this.lblUnpaid.Location = new System.Drawing.Point(54, 23);
+            this.lblUnpaid.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblUnpaid.Name = "lblUnpaid";
-            this.lblUnpaid.Size = new System.Drawing.Size(69, 20);
+            this.lblUnpaid.Size = new System.Drawing.Size(61, 17);
             this.lblUnpaid.TabIndex = 2;
             this.lblUnpaid.Text = "label13";
             // 
@@ -775,9 +827,10 @@
             // 
             this.label11.AutoSize = true;
             this.label11.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label11.Location = new System.Drawing.Point(72, 68);
+            this.label11.Location = new System.Drawing.Point(54, 55);
+            this.label11.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(58, 16);
+            this.label11.Size = new System.Drawing.Size(48, 13);
             this.label11.TabIndex = 1;
             this.label11.Text = "UnPaid";
             // 
@@ -786,18 +839,20 @@
             this.panel8.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
             this.panel8.Controls.Add(this.LblPaid);
             this.panel8.Controls.Add(this.label10);
-            this.panel8.Location = new System.Drawing.Point(13, 70);
+            this.panel8.Location = new System.Drawing.Point(10, 57);
+            this.panel8.Margin = new System.Windows.Forms.Padding(2);
             this.panel8.Name = "panel8";
-            this.panel8.Size = new System.Drawing.Size(191, 100);
+            this.panel8.Size = new System.Drawing.Size(143, 81);
             this.panel8.TabIndex = 14;
             // 
             // LblPaid
             // 
             this.LblPaid.AutoSize = true;
             this.LblPaid.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LblPaid.Location = new System.Drawing.Point(49, 28);
+            this.LblPaid.Location = new System.Drawing.Point(37, 23);
+            this.LblPaid.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.LblPaid.Name = "LblPaid";
-            this.LblPaid.Size = new System.Drawing.Size(69, 20);
+            this.LblPaid.Size = new System.Drawing.Size(61, 17);
             this.LblPaid.TabIndex = 1;
             this.LblPaid.Text = "label13";
             // 
@@ -805,9 +860,10 @@
             // 
             this.label10.AutoSize = true;
             this.label10.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label10.Location = new System.Drawing.Point(64, 68);
+            this.label10.Location = new System.Drawing.Point(48, 55);
+            this.label10.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(39, 16);
+            this.label10.Size = new System.Drawing.Size(32, 13);
             this.label10.TabIndex = 0;
             this.label10.Text = "Paid";
             // 
@@ -816,9 +872,10 @@
             this.button10.BackColor = System.Drawing.Color.Aquamarine;
             this.button10.Font = new System.Drawing.Font("Gill Sans Ultra Bold", 7.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.button10.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.button10.Location = new System.Drawing.Point(352, 308);
+            this.button10.Location = new System.Drawing.Point(264, 250);
+            this.button10.Margin = new System.Windows.Forms.Padding(2);
             this.button10.Name = "button10";
-            this.button10.Size = new System.Drawing.Size(247, 38);
+            this.button10.Size = new System.Drawing.Size(185, 31);
             this.button10.TabIndex = 13;
             this.button10.Text = "View Detailed Report    >";
             this.button10.UseVisualStyleBackColor = false;
@@ -827,24 +884,26 @@
             // 
             this.label9.AutoSize = true;
             this.label9.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label9.Location = new System.Drawing.Point(10, 9);
+            this.label9.Location = new System.Drawing.Point(8, 7);
+            this.label9.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(177, 16);
+            this.label9.Size = new System.Drawing.Size(142, 13);
             this.label9.TabIndex = 0;
             this.label9.Text = "Billing Summary (Today)";
             // 
             // ReceptionistDashboard
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Teal;
-            this.ClientSize = new System.Drawing.Size(1454, 742);
+            this.ClientSize = new System.Drawing.Size(1090, 603);
             this.Controls.Add(this.panel7);
             this.Controls.Add(this.panel6);
             this.Controls.Add(this.dgvWalkInQueue);
             this.Controls.Add(this.panel4);
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.panel1);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "ReceptionistDashboard";
             this.Text = "ReceptionistDashboard";
             this.Load += new System.EventHandler(this.ReceptionistDashboard_Load);
@@ -924,12 +983,8 @@
         private System.Windows.Forms.DataGridView dataGridView2;
         private System.Windows.Forms.Button button6;
         private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn1;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn2;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn3;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn5;
         private System.Windows.Forms.Button button8;
-        private System.Windows.Forms.Button button7;
+        private System.Windows.Forms.Button btnAddWalkIn;
         private System.Windows.Forms.Panel panel6;
         private System.Windows.Forms.DataGridView dataGridView3;
         private System.Windows.Forms.DataGridViewTextBoxColumn colDate;
@@ -950,5 +1005,9 @@
         private System.Windows.Forms.Label lblTotalRevenue;
         private System.Windows.Forms.Label lblUnpaid;
         private System.Windows.Forms.Label LblPaid;
+        private System.Windows.Forms.DataGridViewTextBoxColumn txtNo;
+        private System.Windows.Forms.DataGridViewTextBoxColumn txtPatientName;
+        private System.Windows.Forms.DataGridViewTextBoxColumn txtTimeIn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn txtStatus;
     }
 }

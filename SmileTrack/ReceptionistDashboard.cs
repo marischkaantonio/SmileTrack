@@ -107,18 +107,57 @@ namespace SmileTrack
 
         }
 
+        private void btnAddWalkIn_Click(object sender, EventArgs e)
+        {
+            int rowNumber = dataGridView2.Rows.Count + 1;
 
+            dataGridView2.Rows.Add(
+                rowNumber,
+                "Walk-in Patient " + rowNumber,   // placeholder name
+                DateTime.Now.ToString("hh:mm tt"),
+                "Waiting"                         // default status
+            );
+        }
 
-        private int walkInCounter = 0; // keeps track of walk-in patients
+        private void dataGridView2_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            dataGridView2.Columns.Add("No", "No.");
+            dataGridView2.Columns.Add("PatientName", "Patient Name");
+            dataGridView2.Columns.Add("TimeIn", "Time-in");
+            dataGridView2.Columns.Add("Status", "Status");
+        }
 
-        private void btnWalkIn_Click(object sender, EventArgs e)
+        private void button6_Click(object sender, EventArgs e)
         {
 
+        }
 
+        private void btnLogout_Click(object sender, EventArgs e)
+        {
+            var result = MessageBox.Show("Are you sure you want to log out?",
+                                 "Log-out",
+                                 MessageBoxButtons.YesNo,
+                                 MessageBoxIcon.Question);
+
+            if (result == DialogResult.Yes)
+            {
+             
+                this.Hide();
+
+                
+                LoginForm login = new LoginForm();
+                login.Show();
+
+
+            }
         }
     }
 }
 
+
+
+
+      
 
 
 
