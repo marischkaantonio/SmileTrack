@@ -128,6 +128,7 @@
     <Compile Include="Reminders.Designer.cs">
       <DependentUpon>Reminders.cs</DependentUpon>
     </Compile>
+    <Compile Include="SmileTrack.cs" />
     <Compile Include="Splash.cs">
       <SubType>Form</SubType>
     </Compile>

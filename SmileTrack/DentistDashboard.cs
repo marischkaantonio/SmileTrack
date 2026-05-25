@@ -107,8 +107,9 @@ namespace SmileTrack
 
         private void btnMySched_Click(object sender, EventArgs e)
         {
-            LoadMySchedule();
+            AppointmentUpdater.RefreshTodaysAppointments(dgvSched);
         }
+
         private void LoadMySchedule()
         {
             var myAppoinments = AppointmentManager.Appointments

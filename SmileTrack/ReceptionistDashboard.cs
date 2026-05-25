@@ -235,6 +235,53 @@ namespace SmileTrack
             }
         }
 
+        private void panel7_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void btnUpdate_Click(object sender, EventArgs e)
+        {
+            if (dgvTA.CurrentRow != null)
+            {
+                string patientName = dgvTA.CurrentRow.Cells["PatientName"].Value?.ToString();
+
+                // Example: mark appointment as Completed
+                AppointmentUpdater.UpdateAppointmentStatus(patientName, "Completed");
+            }
+
+            // Refresh grid
+            AppointmentUpdater.RefreshTodaysAppointments(dgvTA);
+
+            // Refresh summary cards
+            LoadSummaryCards();
+
+            MessageBox.Show("Today's appointments updated successfully.", "Update");
+
+            foreach (Form form in Application.OpenForms)
+            {
+                if (form is ReceptionistDashboard receptionistDash)
+                {
+                    receptionistDash.LoadTodaysAppointments();
+                    receptionistDash.LoadSummaryCards();
+                }
+            }
+        }
+        private void btnAddAppointment_Click(object sender, EventArgs e)
+        {
+            AppointmentUpdater.AddAppointment(
+                DateTime.Now,
+                "Juan Dela Cruz",
+                "Dr. Margie",
+                "Cleaning",
+                "Pending"
+            );
+
+            AppointmentUpdater.RefreshTodaysAppointments(dgvTA);
+            LoadSummaryCards();
+        }
+
+
     }
 }
 

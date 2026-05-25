@@ -97,6 +97,8 @@
             this.label10 = new System.Windows.Forms.Label();
             this.button10 = new System.Windows.Forms.Button();
             this.label9 = new System.Windows.Forms.Label();
+            this.btnUpdate = new System.Windows.Forms.Button();
+            this.btnAddAppointment = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -482,13 +484,15 @@
             // panel4
             // 
             this.panel4.BackColor = System.Drawing.Color.White;
+            this.panel4.Controls.Add(this.btnAddAppointment);
+            this.panel4.Controls.Add(this.btnUpdate);
             this.panel4.Controls.Add(this.dgvTA);
             this.panel4.Controls.Add(this.button5);
             this.panel4.Controls.Add(this.label1);
             this.panel4.Location = new System.Drawing.Point(154, 70);
             this.panel4.Margin = new System.Windows.Forms.Padding(2);
             this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(484, 206);
+            this.panel4.Size = new System.Drawing.Size(484, 215);
             this.panel4.TabIndex = 3;
             // 
             // dgvTA
@@ -695,7 +699,7 @@
             this.panel6.Location = new System.Drawing.Point(654, 70);
             this.panel6.Margin = new System.Windows.Forms.Padding(2);
             this.panel6.Name = "panel6";
-            this.panel6.Size = new System.Drawing.Size(428, 195);
+            this.panel6.Size = new System.Drawing.Size(428, 215);
             this.panel6.TabIndex = 4;
             // 
             // dgvReminders
@@ -777,11 +781,12 @@
             this.panel7.Controls.Add(this.panel8);
             this.panel7.Controls.Add(this.button10);
             this.panel7.Controls.Add(this.label9);
-            this.panel7.Location = new System.Drawing.Point(608, 281);
+            this.panel7.Location = new System.Drawing.Point(594, 308);
             this.panel7.Margin = new System.Windows.Forms.Padding(2);
             this.panel7.Name = "panel7";
-            this.panel7.Size = new System.Drawing.Size(474, 302);
+            this.panel7.Size = new System.Drawing.Size(474, 284);
             this.panel7.TabIndex = 14;
+            this.panel7.Paint += new System.Windows.Forms.PaintEventHandler(this.panel7_Paint);
             // 
             // panel10
             // 
@@ -906,6 +911,33 @@
             this.label9.TabIndex = 0;
             this.label9.Text = "Billing Summary (Today)";
             // 
+            // btnUpdate
+            // 
+            this.btnUpdate.BackColor = System.Drawing.Color.Aquamarine;
+            this.btnUpdate.Font = new System.Drawing.Font("Gill Sans Ultra Bold", 7.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnUpdate.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.btnUpdate.Location = new System.Drawing.Point(397, 185);
+            this.btnUpdate.Margin = new System.Windows.Forms.Padding(2);
+            this.btnUpdate.Name = "btnUpdate";
+            this.btnUpdate.Size = new System.Drawing.Size(63, 23);
+            this.btnUpdate.TabIndex = 14;
+            this.btnUpdate.Text = "Update";
+            this.btnUpdate.UseVisualStyleBackColor = false;
+            this.btnUpdate.Click += new System.EventHandler(this.btnUpdate_Click);
+            // 
+            // btnAddAppointment
+            // 
+            this.btnAddAppointment.BackColor = System.Drawing.Color.Aquamarine;
+            this.btnAddAppointment.Font = new System.Drawing.Font("Gill Sans Ultra Bold", 7.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnAddAppointment.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.btnAddAppointment.Location = new System.Drawing.Point(11, 185);
+            this.btnAddAppointment.Margin = new System.Windows.Forms.Padding(2);
+            this.btnAddAppointment.Name = "btnAddAppointment";
+            this.btnAddAppointment.Size = new System.Drawing.Size(63, 23);
+            this.btnAddAppointment.TabIndex = 15;
+            this.btnAddAppointment.Text = "Add ";
+            this.btnAddAppointment.UseVisualStyleBackColor = false;
+            // 
             // ReceptionistDashboard
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1025,5 +1057,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn txtTimeIn;
         private System.Windows.Forms.DataGridViewTextBoxColumn txtStatus;
         private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.Button btnUpdate;
+        private System.Windows.Forms.Button btnAddAppointment;
     }
 }

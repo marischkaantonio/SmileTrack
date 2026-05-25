@@ -64,8 +64,15 @@ namespace SmileTrack
                 dtpRegistrationDate.Value.ToString("yyyy-MM-dd"),
                 cmbTreatmentType.SelectedItem.ToString()
             );
+            AppointmentUpdater.AddAppointmentFromPatient(
+    $"{txtFname.Text} {txtLname.Text}",
+    txtDentist.Text,
+    cmbTreatmentType.SelectedItem?.ToString() ?? "General"
+);
 
             MessageBox.Show("Patient added successfully!", "Success");
+
+
             ClearFields();
         }
 
