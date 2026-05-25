@@ -151,6 +151,12 @@ namespace SmileTrack
 
             }
         }
+
+        private void btnReminders_Click(object sender, EventArgs e)
+        {
+            Reminders Reminders = new Reminders();
+            Reminders.Show();
+        }
     }
 }
 

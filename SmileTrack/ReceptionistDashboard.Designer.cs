@@ -31,7 +31,7 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.panel3 = new System.Windows.Forms.Panel();
             this.button4 = new System.Windows.Forms.Button();
-            this.button3 = new System.Windows.Forms.Button();
+            this.btnReminders = new System.Windows.Forms.Button();
             this.btnWalkIn = new System.Windows.Forms.Button();
             this.btnAppoinment = new System.Windows.Forms.Button();
             this.btnBillings = new System.Windows.Forms.Button();
@@ -122,7 +122,7 @@
             this.panel1.BackColor = System.Drawing.Color.Teal;
             this.panel1.Controls.Add(this.panel3);
             this.panel1.Controls.Add(this.button4);
-            this.panel1.Controls.Add(this.button3);
+            this.panel1.Controls.Add(this.btnReminders);
             this.panel1.Controls.Add(this.btnWalkIn);
             this.panel1.Controls.Add(this.btnAppoinment);
             this.panel1.Controls.Add(this.btnBillings);
@@ -160,18 +160,19 @@
             this.button4.Text = "Reports";
             this.button4.UseVisualStyleBackColor = false;
             // 
-            // button3
+            // btnReminders
             // 
-            this.button3.BackColor = System.Drawing.Color.Aquamarine;
-            this.button3.Font = new System.Drawing.Font("Gill Sans Ultra Bold", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button3.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.button3.Location = new System.Drawing.Point(9, 317);
-            this.button3.Margin = new System.Windows.Forms.Padding(2);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(120, 31);
-            this.button3.TabIndex = 10;
-            this.button3.Text = "Reminders";
-            this.button3.UseVisualStyleBackColor = false;
+            this.btnReminders.BackColor = System.Drawing.Color.Aquamarine;
+            this.btnReminders.Font = new System.Drawing.Font("Gill Sans Ultra Bold", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnReminders.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.btnReminders.Location = new System.Drawing.Point(9, 317);
+            this.btnReminders.Margin = new System.Windows.Forms.Padding(2);
+            this.btnReminders.Name = "btnReminders";
+            this.btnReminders.Size = new System.Drawing.Size(120, 31);
+            this.btnReminders.TabIndex = 10;
+            this.btnReminders.Text = "Reminders";
+            this.btnReminders.UseVisualStyleBackColor = false;
+            this.btnReminders.Click += new System.EventHandler(this.btnReminders_Click);
             // 
             // btnWalkIn
             // 
@@ -965,7 +966,7 @@
         private System.Windows.Forms.Button btnWalkIn;
         private System.Windows.Forms.Button btnAppoinment;
         private System.Windows.Forms.Button button4;
-        private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.Button btnReminders;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.PictureBox pictureBox7;
         private System.Windows.Forms.Label lblWalkin;

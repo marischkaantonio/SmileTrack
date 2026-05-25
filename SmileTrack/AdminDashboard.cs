@@ -22,6 +22,7 @@ namespace SmileTrack
         {
 
             InitializeComponent();
+
         }
         private void SaveUsersToFile()
         {
