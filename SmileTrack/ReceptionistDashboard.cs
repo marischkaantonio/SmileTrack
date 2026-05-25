@@ -117,8 +117,19 @@ namespace SmileTrack
 
         private void LoadSummaryCards()
         {
-            lblTodaysAppoinment.Text = AppointmentManager.Appointments
-                 .Count(a => a.Date.Date == DateTime.Today).ToString();
+            int todaysCount = AppointmentManager.Appointments
+                .Count(a => a.Date.Date == DateTime.Today);
+
+            lblTodaysAppoinment.Text = todaysCount.ToString();
+
+            // Update DentistDashboard textbox if open
+            foreach (Form form in Application.OpenForms)
+            {
+                if (form is DentistDashboard dentistDash)
+                {
+                    dentistDash.txtTodaysAppoinment.Text = todaysCount.ToString();
+                }
+            }
 
             lblNewPatient.Text = PatientManager.Patients
                 .Count(p => p.RegistrationDate.Date == DateTime.Today).ToString();
@@ -128,9 +139,11 @@ namespace SmileTrack
 
             lblReminders.Text = ReminderManager.Reminders
                 .Count(r => r.Date.Date >= DateTime.Today).ToString();
+
             lblWalkin.Text = WalkInQeueManager.Reminders
-               .Count(r => r.Date.Date >= DateTime.Today).ToString();
+                .Count(r => r.Date.Date >= DateTime.Today).ToString();
         }
+
 
 
         private void btnPatients_Click(object sender, EventArgs e)

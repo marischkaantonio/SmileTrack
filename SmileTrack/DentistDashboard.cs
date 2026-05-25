@@ -39,10 +39,9 @@ namespace SmileTrack
             public string Patient { get; set; }
             public string Treatment { get; set; }
             public string Status { get; set; }
-
             public string Doctor { get; set; }
-
         }
+
         public static class AppointmentManager
         {
             public static List<Appointment> Appointments = new List<Appointment>();
@@ -144,6 +143,18 @@ namespace SmileTrack
             }
         }
 
+        private void txtTodaysAppoinment_TextChanged(object sender, EventArgs e)
+        {
+            // Automatically reload today's appointments for this dentist
+            LoadMySchedule();
+
+            // Optional: visually highlight if there are appointments today
+            if (int.TryParse(txtTodaysAppoinment.Text, out int count))
+            {
+                txtTodaysAppoinment.ForeColor = count > 0 ? Color.Green : Color.Red;
+                txtTodaysAppoinment.Font = new Font("Segoe UI", 16, FontStyle.Bold);
+            }
+        }
     }
 }
     
