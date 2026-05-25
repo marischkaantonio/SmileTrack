@@ -58,7 +58,7 @@
             this.label2 = new System.Windows.Forms.Label();
             this.pictureBox3 = new System.Windows.Forms.PictureBox();
             this.panel4 = new System.Windows.Forms.Panel();
-            this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.dgvTA = new System.Windows.Forms.DataGridView();
             this.colTime = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colPname = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colDentist = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -96,6 +96,7 @@
             this.label10 = new System.Windows.Forms.Label();
             this.button10 = new System.Windows.Forms.Button();
             this.label9 = new System.Windows.Forms.Label();
+            this.label13 = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -106,7 +107,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
             this.panel4.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvTA)).BeginInit();
             this.dgvWalkInQueue.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).BeginInit();
             this.panel6.SuspendLayout();
@@ -290,6 +291,7 @@
             // panel2
             // 
             this.panel2.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.panel2.Controls.Add(this.label13);
             this.panel2.Controls.Add(this.lblWalkin);
             this.panel2.Controls.Add(this.label6);
             this.panel2.Controls.Add(this.pictureBox7);
@@ -469,7 +471,7 @@
             // panel4
             // 
             this.panel4.BackColor = System.Drawing.Color.White;
-            this.panel4.Controls.Add(this.dataGridView1);
+            this.panel4.Controls.Add(this.dgvTA);
             this.panel4.Controls.Add(this.button5);
             this.panel4.Controls.Add(this.label1);
             this.panel4.Location = new System.Drawing.Point(154, 70);
@@ -478,22 +480,23 @@
             this.panel4.Size = new System.Drawing.Size(484, 206);
             this.panel4.TabIndex = 3;
             // 
-            // dataGridView1
+            // dgvTA
             // 
-            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.dgvTA.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvTA.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.colTime,
             this.colPname,
             this.colDentist,
             this.colTreatment,
             this.colStatus});
-            this.dataGridView1.Location = new System.Drawing.Point(10, 38);
-            this.dataGridView1.Margin = new System.Windows.Forms.Padding(2);
-            this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.RowHeadersWidth = 51;
-            this.dataGridView1.RowTemplate.Height = 24;
-            this.dataGridView1.Size = new System.Drawing.Size(461, 141);
-            this.dataGridView1.TabIndex = 2;
+            this.dgvTA.Location = new System.Drawing.Point(10, 38);
+            this.dgvTA.Margin = new System.Windows.Forms.Padding(2);
+            this.dgvTA.Name = "dgvTA";
+            this.dgvTA.RowHeadersWidth = 51;
+            this.dgvTA.RowTemplate.Height = 24;
+            this.dgvTA.Size = new System.Drawing.Size(461, 141);
+            this.dgvTA.TabIndex = 2;
+            this.dgvTA.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvTA_CellContentClick);
             // 
             // colTime
             // 
@@ -892,6 +895,17 @@
             this.label9.TabIndex = 0;
             this.label9.Text = "Billing Summary (Today)";
             // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label13.Location = new System.Drawing.Point(94, 32);
+            this.label13.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(11, 13);
+            this.label13.TabIndex = 19;
+            this.label13.Text = "t";
+            // 
             // ReceptionistDashboard
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -921,7 +935,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
             this.panel4.ResumeLayout(false);
             this.panel4.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvTA)).EndInit();
             this.dgvWalkInQueue.ResumeLayout(false);
             this.dgvWalkInQueue.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).EndInit();
@@ -974,7 +988,7 @@
         private System.Windows.Forms.Panel panel4;
         private System.Windows.Forms.Button button5;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.DataGridView dataGridView1;
+        private System.Windows.Forms.DataGridView dgvTA;
         private System.Windows.Forms.DataGridViewTextBoxColumn colTime;
         private System.Windows.Forms.DataGridViewTextBoxColumn colPname;
         private System.Windows.Forms.DataGridViewTextBoxColumn colDentist;
@@ -1010,5 +1024,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn txtPatientName;
         private System.Windows.Forms.DataGridViewTextBoxColumn txtTimeIn;
         private System.Windows.Forms.DataGridViewTextBoxColumn txtStatus;
+        private System.Windows.Forms.Label label13;
     }
 }

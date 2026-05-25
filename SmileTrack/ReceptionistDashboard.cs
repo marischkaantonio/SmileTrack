@@ -28,6 +28,11 @@ namespace SmileTrack
         {
             public DateTime Date { get; set; }
             public string Status { get; set; }
+
+            public string PatientName { get; set; }
+            public string Dentist { get; set; }
+            public string Treatment { get; set; }
+
         }
 
         public static class PatientManager
@@ -59,12 +64,54 @@ namespace SmileTrack
             public string Status { get; set; }
         }
 
+        private void LoadTodaysAppointments()
+        {
+            // Clear existing rows
+            dgvTA.Rows.Clear();
+
+            // Ensure columns exist
+            if (dgvTA.Columns.Count == 0)
+            {
+                dgvTA.Columns.Add("Time", "Time");
+                dgvTA.Columns.Add("PatientName", "Patient Name");
+                dgvTA.Columns.Add("Dentist", "Dentist");
+                dgvTA.Columns.Add("Treatment", "Treatment");
+                dgvTA.Columns.Add("Status", "Status");
+            }
+
+            // Filter appointments for today
+            var todaysAppointments = AppointmentManager.Appointments
+                .Where(a => a.Date.Date == DateTime.Today)
+                .ToList();
+
+            // Populate DataGridView
+            foreach (var appt in todaysAppointments)
+            {
+                dgvTA.Rows.Add(
+                    appt.Date.ToString("hh:mm tt"),
+                    appt.PatientName,      // Add these properties to Appointment class if not yet present
+                    appt.Dentist,
+                    appt.Treatment,
+                    appt.Status
+                );
+            }
+
+            // Optional: show message if none found
+            if (todaysAppointments.Count == 0)
+            {
+                MessageBox.Show("No appointments scheduled for today.", "Information");
+            }
+        }
+
+
         public string LoggedInUser { get; set; }
         private void ReceptionistDashboard_Load(object sender, EventArgs e)
         {
             LoadSummaryCards();
 
             lblWelcome.Text = $"Welcome, {LoggedInUser}!";
+            LoadTodaysAppointments();
+
         }
 
 
@@ -157,6 +204,24 @@ namespace SmileTrack
             Reminders Reminders = new Reminders();
             Reminders.Show();
         }
+
+        private void dgvTA_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex >= 0)
+            {
+                DataGridViewRow row = dgvTA.Rows[e.RowIndex];
+                string patientName = row.Cells["PatientName"].Value?.ToString();
+                string dentist = row.Cells["Dentist"].Value?.ToString();
+                string treatment = row.Cells["Treatment"].Value?.ToString();
+                string status = row.Cells["Status"].Value?.ToString();
+
+                MessageBox.Show(
+                    $"Patient: {patientName}\nDentist: {dentist}\nTreatment: {treatment}\nStatus: {status}",
+                    "Appointment Details"
+                );
+            }
+        }
+
     }
 }
 
