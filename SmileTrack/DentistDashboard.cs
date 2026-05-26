@@ -144,9 +144,33 @@ namespace SmileTrack
             }
         }
 
+        private void btnHome_Click(object sender, EventArgs e)
+        {
+            DentistDashboard dentistForm = new DentistDashboard();
+            dentistForm.Show();
+
+
+            this.Close();
+        }
+
+        private void lblViewTitle_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnDashboard_Click(object sender, EventArgs e)
+        {
+            lblViewTitle.Text = "Dashboard";
+            panelDentistDashboard.Visible = true;
+            panelDentistDashboard.BringToFront();
+            panelDentistDashboard.Dock = DockStyle.Fill;
+            Panel1.Visible = false;
+
+        }
     }
 }
-    
-    
+      
+
+
 
 

@@ -141,15 +141,35 @@ namespace SmileTrack
 
             if (result == DialogResult.Yes)
             {
-             
+
                 this.Hide();
 
-                
+
                 LoginForm login = new LoginForm();
                 login.Show();
 
 
             }
+        }
+       
+
+        private void btnHome_Click(object sender, EventArgs e)
+        {
+            ReceptionistDashboard receptionistForm = new ReceptionistDashboard();
+            receptionistForm.Show();
+
+
+            this.Close();
+        }
+
+        private void btnDashboard_Click(object sender, EventArgs e)
+        {
+            lblViewTitle.Text = "Dashboard";
+            panelDashboard.Visible = true;
+            panelDashboard.BringToFront();
+            panelDashboard.Dock = DockStyle.Fill;
+            panel1.Visible = false;
+
         }
     }
 }

@@ -1,17 +1,18 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Drawing.Printing;
+using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
 using System.Xml.Linq;
-using System.IO;
-using Newtonsoft.Json;
-using System.Text.Json;
 
 
 namespace SmileTrack
@@ -58,42 +59,35 @@ namespace SmileTrack
         private void Form1_Load(object sender, EventArgs e)
         {
             panelDashboard.Visible = true;
-            panelUserManagement.Visible = false;
-            panelReports.Visible = false;
-            panelAuditLogs.Visible = false;
+      
+            Panel1.Visible = false;
+
         }
+
+        private void ShowPanel(Panel panelToShow, string headerText)
+        {
+            panelDashboard.Visible = false;
+          
+            Panel1.Visible = false;
+
+            panelToShow.Visible = true;
+            panelToShow.Dock = DockStyle.Fill;
+            panelToShow.BringToFront();
+
+            lblViewTitle.Text = headerText;
+        }
+
 
         private void btnDashboard_Click_1(object sender, EventArgs e)
         {
-            panelDashboard.Visible = true;
-            panelUserManagement.Visible = false;
-            panelReports.Visible = false;
-            panelAuditLogs.Visible = false;
+            ShowPanel(panelDashboard, "Dashboard View");
         }
 
-
-        private void btnUserMngt_Click(object sender, EventArgs e)
-        {
-            panelDashboard.Visible = false;
-            panelUserManagement.Visible = true;
-            panelReports.Visible = false;
-            panelAuditLogs.Visible = false;
-        }
-
-        private void btnReports_Click(object sender, EventArgs e)
-        {
-            panelDashboard.Visible = false;
-            panelUserManagement.Visible = false;
-            panelReports.Visible = true;
-            panelAuditLogs.Visible = false;
-        }
+       
 
         private void btnAuditLogs_Click(object sender, EventArgs e)
         {
-            panelDashboard.Visible = false;
-            panelUserManagement.Visible = false;
-            panelReports.Visible = false;
-            panelAuditLogs.Visible = true;
+            ShowPanel(Panel1, "Audit Logs");
         }
 
         private void btnLogOut_Click(object sender, EventArgs e)
@@ -129,69 +123,6 @@ namespace SmileTrack
 
 
             dgvUserMngt.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-        }
-
-
-
-        private void btnAdd_Click(object sender, EventArgs e)
-        {
-            {
-                if (dgvUserMngt.CurrentRow != null)
-                {
-                    DataGridViewRow row = dgvUserMngt.CurrentRow;
-
-                    string name = row.Cells["UserName"].Value?.ToString();
-                    string role = row.Cells["Role"].Value?.ToString();
-                    string password = row.Cells["Password"].Value?.ToString();
-                    string status = row.Cells["Status"].Value?.ToString();
-
-                    if (!string.IsNullOrWhiteSpace(name))
-                    {
-                        SaveUsersToFile();
-
-                        MessageBox.Show("User successfully added.");
-                    }
-                    else
-                    {
-                        MessageBox.Show("Please enter a valid name before adding.");
-                    }
-                }
-            }
-        }
-
-
-
-
-
-        private void btnRemove_Click(object sender, EventArgs e)
-        {
-            if (dgvUserMngt.CurrentRow != null)
-            {
-                dgvUserMngt.Rows.Remove(dgvUserMngt.CurrentRow);
-                MessageBox.Show("User successfully removed.");
-            }
-            else
-            {
-                MessageBox.Show("Please select a row to remove.");
-            }
-        }
-
-        private void btnEdit_Click(object sender, EventArgs e)
-        {
-
-
-            if (dgvAuditLogs.CurrentRow != null)
-            {
-
-                dgvAuditLogs.BeginEdit(true);
-            }
-            else
-            {
-                MessageBox.Show("Please select a row to edit.",
-                                "Edit User",
-                                MessageBoxButtons.OK,
-                                MessageBoxIcon.Warning);
-            }
         }
 
         private void FormAdminDashboard_Load(object sender, EventArgs e)
@@ -241,9 +172,68 @@ namespace SmileTrack
             }
         }
 
-        private void btnRefresh_Click(object sender, EventArgs e)
+     
+        private void btnHome_Click(object sender, EventArgs e)
         {
-            LoadAuditLogs();
+            FormAdminDashboard dashboard = new FormAdminDashboard();
+            dashboard.Show();
+            this.Close();
+        }
+
+        private void btnEdit_Click(object sender, EventArgs e)
+        {
+
+            if (dgvUserMngt.CurrentRow != null)
+            {
+
+                dgvUserMngt.BeginEdit(true);
+            }
+            else
+            {
+                MessageBox.Show("Please select a row to edit.",
+                                "Edit User",
+                                MessageBoxButtons.OK,
+                                MessageBoxIcon.Warning);
+            }
+        }
+
+        private void btnRemove_Click(object sender, EventArgs e)
+        {
+             
+            if (dgvUserMngt.CurrentRow != null)
+            {
+                dgvUserMngt.Rows.Remove(dgvUserMngt.CurrentRow);
+                MessageBox.Show("User successfully removed.");
+            }
+            else
+            {
+                MessageBox.Show("Please select a row to remove.");
+            }
+        }
+
+        private void btnAdd_Click(object sender, EventArgs e)
+        {
+
+            if (dgvUserMngt.CurrentRow != null)
+            {
+                DataGridViewRow row = dgvUserMngt.CurrentRow;
+
+                string name = row.Cells["UserName"].Value?.ToString();
+                string role = row.Cells["Role"].Value?.ToString();
+                string password = row.Cells["Password"].Value?.ToString();
+                string status = row.Cells["Status"].Value?.ToString();
+
+                if (!string.IsNullOrWhiteSpace(name))
+                {
+                    SaveUsersToFile();
+
+                    MessageBox.Show("User successfully added.");
+                }
+                else
+                {
+                    MessageBox.Show("Please enter a valid name before adding.");
+                }
+            }
         }
 
         private void btnClear_Click(object sender, EventArgs e)
@@ -262,14 +252,27 @@ namespace SmileTrack
 
         }
 
+        private void btnRefresh_Click(object sender, EventArgs e)
+        {
+               
+            LoadAuditLogs();
+        }
+    }
     }
 
-}
+    
+
+    
 
 
 
 
-  
+
+
+
+
+
+
 
 
 

@@ -28,12 +28,12 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.Panel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
-            this.button1 = new System.Windows.Forms.Button();
+            this.btnDashboard = new System.Windows.Forms.Button();
             this.btnMySched = new System.Windows.Forms.Button();
             this.btnTreatments = new System.Windows.Forms.Button();
             this.btnRepots = new System.Windows.Forms.Button();
@@ -41,9 +41,10 @@
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.panel2 = new System.Windows.Forms.Panel();
             this.btnLogOut = new System.Windows.Forms.Button();
-            this.panel3 = new System.Windows.Forms.Panel();
+            this.panelDentistDashboard = new System.Windows.Forms.Panel();
+            this.btnHome = new System.Windows.Forms.Button();
+            this.lblViewTitle = new System.Windows.Forms.Label();
             this.textBox2 = new System.Windows.Forms.TextBox();
-            this.textBox1 = new System.Windows.Forms.TextBox();
             this.label11 = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
             this.pictureBox6 = new System.Windows.Forms.PictureBox();
@@ -79,7 +80,7 @@
             this.Panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
-            this.panel3.SuspendLayout();
+            this.panelDentistDashboard.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox6)).BeginInit();
             this.TreatmentDone.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
@@ -94,7 +95,7 @@
             // 
             this.Panel1.BackColor = System.Drawing.Color.Teal;
             this.Panel1.Controls.Add(this.pictureBox2);
-            this.Panel1.Controls.Add(this.button1);
+            this.Panel1.Controls.Add(this.btnDashboard);
             this.Panel1.Controls.Add(this.btnMySched);
             this.Panel1.Controls.Add(this.btnTreatments);
             this.Panel1.Controls.Add(this.btnRepots);
@@ -120,18 +121,19 @@
             this.pictureBox2.TabIndex = 8;
             this.pictureBox2.TabStop = false;
             // 
-            // button1
+            // btnDashboard
             // 
-            this.button1.BackColor = System.Drawing.Color.Aquamarine;
-            this.button1.Font = new System.Drawing.Font("Gill Sans Ultra Bold", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button1.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.button1.Location = new System.Drawing.Point(2, 110);
-            this.button1.Margin = new System.Windows.Forms.Padding(2);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(109, 31);
-            this.button1.TabIndex = 1;
-            this.button1.Text = "Dashboard";
-            this.button1.UseVisualStyleBackColor = false;
+            this.btnDashboard.BackColor = System.Drawing.Color.Aquamarine;
+            this.btnDashboard.Font = new System.Drawing.Font("Gill Sans Ultra Bold", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnDashboard.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.btnDashboard.Location = new System.Drawing.Point(2, 110);
+            this.btnDashboard.Margin = new System.Windows.Forms.Padding(2);
+            this.btnDashboard.Name = "btnDashboard";
+            this.btnDashboard.Size = new System.Drawing.Size(109, 31);
+            this.btnDashboard.TabIndex = 1;
+            this.btnDashboard.Text = "Dashboard";
+            this.btnDashboard.UseVisualStyleBackColor = false;
+            this.btnDashboard.Click += new System.EventHandler(this.btnDashboard_Click);
             // 
             // btnMySched
             // 
@@ -223,39 +225,64 @@
             this.btnLogOut.UseVisualStyleBackColor = false;
             this.btnLogOut.Click += new System.EventHandler(this.btnLogOut_Click);
             // 
-            // panel3
+            // panelDentistDashboard
             // 
-            this.panel3.BackColor = System.Drawing.Color.White;
-            this.panel3.Controls.Add(this.textBox2);
-            this.panel3.Controls.Add(this.textBox1);
-            this.panel3.Controls.Add(this.label11);
-            this.panel3.Controls.Add(this.label10);
-            this.panel3.Controls.Add(this.pictureBox6);
-            this.panel3.Controls.Add(this.label9);
-            this.panel3.Controls.Add(this.TreatmentDone);
-            this.panel3.Controls.Add(this.label8);
-            this.panel3.Controls.Add(this.label7);
-            this.panel3.Controls.Add(this.chart1);
-            this.panel3.Controls.Add(this.label6);
-            this.panel3.Controls.Add(this.dataGridView1);
-            this.panel3.Controls.Add(this.label5);
-            this.panel3.Controls.Add(this.dgvSched);
-            this.panel3.Controls.Add(this.label4);
-            this.panel3.Controls.Add(this.label3);
-            this.panel3.Controls.Add(this.label2);
-            this.panel3.Controls.Add(this.pictureBox3);
-            this.panel3.Controls.Add(this.pictureBox4);
-            this.panel3.Controls.Add(this.pictureBox5);
-            this.panel3.Controls.Add(this.txtTreatmentDone);
-            this.panel3.Controls.Add(this.txtPatientSeen);
-            this.panel3.Controls.Add(this.txtTodaysAppoinment);
-            this.panel3.Controls.Add(this.txtUpApp);
-            this.panel3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel3.Location = new System.Drawing.Point(147, 8);
-            this.panel3.Margin = new System.Windows.Forms.Padding(2);
-            this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(907, 629);
-            this.panel3.TabIndex = 1;
+            this.panelDentistDashboard.BackColor = System.Drawing.Color.White;
+            this.panelDentistDashboard.Controls.Add(this.btnHome);
+            this.panelDentistDashboard.Controls.Add(this.lblViewTitle);
+            this.panelDentistDashboard.Controls.Add(this.textBox2);
+            this.panelDentistDashboard.Controls.Add(this.label11);
+            this.panelDentistDashboard.Controls.Add(this.label10);
+            this.panelDentistDashboard.Controls.Add(this.pictureBox6);
+            this.panelDentistDashboard.Controls.Add(this.label9);
+            this.panelDentistDashboard.Controls.Add(this.TreatmentDone);
+            this.panelDentistDashboard.Controls.Add(this.label8);
+            this.panelDentistDashboard.Controls.Add(this.label7);
+            this.panelDentistDashboard.Controls.Add(this.chart1);
+            this.panelDentistDashboard.Controls.Add(this.label6);
+            this.panelDentistDashboard.Controls.Add(this.dataGridView1);
+            this.panelDentistDashboard.Controls.Add(this.label5);
+            this.panelDentistDashboard.Controls.Add(this.dgvSched);
+            this.panelDentistDashboard.Controls.Add(this.label4);
+            this.panelDentistDashboard.Controls.Add(this.label3);
+            this.panelDentistDashboard.Controls.Add(this.label2);
+            this.panelDentistDashboard.Controls.Add(this.pictureBox3);
+            this.panelDentistDashboard.Controls.Add(this.pictureBox4);
+            this.panelDentistDashboard.Controls.Add(this.pictureBox5);
+            this.panelDentistDashboard.Controls.Add(this.txtTreatmentDone);
+            this.panelDentistDashboard.Controls.Add(this.txtPatientSeen);
+            this.panelDentistDashboard.Controls.Add(this.txtTodaysAppoinment);
+            this.panelDentistDashboard.Controls.Add(this.txtUpApp);
+            this.panelDentistDashboard.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panelDentistDashboard.Location = new System.Drawing.Point(147, 8);
+            this.panelDentistDashboard.Margin = new System.Windows.Forms.Padding(2);
+            this.panelDentistDashboard.Name = "panelDentistDashboard";
+            this.panelDentistDashboard.Size = new System.Drawing.Size(907, 629);
+            this.panelDentistDashboard.TabIndex = 1;
+            // 
+            // btnHome
+            // 
+            this.btnHome.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnHome.Location = new System.Drawing.Point(13, 10);
+            this.btnHome.Name = "btnHome";
+            this.btnHome.Size = new System.Drawing.Size(43, 23);
+            this.btnHome.TabIndex = 30;
+            this.btnHome.Text = "🏠";
+            this.btnHome.UseVisualStyleBackColor = true;
+            this.btnHome.Click += new System.EventHandler(this.btnHome_Click);
+            // 
+            // lblViewTitle
+            // 
+            this.lblViewTitle.AutoSize = true;
+            this.lblViewTitle.BackColor = System.Drawing.Color.PaleTurquoise;
+            this.lblViewTitle.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.lblViewTitle.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.lblViewTitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblViewTitle.Location = new System.Drawing.Point(62, 14);
+            this.lblViewTitle.Name = "lblViewTitle";
+            this.lblViewTitle.Size = new System.Drawing.Size(2, 17);
+            this.lblViewTitle.TabIndex = 29;
+            this.lblViewTitle.Click += new System.EventHandler(this.lblViewTitle_Click);
             // 
             // textBox2
             // 
@@ -265,14 +292,6 @@
             this.textBox2.Size = new System.Drawing.Size(144, 20);
             this.textBox2.TabIndex = 28;
             this.textBox2.Text = " 🔍Search patient";
-            // 
-            // textBox1
-            // 
-            this.textBox1.Location = new System.Drawing.Point(0, 0);
-            this.textBox1.Margin = new System.Windows.Forms.Padding(2);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(76, 20);
-            this.textBox1.TabIndex = 27;
             // 
             // label11
             // 
@@ -399,19 +418,19 @@
             // 
             // chart1
             // 
-            chartArea1.Name = "ChartArea1";
-            this.chart1.ChartAreas.Add(chartArea1);
-            legend1.Name = "Legend1";
-            legend1.TableStyle = System.Windows.Forms.DataVisualization.Charting.LegendTableStyle.Wide;
-            this.chart1.Legends.Add(legend1);
+            chartArea2.Name = "ChartArea1";
+            this.chart1.ChartAreas.Add(chartArea2);
+            legend2.Name = "Legend1";
+            legend2.TableStyle = System.Windows.Forms.DataVisualization.Charting.LegendTableStyle.Wide;
+            this.chart1.Legends.Add(legend2);
             this.chart1.Location = new System.Drawing.Point(56, 407);
             this.chart1.Margin = new System.Windows.Forms.Padding(2);
             this.chart1.Name = "chart1";
             this.chart1.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.Pastel;
-            series1.ChartArea = "ChartArea1";
-            series1.Legend = "Legend1";
-            series1.Name = "Series1";
-            this.chart1.Series.Add(series1);
+            series2.ChartArea = "ChartArea1";
+            series2.Legend = "Legend1";
+            series2.Name = "Series1";
+            this.chart1.Series.Add(series2);
             this.chart1.Size = new System.Drawing.Size(228, 180);
             this.chart1.TabIndex = 14;
             this.chart1.Text = "chart1";
@@ -617,7 +636,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1062, 645);
-            this.Controls.Add(this.panel3);
+            this.Controls.Add(this.panelDentistDashboard);
             this.Controls.Add(this.Panel1);
             this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "DentistDashboard";
@@ -627,8 +646,8 @@
             this.Panel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
-            this.panel3.ResumeLayout(false);
-            this.panel3.PerformLayout();
+            this.panelDentistDashboard.ResumeLayout(false);
+            this.panelDentistDashboard.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox6)).EndInit();
             this.TreatmentDone.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).EndInit();
@@ -645,7 +664,7 @@
 
         private System.Windows.Forms.FlowLayoutPanel Panel1;
         private System.Windows.Forms.PictureBox pictureBox1;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button btnDashboard;
         private System.Windows.Forms.Button btnMySched;
         private System.Windows.Forms.Button btnTreatments;
         private System.Windows.Forms.Button btnRepots;
@@ -653,7 +672,7 @@
         private System.Windows.Forms.PictureBox pictureBox2;
         private System.Windows.Forms.Button btnLogOut;
         private System.Windows.Forms.Panel panel2;
-        private System.Windows.Forms.Panel panel3;
+        private System.Windows.Forms.Panel panelDentistDashboard;
         private System.Windows.Forms.PictureBox pictureBox3;
         private System.Windows.Forms.PictureBox pictureBox4;
         private System.Windows.Forms.PictureBox pictureBox5;
@@ -687,6 +706,7 @@
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.TextBox textBox2;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.Button btnHome;
+        private System.Windows.Forms.Label lblViewTitle;
     }
 }

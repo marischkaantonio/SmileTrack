@@ -41,7 +41,7 @@
             this.btnPatients = new System.Windows.Forms.Button();
             this.btnDashboard = new System.Windows.Forms.Button();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.panel2 = new System.Windows.Forms.Panel();
+            this.panelDashboard = new System.Windows.Forms.Panel();
             this.lblWalkin = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.pictureBox7 = new System.Windows.Forms.PictureBox();
@@ -96,10 +96,12 @@
             this.label10 = new System.Windows.Forms.Label();
             this.button10 = new System.Windows.Forms.Button();
             this.label9 = new System.Windows.Forms.Label();
+            this.btnHome = new System.Windows.Forms.Button();
+            this.lblViewTitle = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
-            this.panel2.SuspendLayout();
+            this.panelDashboard.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox7)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox6)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox5)).BeginInit();
@@ -274,6 +276,7 @@
             this.btnDashboard.TabIndex = 2;
             this.btnDashboard.Text = "Dashboard";
             this.btnDashboard.UseVisualStyleBackColor = false;
+            this.btnDashboard.Click += new System.EventHandler(this.btnDashboard_Click);
             // 
             // pictureBox1
             // 
@@ -286,34 +289,36 @@
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
             // 
-            // panel2
+            // panelDashboard
             // 
-            this.panel2.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.panel2.Controls.Add(this.lblWalkin);
-            this.panel2.Controls.Add(this.label6);
-            this.panel2.Controls.Add(this.pictureBox7);
-            this.panel2.Controls.Add(this.lblReminders);
-            this.panel2.Controls.Add(this.lblPendingConfirmation);
-            this.panel2.Controls.Add(this.lblNewPatient);
-            this.panel2.Controls.Add(this.lblTodaysAppoinment);
-            this.panel2.Controls.Add(this.label5);
-            this.panel2.Controls.Add(this.pictureBox6);
-            this.panel2.Controls.Add(this.label4);
-            this.panel2.Controls.Add(this.pictureBox5);
-            this.panel2.Controls.Add(this.label3);
-            this.panel2.Controls.Add(this.pictureBox4);
-            this.panel2.Controls.Add(this.label2);
-            this.panel2.Controls.Add(this.pictureBox3);
-            this.panel2.Location = new System.Drawing.Point(154, 0);
-            this.panel2.Margin = new System.Windows.Forms.Padding(2);
-            this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(927, 63);
-            this.panel2.TabIndex = 2;
+            this.panelDashboard.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.panelDashboard.Controls.Add(this.lblViewTitle);
+            this.panelDashboard.Controls.Add(this.btnHome);
+            this.panelDashboard.Controls.Add(this.lblWalkin);
+            this.panelDashboard.Controls.Add(this.label6);
+            this.panelDashboard.Controls.Add(this.pictureBox7);
+            this.panelDashboard.Controls.Add(this.lblReminders);
+            this.panelDashboard.Controls.Add(this.lblPendingConfirmation);
+            this.panelDashboard.Controls.Add(this.lblNewPatient);
+            this.panelDashboard.Controls.Add(this.lblTodaysAppoinment);
+            this.panelDashboard.Controls.Add(this.label5);
+            this.panelDashboard.Controls.Add(this.pictureBox6);
+            this.panelDashboard.Controls.Add(this.label4);
+            this.panelDashboard.Controls.Add(this.pictureBox5);
+            this.panelDashboard.Controls.Add(this.label3);
+            this.panelDashboard.Controls.Add(this.pictureBox4);
+            this.panelDashboard.Controls.Add(this.label2);
+            this.panelDashboard.Controls.Add(this.pictureBox3);
+            this.panelDashboard.Location = new System.Drawing.Point(154, 0);
+            this.panelDashboard.Margin = new System.Windows.Forms.Padding(2);
+            this.panelDashboard.Name = "panelDashboard";
+            this.panelDashboard.Size = new System.Drawing.Size(927, 73);
+            this.panelDashboard.TabIndex = 2;
             // 
             // lblWalkin
             // 
             this.lblWalkin.AutoSize = true;
-            this.lblWalkin.Location = new System.Drawing.Point(669, 36);
+            this.lblWalkin.Location = new System.Drawing.Point(673, 51);
             this.lblWalkin.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblWalkin.Name = "lblWalkin";
             this.lblWalkin.Size = new System.Drawing.Size(0, 13);
@@ -323,7 +328,7 @@
             // 
             this.label6.AutoSize = true;
             this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label6.Location = new System.Drawing.Point(667, 10);
+            this.label6.Location = new System.Drawing.Point(671, 25);
             this.label6.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(100, 13);
@@ -334,7 +339,7 @@
             // 
             this.pictureBox7.BackgroundImage = global::SmileTrack.Properties.Resources._7765670;
             this.pictureBox7.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.pictureBox7.Location = new System.Drawing.Point(500, 10);
+            this.pictureBox7.Location = new System.Drawing.Point(504, 25);
             this.pictureBox7.Margin = new System.Windows.Forms.Padding(2);
             this.pictureBox7.Name = "pictureBox7";
             this.pictureBox7.Size = new System.Drawing.Size(40, 41);
@@ -344,7 +349,7 @@
             // lblReminders
             // 
             this.lblReminders.AutoSize = true;
-            this.lblReminders.Location = new System.Drawing.Point(552, 37);
+            this.lblReminders.Location = new System.Drawing.Point(556, 52);
             this.lblReminders.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblReminders.Name = "lblReminders";
             this.lblReminders.Size = new System.Drawing.Size(0, 13);
@@ -353,7 +358,7 @@
             // lblPendingConfirmation
             // 
             this.lblPendingConfirmation.AutoSize = true;
-            this.lblPendingConfirmation.Location = new System.Drawing.Point(380, 37);
+            this.lblPendingConfirmation.Location = new System.Drawing.Point(384, 52);
             this.lblPendingConfirmation.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblPendingConfirmation.Name = "lblPendingConfirmation";
             this.lblPendingConfirmation.Size = new System.Drawing.Size(0, 13);
@@ -362,7 +367,7 @@
             // lblNewPatient
             // 
             this.lblNewPatient.AutoSize = true;
-            this.lblNewPatient.Location = new System.Drawing.Point(226, 37);
+            this.lblNewPatient.Location = new System.Drawing.Point(230, 52);
             this.lblNewPatient.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblNewPatient.Name = "lblNewPatient";
             this.lblNewPatient.Size = new System.Drawing.Size(0, 13);
@@ -371,7 +376,7 @@
             // lblTodaysAppoinment
             // 
             this.lblTodaysAppoinment.AutoSize = true;
-            this.lblTodaysAppoinment.Location = new System.Drawing.Point(70, 32);
+            this.lblTodaysAppoinment.Location = new System.Drawing.Point(74, 47);
             this.lblTodaysAppoinment.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblTodaysAppoinment.Name = "lblTodaysAppoinment";
             this.lblTodaysAppoinment.Size = new System.Drawing.Size(0, 13);
@@ -381,7 +386,7 @@
             // 
             this.label5.AutoSize = true;
             this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label5.Location = new System.Drawing.Point(544, 10);
+            this.label5.Location = new System.Drawing.Point(548, 25);
             this.label5.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(66, 13);
@@ -392,7 +397,7 @@
             // 
             this.pictureBox6.BackgroundImage = global::SmileTrack.Properties.Resources._6098813;
             this.pictureBox6.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.pictureBox6.Location = new System.Drawing.Point(622, 10);
+            this.pictureBox6.Location = new System.Drawing.Point(626, 25);
             this.pictureBox6.Margin = new System.Windows.Forms.Padding(2);
             this.pictureBox6.Name = "pictureBox6";
             this.pictureBox6.Size = new System.Drawing.Size(40, 41);
@@ -403,7 +408,7 @@
             // 
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(369, 10);
+            this.label4.Location = new System.Drawing.Point(373, 25);
             this.label4.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(127, 13);
@@ -414,7 +419,7 @@
             // 
             this.pictureBox5.BackgroundImage = global::SmileTrack.Properties.Resources._4439741;
             this.pictureBox5.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.pictureBox5.Location = new System.Drawing.Point(324, 10);
+            this.pictureBox5.Location = new System.Drawing.Point(328, 25);
             this.pictureBox5.Margin = new System.Windows.Forms.Padding(2);
             this.pictureBox5.Name = "pictureBox5";
             this.pictureBox5.Size = new System.Drawing.Size(40, 41);
@@ -425,7 +430,7 @@
             // 
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(215, 10);
+            this.label3.Location = new System.Drawing.Point(219, 25);
             this.label3.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(76, 13);
@@ -436,7 +441,7 @@
             // 
             this.pictureBox4.BackgroundImage = global::SmileTrack.Properties.Resources._10494340;
             this.pictureBox4.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.pictureBox4.Location = new System.Drawing.Point(170, 10);
+            this.pictureBox4.Location = new System.Drawing.Point(174, 25);
             this.pictureBox4.Margin = new System.Windows.Forms.Padding(2);
             this.pictureBox4.Name = "pictureBox4";
             this.pictureBox4.Size = new System.Drawing.Size(40, 41);
@@ -447,7 +452,7 @@
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(56, 10);
+            this.label2.Location = new System.Drawing.Point(60, 25);
             this.label2.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(118, 13);
@@ -458,7 +463,7 @@
             // 
             this.pictureBox3.BackgroundImage = global::SmileTrack.Properties.Resources._5539724;
             this.pictureBox3.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.pictureBox3.Location = new System.Drawing.Point(10, 10);
+            this.pictureBox3.Location = new System.Drawing.Point(14, 25);
             this.pictureBox3.Margin = new System.Windows.Forms.Padding(2);
             this.pictureBox3.Name = "pictureBox3";
             this.pictureBox3.Size = new System.Drawing.Size(42, 41);
@@ -471,10 +476,10 @@
             this.panel4.Controls.Add(this.dataGridView1);
             this.panel4.Controls.Add(this.button5);
             this.panel4.Controls.Add(this.label1);
-            this.panel4.Location = new System.Drawing.Point(154, 70);
+            this.panel4.Location = new System.Drawing.Point(154, 77);
             this.panel4.Margin = new System.Windows.Forms.Padding(2);
             this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(484, 206);
+            this.panel4.Size = new System.Drawing.Size(484, 199);
             this.panel4.TabIndex = 3;
             // 
             // dataGridView1
@@ -677,10 +682,10 @@
             this.panel6.Controls.Add(this.dataGridView3);
             this.panel6.Controls.Add(this.button9);
             this.panel6.Controls.Add(this.label8);
-            this.panel6.Location = new System.Drawing.Point(654, 70);
+            this.panel6.Location = new System.Drawing.Point(654, 77);
             this.panel6.Margin = new System.Windows.Forms.Padding(2);
             this.panel6.Name = "panel6";
-            this.panel6.Size = new System.Drawing.Size(428, 195);
+            this.panel6.Size = new System.Drawing.Size(428, 188);
             this.panel6.TabIndex = 4;
             // 
             // dataGridView3
@@ -891,6 +896,29 @@
             this.label9.TabIndex = 0;
             this.label9.Text = "Billing Summary (Today)";
             // 
+            // btnHome
+            // 
+            this.btnHome.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnHome.Location = new System.Drawing.Point(3, 3);
+            this.btnHome.Name = "btnHome";
+            this.btnHome.Size = new System.Drawing.Size(43, 23);
+            this.btnHome.TabIndex = 28;
+            this.btnHome.Text = "🏠";
+            this.btnHome.UseVisualStyleBackColor = true;
+            this.btnHome.Click += new System.EventHandler(this.btnHome_Click);
+            // 
+            // lblViewTitle
+            // 
+            this.lblViewTitle.AutoSize = true;
+            this.lblViewTitle.BackColor = System.Drawing.Color.PaleTurquoise;
+            this.lblViewTitle.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.lblViewTitle.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.lblViewTitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblViewTitle.Location = new System.Drawing.Point(54, 3);
+            this.lblViewTitle.Name = "lblViewTitle";
+            this.lblViewTitle.Size = new System.Drawing.Size(2, 17);
+            this.lblViewTitle.TabIndex = 27;
+            // 
             // ReceptionistDashboard
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -901,7 +929,7 @@
             this.Controls.Add(this.panel6);
             this.Controls.Add(this.dgvWalkInQueue);
             this.Controls.Add(this.panel4);
-            this.Controls.Add(this.panel2);
+            this.Controls.Add(this.panelDashboard);
             this.Controls.Add(this.panel1);
             this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "ReceptionistDashboard";
@@ -911,8 +939,8 @@
             this.panel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
-            this.panel2.ResumeLayout(false);
-            this.panel2.PerformLayout();
+            this.panelDashboard.ResumeLayout(false);
+            this.panelDashboard.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox7)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox6)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox5)).EndInit();
@@ -948,7 +976,7 @@
         private System.Windows.Forms.PictureBox pictureBox2;
         private System.Windows.Forms.Button btnLogout;
         private System.Windows.Forms.PictureBox pictureBox3;
-        private System.Windows.Forms.Panel panel2;
+        private System.Windows.Forms.Panel panelDashboard;
         private System.Windows.Forms.PictureBox pictureBox4;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
@@ -1009,5 +1037,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn txtPatientName;
         private System.Windows.Forms.DataGridViewTextBoxColumn txtTimeIn;
         private System.Windows.Forms.DataGridViewTextBoxColumn txtStatus;
+        private System.Windows.Forms.Label lblViewTitle;
+        private System.Windows.Forms.Button btnHome;
     }
 }

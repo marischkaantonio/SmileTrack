@@ -63,7 +63,7 @@
             // txtUname
             // 
             this.txtUname.Location = new System.Drawing.Point(176, 92);
-            this.txtUname.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.txtUname.Margin = new System.Windows.Forms.Padding(2);
             this.txtUname.Name = "txtUname";
             this.txtUname.Size = new System.Drawing.Size(150, 20);
             this.txtUname.TabIndex = 2;
@@ -71,7 +71,7 @@
             // txtPsswrd
             // 
             this.txtPsswrd.Location = new System.Drawing.Point(176, 121);
-            this.txtPsswrd.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.txtPsswrd.Margin = new System.Windows.Forms.Padding(2);
             this.txtPsswrd.Name = "txtPsswrd";
             this.txtPsswrd.Size = new System.Drawing.Size(150, 20);
             this.txtPsswrd.TabIndex = 3;
@@ -82,7 +82,7 @@
             this.btnLogin.Font = new System.Drawing.Font("Gill Sans Ultra Bold", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnLogin.ForeColor = System.Drawing.SystemColors.ButtonFace;
             this.btnLogin.Location = new System.Drawing.Point(154, 182);
-            this.btnLogin.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnLogin.Margin = new System.Windows.Forms.Padding(2);
             this.btnLogin.Name = "btnLogin";
             this.btnLogin.Size = new System.Drawing.Size(64, 31);
             this.btnLogin.TabIndex = 4;
@@ -96,7 +96,7 @@
             this.btnClear.Font = new System.Drawing.Font("Gill Sans Ultra Bold", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnClear.ForeColor = System.Drawing.SystemColors.ButtonFace;
             this.btnClear.Location = new System.Drawing.Point(256, 182);
-            this.btnClear.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnClear.Margin = new System.Windows.Forms.Padding(2);
             this.btnClear.Name = "btnClear";
             this.btnClear.Size = new System.Drawing.Size(69, 31);
             this.btnClear.TabIndex = 5;
@@ -107,7 +107,7 @@
             // panel1
             // 
             this.panel1.Location = new System.Drawing.Point(154, 255);
-            this.panel1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.panel1.Margin = new System.Windows.Forms.Padding(2);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(150, 81);
             this.panel1.TabIndex = 6;
@@ -137,9 +137,10 @@
             this.Controls.Add(this.txtUname);
             this.Controls.Add(this.lblPswrd);
             this.Controls.Add(this.lblUsername);
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "LoginForm";
             this.Text = "LoginForm";
+            this.Load += new System.EventHandler(this.LoginForm_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
