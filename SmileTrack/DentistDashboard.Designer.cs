@@ -42,8 +42,6 @@
             this.panel2 = new System.Windows.Forms.Panel();
             this.btnLogOut = new System.Windows.Forms.Button();
             this.panelDentistDashboard = new System.Windows.Forms.Panel();
-            this.btnHome = new System.Windows.Forms.Button();
-            this.lblViewTitle = new System.Windows.Forms.Label();
             this.textBox2 = new System.Windows.Forms.TextBox();
             this.label11 = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
@@ -133,7 +131,6 @@
             this.btnDashboard.TabIndex = 1;
             this.btnDashboard.Text = "Dashboard";
             this.btnDashboard.UseVisualStyleBackColor = false;
-            this.btnDashboard.Click += new System.EventHandler(this.btnDashboard_Click);
             // 
             // btnMySched
             // 
@@ -228,8 +225,6 @@
             // panelDentistDashboard
             // 
             this.panelDentistDashboard.BackColor = System.Drawing.Color.White;
-            this.panelDentistDashboard.Controls.Add(this.btnHome);
-            this.panelDentistDashboard.Controls.Add(this.lblViewTitle);
             this.panelDentistDashboard.Controls.Add(this.textBox2);
             this.panelDentistDashboard.Controls.Add(this.label11);
             this.panelDentistDashboard.Controls.Add(this.label10);
@@ -260,30 +255,8 @@
             this.panelDentistDashboard.Size = new System.Drawing.Size(907, 629);
             this.panelDentistDashboard.TabIndex = 1;
             // 
-            // btnHome
-            // 
-            this.btnHome.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnHome.Location = new System.Drawing.Point(13, 10);
-            this.btnHome.Name = "btnHome";
-            this.btnHome.Size = new System.Drawing.Size(43, 23);
-            this.btnHome.TabIndex = 30;
-            this.btnHome.Text = "🏠";
-            this.btnHome.UseVisualStyleBackColor = true;
-            this.btnHome.Click += new System.EventHandler(this.btnHome_Click);
-            // 
-            // lblViewTitle
-            // 
-            this.lblViewTitle.AutoSize = true;
-            this.lblViewTitle.BackColor = System.Drawing.Color.PaleTurquoise;
-            this.lblViewTitle.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.lblViewTitle.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.lblViewTitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblViewTitle.Location = new System.Drawing.Point(62, 14);
-            this.lblViewTitle.Name = "lblViewTitle";
-            this.lblViewTitle.Size = new System.Drawing.Size(2, 17);
-            this.lblViewTitle.TabIndex = 29;
-            this.lblViewTitle.Click += new System.EventHandler(this.lblViewTitle_Click);
-            // 
+            /
+        
             // textBox2
             // 
             this.textBox2.Location = new System.Drawing.Point(335, 15);

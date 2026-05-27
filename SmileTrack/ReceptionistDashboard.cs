@@ -281,7 +281,25 @@ namespace SmileTrack
             LoadSummaryCards();
         }
 
+        private void button10_Click(object sender, EventArgs e)
+        {
 
+        }
+
+        private void btnWalkIn_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnAddAppointment_Click_1(object sender, EventArgs e)
+        {
+
+        }
     }
 }
 

@@ -50,6 +50,13 @@ public class AuditLog
     public string Details { get; set; }
 }
 
+public class Appointment
+{
+    public string Time { get; set; }
+    public string PatientName { get; set; }
+    public string Dentist { get; set; }
+    public string Treatment { get; set; }
+}
 
 
 
