@@ -23,6 +23,7 @@ namespace SmileTrack
         {
 
             InitializeComponent();
+
         }
         private void SaveUsersToFile()
         {
@@ -256,6 +257,11 @@ namespace SmileTrack
         {
                
             LoadAuditLogs();
+        }
+
+        private void btnUserMngt_Click(object sender, EventArgs e)
+        {
+            ShowPanel(panelUManagement, "UserManagement");
         }
     }
     }

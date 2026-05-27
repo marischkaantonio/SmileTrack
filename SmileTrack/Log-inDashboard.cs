@@ -58,7 +58,7 @@ namespace SmileTrack
                 this.Hide();
                 loggedIn = true;
             }
-            else if (username == "receipt1" && password == "receipt")
+            else if (username == "recept1" && password == "recept")
             {
                 new ReceptionistDashboard().Show();
                 this.Hide();

@@ -28,9 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea6 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend6 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series6 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.Panel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.btnDashboard = new System.Windows.Forms.Button();
@@ -68,6 +68,7 @@
             this.Password = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Status = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.DailyTransaction = new System.Windows.Forms.DataVisualization.Charting.Chart();
+            this.panelUManagement = new System.Windows.Forms.Panel();
             this.Panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -75,6 +76,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.dgvAuditLogs)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvUserMngt)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.DailyTransaction)).BeginInit();
+            this.panelUManagement.SuspendLayout();
             this.SuspendLayout();
             // 
             // Panel1
@@ -133,6 +135,7 @@
             this.btnUserMngt.TabIndex = 2;
             this.btnUserMngt.Text = "UserManagement";
             this.btnUserMngt.UseVisualStyleBackColor = false;
+            this.btnUserMngt.Click += new System.EventHandler(this.btnUserMngt_Click);
             // 
             // btnReports
             // 
@@ -214,7 +217,7 @@
             // panelDashboard
             // 
             this.panelDashboard.BackColor = System.Drawing.Color.White;
-            this.panelDashboard.Controls.Add(this.label1);
+            this.panelDashboard.Controls.Add(this.panelUManagement);
             this.panelDashboard.Controls.Add(this.label6);
             this.panelDashboard.Controls.Add(this.btnClear);
             this.panelDashboard.Controls.Add(this.lblBillingSummary);
@@ -226,11 +229,7 @@
             this.panelDashboard.Controls.Add(this.textBox1);
             this.panelDashboard.Controls.Add(this.btnHome);
             this.panelDashboard.Controls.Add(this.lblViewTitle);
-            this.panelDashboard.Controls.Add(this.btnAdd);
-            this.panelDashboard.Controls.Add(this.btnEdit);
-            this.panelDashboard.Controls.Add(this.btnRemove);
             this.panelDashboard.Controls.Add(this.lblAppoinmentToday);
-            this.panelDashboard.Controls.Add(this.dgvUserMngt);
             this.panelDashboard.Controls.Add(this.DailyTransaction);
             this.panelDashboard.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelDashboard.Location = new System.Drawing.Point(181, 0);
@@ -242,7 +241,7 @@
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(49, 82);
+            this.label1.Location = new System.Drawing.Point(21, 13);
             this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(109, 13);
@@ -410,7 +409,7 @@
             this.btnAdd.BackColor = System.Drawing.Color.Aquamarine;
             this.btnAdd.Font = new System.Drawing.Font("Gill Sans Ultra Bold", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnAdd.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.btnAdd.Location = new System.Drawing.Point(418, 245);
+            this.btnAdd.Location = new System.Drawing.Point(390, 176);
             this.btnAdd.Margin = new System.Windows.Forms.Padding(2);
             this.btnAdd.Name = "btnAdd";
             this.btnAdd.Size = new System.Drawing.Size(117, 28);
@@ -424,7 +423,7 @@
             this.btnEdit.BackColor = System.Drawing.Color.Aquamarine;
             this.btnEdit.Font = new System.Drawing.Font("Gill Sans Ultra Bold", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnEdit.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.btnEdit.Location = new System.Drawing.Point(67, 245);
+            this.btnEdit.Location = new System.Drawing.Point(39, 176);
             this.btnEdit.Margin = new System.Windows.Forms.Padding(2);
             this.btnEdit.Name = "btnEdit";
             this.btnEdit.Size = new System.Drawing.Size(117, 28);
@@ -438,7 +437,7 @@
             this.btnRemove.BackColor = System.Drawing.Color.Aquamarine;
             this.btnRemove.Font = new System.Drawing.Font("Gill Sans Ultra Bold", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnRemove.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.btnRemove.Location = new System.Drawing.Point(227, 245);
+            this.btnRemove.Location = new System.Drawing.Point(199, 176);
             this.btnRemove.Margin = new System.Windows.Forms.Padding(2);
             this.btnRemove.Name = "btnRemove";
             this.btnRemove.Size = new System.Drawing.Size(117, 28);
@@ -466,7 +465,7 @@
             this.Role,
             this.Password,
             this.Status});
-            this.dgvUserMngt.Location = new System.Drawing.Point(52, 107);
+            this.dgvUserMngt.Location = new System.Drawing.Point(24, 38);
             this.dgvUserMngt.Margin = new System.Windows.Forms.Padding(2);
             this.dgvUserMngt.Name = "dgvUserMngt";
             this.dgvUserMngt.RowHeadersWidth = 51;
@@ -502,22 +501,34 @@
             // 
             // DailyTransaction
             // 
-            chartArea6.Name = "ChartArea1";
-            this.DailyTransaction.ChartAreas.Add(chartArea6);
-            legend6.Name = "Legend1";
-            legend6.TableStyle = System.Windows.Forms.DataVisualization.Charting.LegendTableStyle.Wide;
-            this.DailyTransaction.Legends.Add(legend6);
+            chartArea1.Name = "ChartArea1";
+            this.DailyTransaction.ChartAreas.Add(chartArea1);
+            legend1.Name = "Legend1";
+            legend1.TableStyle = System.Windows.Forms.DataVisualization.Charting.LegendTableStyle.Wide;
+            this.DailyTransaction.Legends.Add(legend1);
             this.DailyTransaction.Location = new System.Drawing.Point(648, 364);
             this.DailyTransaction.Margin = new System.Windows.Forms.Padding(2);
             this.DailyTransaction.Name = "DailyTransaction";
             this.DailyTransaction.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.Pastel;
-            series6.ChartArea = "ChartArea1";
-            series6.Legend = "Legend1";
-            series6.Name = "Series1";
-            this.DailyTransaction.Series.Add(series6);
+            series1.ChartArea = "ChartArea1";
+            series1.Legend = "Legend1";
+            series1.Name = "Series1";
+            this.DailyTransaction.Series.Add(series1);
             this.DailyTransaction.Size = new System.Drawing.Size(333, 229);
             this.DailyTransaction.TabIndex = 32;
             this.DailyTransaction.Text = "chart1";
+            // 
+            // panelUManagement
+            // 
+            this.panelUManagement.Controls.Add(this.label1);
+            this.panelUManagement.Controls.Add(this.btnAdd);
+            this.panelUManagement.Controls.Add(this.btnEdit);
+            this.panelUManagement.Controls.Add(this.btnRemove);
+            this.panelUManagement.Controls.Add(this.dgvUserMngt);
+            this.panelUManagement.Location = new System.Drawing.Point(28, 69);
+            this.panelUManagement.Name = "panelUManagement";
+            this.panelUManagement.Size = new System.Drawing.Size(558, 216);
+            this.panelUManagement.TabIndex = 45;
             // 
             // FormAdminDashboard
             // 
@@ -539,6 +550,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.dgvAuditLogs)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvUserMngt)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.DailyTransaction)).EndInit();
+            this.panelUManagement.ResumeLayout(false);
+            this.panelUManagement.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -581,5 +594,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn Password;
         private System.Windows.Forms.DataGridViewTextBoxColumn Status;
         private System.Windows.Forms.DataVisualization.Charting.Chart DailyTransaction;
+        private System.Windows.Forms.Panel panelUManagement;
     }
 }

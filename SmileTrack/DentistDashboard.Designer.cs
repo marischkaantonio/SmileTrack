@@ -621,6 +621,7 @@
             this.txtTodaysAppoinment.Size = new System.Drawing.Size(114, 83);
             this.txtTodaysAppoinment.TabIndex = 23;
             this.txtTodaysAppoinment.Text = "";
+            this.txtTodaysAppoinment.TextChanged += new System.EventHandler(this.txtTodaysAppoinment_TextChanged);
             // 
             // txtUpApp
             // 
@@ -701,12 +702,11 @@
         private System.Windows.Forms.RichTextBox txtNotes;
         private System.Windows.Forms.RichTextBox txtTreatmentDone;
         private System.Windows.Forms.RichTextBox txtPatientSeen;
-        private System.Windows.Forms.RichTextBox txtTodaysAppoinment;
         private System.Windows.Forms.RichTextBox txtUpApp;
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.TextBox textBox2;
-        private System.Windows.Forms.Button btnHome;
-        private System.Windows.Forms.Label lblViewTitle;
+        private System.Windows.Forms.TextBox textBox1;
+        public System.Windows.Forms.RichTextBox txtTodaysAppoinment;
     }
 }

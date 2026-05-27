@@ -31,7 +31,7 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.panel3 = new System.Windows.Forms.Panel();
             this.button4 = new System.Windows.Forms.Button();
-            this.button3 = new System.Windows.Forms.Button();
+            this.btnReminders = new System.Windows.Forms.Button();
             this.btnWalkIn = new System.Windows.Forms.Button();
             this.btnAppoinment = new System.Windows.Forms.Button();
             this.btnBillings = new System.Windows.Forms.Button();
@@ -41,7 +41,8 @@
             this.btnPatients = new System.Windows.Forms.Button();
             this.btnDashboard = new System.Windows.Forms.Button();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.panelDashboard = new System.Windows.Forms.Panel();
+            this.panel2 = new System.Windows.Forms.Panel();
+            this.label13 = new System.Windows.Forms.Label();
             this.lblWalkin = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.pictureBox7 = new System.Windows.Forms.PictureBox();
@@ -58,7 +59,7 @@
             this.label2 = new System.Windows.Forms.Label();
             this.pictureBox3 = new System.Windows.Forms.PictureBox();
             this.panel4 = new System.Windows.Forms.Panel();
-            this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.dgvTA = new System.Windows.Forms.DataGridView();
             this.colTime = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colPname = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colDentist = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -77,7 +78,7 @@
             this.button6 = new System.Windows.Forms.Button();
             this.label7 = new System.Windows.Forms.Label();
             this.panel6 = new System.Windows.Forms.Panel();
-            this.dataGridView3 = new System.Windows.Forms.DataGridView();
+            this.dgvReminders = new System.Windows.Forms.DataGridView();
             this.colDate = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colPatient = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colTime1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -96,8 +97,8 @@
             this.label10 = new System.Windows.Forms.Label();
             this.button10 = new System.Windows.Forms.Button();
             this.label9 = new System.Windows.Forms.Label();
-            this.btnHome = new System.Windows.Forms.Button();
-            this.lblViewTitle = new System.Windows.Forms.Label();
+            this.btnUpdate = new System.Windows.Forms.Button();
+            this.btnAddAppointment = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -108,11 +109,11 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
             this.panel4.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvTA)).BeginInit();
             this.dgvWalkInQueue.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).BeginInit();
             this.panel6.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView3)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvReminders)).BeginInit();
             this.panel7.SuspendLayout();
             this.panel10.SuspendLayout();
             this.panel9.SuspendLayout();
@@ -124,7 +125,7 @@
             this.panel1.BackColor = System.Drawing.Color.Teal;
             this.panel1.Controls.Add(this.panel3);
             this.panel1.Controls.Add(this.button4);
-            this.panel1.Controls.Add(this.button3);
+            this.panel1.Controls.Add(this.btnReminders);
             this.panel1.Controls.Add(this.btnWalkIn);
             this.panel1.Controls.Add(this.btnAppoinment);
             this.panel1.Controls.Add(this.btnBillings);
@@ -162,18 +163,19 @@
             this.button4.Text = "Reports";
             this.button4.UseVisualStyleBackColor = false;
             // 
-            // button3
+            // btnReminders
             // 
-            this.button3.BackColor = System.Drawing.Color.Aquamarine;
-            this.button3.Font = new System.Drawing.Font("Gill Sans Ultra Bold", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button3.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.button3.Location = new System.Drawing.Point(9, 317);
-            this.button3.Margin = new System.Windows.Forms.Padding(2);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(120, 31);
-            this.button3.TabIndex = 10;
-            this.button3.Text = "Reminders";
-            this.button3.UseVisualStyleBackColor = false;
+            this.btnReminders.BackColor = System.Drawing.Color.Aquamarine;
+            this.btnReminders.Font = new System.Drawing.Font("Gill Sans Ultra Bold", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnReminders.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.btnReminders.Location = new System.Drawing.Point(9, 317);
+            this.btnReminders.Margin = new System.Windows.Forms.Padding(2);
+            this.btnReminders.Name = "btnReminders";
+            this.btnReminders.Size = new System.Drawing.Size(120, 31);
+            this.btnReminders.TabIndex = 10;
+            this.btnReminders.Text = "Reminders";
+            this.btnReminders.UseVisualStyleBackColor = false;
+            this.btnReminders.Click += new System.EventHandler(this.btnReminders_Click);
             // 
             // btnWalkIn
             // 
@@ -291,29 +293,39 @@
             // 
             // panelDashboard
             // 
-            this.panelDashboard.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.panelDashboard.Controls.Add(this.lblViewTitle);
-            this.panelDashboard.Controls.Add(this.btnHome);
-            this.panelDashboard.Controls.Add(this.lblWalkin);
-            this.panelDashboard.Controls.Add(this.label6);
-            this.panelDashboard.Controls.Add(this.pictureBox7);
-            this.panelDashboard.Controls.Add(this.lblReminders);
-            this.panelDashboard.Controls.Add(this.lblPendingConfirmation);
-            this.panelDashboard.Controls.Add(this.lblNewPatient);
-            this.panelDashboard.Controls.Add(this.lblTodaysAppoinment);
-            this.panelDashboard.Controls.Add(this.label5);
-            this.panelDashboard.Controls.Add(this.pictureBox6);
-            this.panelDashboard.Controls.Add(this.label4);
-            this.panelDashboard.Controls.Add(this.pictureBox5);
-            this.panelDashboard.Controls.Add(this.label3);
-            this.panelDashboard.Controls.Add(this.pictureBox4);
-            this.panelDashboard.Controls.Add(this.label2);
-            this.panelDashboard.Controls.Add(this.pictureBox3);
-            this.panelDashboard.Location = new System.Drawing.Point(154, 0);
-            this.panelDashboard.Margin = new System.Windows.Forms.Padding(2);
-            this.panelDashboard.Name = "panelDashboard";
-            this.panelDashboard.Size = new System.Drawing.Size(927, 73);
-            this.panelDashboard.TabIndex = 2;
+            this.panel2.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.panel2.Controls.Add(this.label13);
+            this.panel2.Controls.Add(this.lblWalkin);
+            this.panel2.Controls.Add(this.label6);
+            this.panel2.Controls.Add(this.pictureBox7);
+            this.panel2.Controls.Add(this.lblReminders);
+            this.panel2.Controls.Add(this.lblPendingConfirmation);
+            this.panel2.Controls.Add(this.lblNewPatient);
+            this.panel2.Controls.Add(this.lblTodaysAppoinment);
+            this.panel2.Controls.Add(this.label5);
+            this.panel2.Controls.Add(this.pictureBox6);
+            this.panel2.Controls.Add(this.label4);
+            this.panel2.Controls.Add(this.pictureBox5);
+            this.panel2.Controls.Add(this.label3);
+            this.panel2.Controls.Add(this.pictureBox4);
+            this.panel2.Controls.Add(this.label2);
+            this.panel2.Controls.Add(this.pictureBox3);
+            this.panel2.Location = new System.Drawing.Point(154, 0);
+            this.panel2.Margin = new System.Windows.Forms.Padding(2);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(927, 63);
+            this.panel2.TabIndex = 2;
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label13.Location = new System.Drawing.Point(94, 32);
+            this.label13.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(11, 13);
+            this.label13.TabIndex = 19;
+            this.label13.Text = "t";
             // 
             // lblWalkin
             // 
@@ -473,31 +485,34 @@
             // panel4
             // 
             this.panel4.BackColor = System.Drawing.Color.White;
-            this.panel4.Controls.Add(this.dataGridView1);
+            this.panel4.Controls.Add(this.btnAddAppointment);
+            this.panel4.Controls.Add(this.btnUpdate);
+            this.panel4.Controls.Add(this.dgvTA);
             this.panel4.Controls.Add(this.button5);
             this.panel4.Controls.Add(this.label1);
             this.panel4.Location = new System.Drawing.Point(154, 77);
             this.panel4.Margin = new System.Windows.Forms.Padding(2);
             this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(484, 199);
+            this.panel4.Size = new System.Drawing.Size(484, 215);
             this.panel4.TabIndex = 3;
             // 
-            // dataGridView1
+            // dgvTA
             // 
-            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.dgvTA.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvTA.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.colTime,
             this.colPname,
             this.colDentist,
             this.colTreatment,
             this.colStatus});
-            this.dataGridView1.Location = new System.Drawing.Point(10, 38);
-            this.dataGridView1.Margin = new System.Windows.Forms.Padding(2);
-            this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.RowHeadersWidth = 51;
-            this.dataGridView1.RowTemplate.Height = 24;
-            this.dataGridView1.Size = new System.Drawing.Size(461, 141);
-            this.dataGridView1.TabIndex = 2;
+            this.dgvTA.Location = new System.Drawing.Point(10, 38);
+            this.dgvTA.Margin = new System.Windows.Forms.Padding(2);
+            this.dgvTA.Name = "dgvTA";
+            this.dgvTA.RowHeadersWidth = 51;
+            this.dgvTA.RowTemplate.Height = 24;
+            this.dgvTA.Size = new System.Drawing.Size(461, 141);
+            this.dgvTA.TabIndex = 2;
+            this.dgvTA.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvTA_CellContentClick);
             // 
             // colTime
             // 
@@ -679,30 +694,30 @@
             // panel6
             // 
             this.panel6.BackColor = System.Drawing.Color.White;
-            this.panel6.Controls.Add(this.dataGridView3);
+            this.panel6.Controls.Add(this.dgvReminders);
             this.panel6.Controls.Add(this.button9);
             this.panel6.Controls.Add(this.label8);
             this.panel6.Location = new System.Drawing.Point(654, 77);
             this.panel6.Margin = new System.Windows.Forms.Padding(2);
             this.panel6.Name = "panel6";
-            this.panel6.Size = new System.Drawing.Size(428, 188);
+            this.panel6.Size = new System.Drawing.Size(428, 215);
             this.panel6.TabIndex = 4;
             // 
-            // dataGridView3
+            // dgvReminders
             // 
-            this.dataGridView3.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView3.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.dgvReminders.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvReminders.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.colDate,
             this.colPatient,
             this.colTime1,
             this.colType});
-            this.dataGridView3.Location = new System.Drawing.Point(10, 38);
-            this.dataGridView3.Margin = new System.Windows.Forms.Padding(2);
-            this.dataGridView3.Name = "dataGridView3";
-            this.dataGridView3.RowHeadersWidth = 51;
-            this.dataGridView3.RowTemplate.Height = 24;
-            this.dataGridView3.Size = new System.Drawing.Size(402, 122);
-            this.dataGridView3.TabIndex = 2;
+            this.dgvReminders.Location = new System.Drawing.Point(10, 38);
+            this.dgvReminders.Margin = new System.Windows.Forms.Padding(2);
+            this.dgvReminders.Name = "dgvReminders";
+            this.dgvReminders.RowHeadersWidth = 51;
+            this.dgvReminders.RowTemplate.Height = 24;
+            this.dgvReminders.Size = new System.Drawing.Size(402, 122);
+            this.dgvReminders.TabIndex = 2;
             // 
             // colDate
             // 
@@ -767,11 +782,12 @@
             this.panel7.Controls.Add(this.panel8);
             this.panel7.Controls.Add(this.button10);
             this.panel7.Controls.Add(this.label9);
-            this.panel7.Location = new System.Drawing.Point(608, 281);
+            this.panel7.Location = new System.Drawing.Point(594, 308);
             this.panel7.Margin = new System.Windows.Forms.Padding(2);
             this.panel7.Name = "panel7";
-            this.panel7.Size = new System.Drawing.Size(474, 302);
+            this.panel7.Size = new System.Drawing.Size(474, 284);
             this.panel7.TabIndex = 14;
+            this.panel7.Paint += new System.Windows.Forms.PaintEventHandler(this.panel7_Paint);
             // 
             // panel10
             // 
@@ -896,28 +912,32 @@
             this.label9.TabIndex = 0;
             this.label9.Text = "Billing Summary (Today)";
             // 
-            // btnHome
+            // btnUpdate
             // 
-            this.btnHome.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnHome.Location = new System.Drawing.Point(3, 3);
-            this.btnHome.Name = "btnHome";
-            this.btnHome.Size = new System.Drawing.Size(43, 23);
-            this.btnHome.TabIndex = 28;
-            this.btnHome.Text = "🏠";
-            this.btnHome.UseVisualStyleBackColor = true;
-            this.btnHome.Click += new System.EventHandler(this.btnHome_Click);
+            this.btnUpdate.BackColor = System.Drawing.Color.Aquamarine;
+            this.btnUpdate.Font = new System.Drawing.Font("Gill Sans Ultra Bold", 7.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnUpdate.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.btnUpdate.Location = new System.Drawing.Point(397, 185);
+            this.btnUpdate.Margin = new System.Windows.Forms.Padding(2);
+            this.btnUpdate.Name = "btnUpdate";
+            this.btnUpdate.Size = new System.Drawing.Size(63, 23);
+            this.btnUpdate.TabIndex = 14;
+            this.btnUpdate.Text = "Update";
+            this.btnUpdate.UseVisualStyleBackColor = false;
+            this.btnUpdate.Click += new System.EventHandler(this.btnUpdate_Click);
             // 
-            // lblViewTitle
+            // btnAddAppointment
             // 
-            this.lblViewTitle.AutoSize = true;
-            this.lblViewTitle.BackColor = System.Drawing.Color.PaleTurquoise;
-            this.lblViewTitle.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.lblViewTitle.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.lblViewTitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblViewTitle.Location = new System.Drawing.Point(54, 3);
-            this.lblViewTitle.Name = "lblViewTitle";
-            this.lblViewTitle.Size = new System.Drawing.Size(2, 17);
-            this.lblViewTitle.TabIndex = 27;
+            this.btnAddAppointment.BackColor = System.Drawing.Color.Aquamarine;
+            this.btnAddAppointment.Font = new System.Drawing.Font("Gill Sans Ultra Bold", 7.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnAddAppointment.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.btnAddAppointment.Location = new System.Drawing.Point(11, 185);
+            this.btnAddAppointment.Margin = new System.Windows.Forms.Padding(2);
+            this.btnAddAppointment.Name = "btnAddAppointment";
+            this.btnAddAppointment.Size = new System.Drawing.Size(63, 23);
+            this.btnAddAppointment.TabIndex = 15;
+            this.btnAddAppointment.Text = "Add ";
+            this.btnAddAppointment.UseVisualStyleBackColor = false;
             // 
             // ReceptionistDashboard
             // 
@@ -948,13 +968,13 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
             this.panel4.ResumeLayout(false);
             this.panel4.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvTA)).EndInit();
             this.dgvWalkInQueue.ResumeLayout(false);
             this.dgvWalkInQueue.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).EndInit();
             this.panel6.ResumeLayout(false);
             this.panel6.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView3)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvReminders)).EndInit();
             this.panel7.ResumeLayout(false);
             this.panel7.PerformLayout();
             this.panel10.ResumeLayout(false);
@@ -993,7 +1013,7 @@
         private System.Windows.Forms.Button btnWalkIn;
         private System.Windows.Forms.Button btnAppoinment;
         private System.Windows.Forms.Button button4;
-        private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.Button btnReminders;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.PictureBox pictureBox7;
         private System.Windows.Forms.Label lblWalkin;
@@ -1001,7 +1021,7 @@
         private System.Windows.Forms.Panel panel4;
         private System.Windows.Forms.Button button5;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.DataGridView dataGridView1;
+        private System.Windows.Forms.DataGridView dgvTA;
         private System.Windows.Forms.DataGridViewTextBoxColumn colTime;
         private System.Windows.Forms.DataGridViewTextBoxColumn colPname;
         private System.Windows.Forms.DataGridViewTextBoxColumn colDentist;
@@ -1014,7 +1034,7 @@
         private System.Windows.Forms.Button button8;
         private System.Windows.Forms.Button btnAddWalkIn;
         private System.Windows.Forms.Panel panel6;
-        private System.Windows.Forms.DataGridView dataGridView3;
+        private System.Windows.Forms.DataGridView dgvReminders;
         private System.Windows.Forms.DataGridViewTextBoxColumn colDate;
         private System.Windows.Forms.DataGridViewTextBoxColumn colPatient;
         private System.Windows.Forms.DataGridViewTextBoxColumn colTime1;
@@ -1037,7 +1057,8 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn txtPatientName;
         private System.Windows.Forms.DataGridViewTextBoxColumn txtTimeIn;
         private System.Windows.Forms.DataGridViewTextBoxColumn txtStatus;
-        private System.Windows.Forms.Label lblViewTitle;
-        private System.Windows.Forms.Button btnHome;
+        private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.Button btnUpdate;
+        private System.Windows.Forms.Button btnAddAppointment;
     }
 }

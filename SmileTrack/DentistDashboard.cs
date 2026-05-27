@@ -39,10 +39,9 @@ namespace SmileTrack
             public string Patient { get; set; }
             public string Treatment { get; set; }
             public string Status { get; set; }
-
             public string Doctor { get; set; }
-
         }
+
         public static class AppointmentManager
         {
             public static List<Appointment> Appointments = new List<Appointment>();
@@ -108,8 +107,9 @@ namespace SmileTrack
 
         private void btnMySched_Click(object sender, EventArgs e)
         {
-            LoadMySchedule();
+            AppointmentUpdater.RefreshTodaysAppointments(dgvSched);
         }
+
         private void LoadMySchedule()
         {
             var myAppoinments = AppointmentManager.Appointments
@@ -144,28 +144,17 @@ namespace SmileTrack
             }
         }
 
-        private void btnHome_Click(object sender, EventArgs e)
+        private void txtTodaysAppoinment_TextChanged(object sender, EventArgs e)
         {
-            DentistDashboard dentistForm = new DentistDashboard();
-            dentistForm.Show();
+            // Automatically reload today's appointments for this dentist
+            LoadMySchedule();
 
-
-            this.Close();
-        }
-
-        private void lblViewTitle_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void btnDashboard_Click(object sender, EventArgs e)
-        {
-            lblViewTitle.Text = "Dashboard";
-            panelDentistDashboard.Visible = true;
-            panelDentistDashboard.BringToFront();
-            panelDentistDashboard.Dock = DockStyle.Fill;
-            Panel1.Visible = false;
-
+            // Optional: visually highlight if there are appointments today
+            if (int.TryParse(txtTodaysAppoinment.Text, out int count))
+            {
+                txtTodaysAppoinment.ForeColor = count > 0 ? Color.Green : Color.Red;
+                txtTodaysAppoinment.Font = new Font("Segoe UI", 16, FontStyle.Bold);
+            }
         }
     }
 }
