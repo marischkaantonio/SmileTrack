@@ -255,7 +255,7 @@
             this.panelDentistDashboard.Size = new System.Drawing.Size(907, 629);
             this.panelDentistDashboard.TabIndex = 1;
             // 
-            /
+            
         
             // textBox2
             // 
