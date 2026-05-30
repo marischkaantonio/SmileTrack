@@ -60,3 +60,64 @@ public class Appointment
 
 
 
+
+namespace SmileTrack
+{
+    public static class AppointmentGenerator
+    {
+        private static readonly Random random = new Random();
+
+        // Sample patient names
+        private static readonly List<string> patientNames = new List<string>
+        {
+            "Juan Dela Cruz",
+            "Maria Santos",
+            "Jose Ramirez",
+            "Ana Mendoza",
+            "Carlos Reyes",
+            "Liza Fernandez",
+            "Mark Villanueva",
+            "Grace Lim",
+            "Paolo Garcia",
+            "Ella Cruz"
+        };
+
+        // Sample treatments
+        private static readonly List<string> treatments = new List<string>
+        {
+            "Cleaning",
+            "Filling",
+            "Root Canal",
+            "Extraction",
+            "Orthodontic Treatment",
+            "Teeth Whitening",
+            "Crown",
+            "Bridge",
+            "Dentures",
+            "Implant"
+        };
+
+        // Randomly pick a patient name
+        public static string GetRandomPatientName()
+        {
+            int index = random.Next(patientNames.Count);
+            return patientNames[index];
+        }
+
+        // Randomly pick a dentist (Rimrose or Marjie)
+        public static string GetRandomDentist()
+        {
+            string[] dentists = { "Dr. Rimrose", "Dr. Marjie" };
+            int index = random.Next(dentists.Length);
+            return dentists[index];
+        }
+
+        // Randomly pick a treatment
+        public static string GetRandomTreatment()
+        {
+            int index = random.Next(treatments.Count);
+            return treatments[index];
+        }
+    }
+}
+
