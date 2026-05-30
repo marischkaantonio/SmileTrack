@@ -61,11 +61,6 @@
             this.btnAddAppointment = new System.Windows.Forms.Button();
             this.btnUpdate = new System.Windows.Forms.Button();
             this.dgvTA = new System.Windows.Forms.DataGridView();
-            this.colTime = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colPname = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colDentist = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colTreatment = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colStatus = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.button5 = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.dgvWalkInQueue = new System.Windows.Forms.Panel();
@@ -98,6 +93,11 @@
             this.label10 = new System.Windows.Forms.Label();
             this.button10 = new System.Windows.Forms.Button();
             this.label9 = new System.Windows.Forms.Label();
+            this.colTime = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colPname = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.txtDentist = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.txtTreatment = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colStatus = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -481,6 +481,7 @@
             this.btnAddAppointment.TabIndex = 15;
             this.btnAddAppointment.Text = "Add ";
             this.btnAddAppointment.UseVisualStyleBackColor = false;
+            this.btnAddAppointment.Click += new System.EventHandler(this.btnAddAppointment_Click_2);
             // 
             // btnUpdate
             // 
@@ -502,8 +503,8 @@
             this.dgvTA.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.colTime,
             this.colPname,
-            this.colDentist,
-            this.colTreatment,
+            this.txtDentist,
+            this.txtTreatment,
             this.colStatus});
             this.dgvTA.Location = new System.Drawing.Point(11, 40);
             this.dgvTA.Margin = new System.Windows.Forms.Padding(2);
@@ -513,45 +514,6 @@
             this.dgvTA.Size = new System.Drawing.Size(461, 141);
             this.dgvTA.TabIndex = 2;
             this.dgvTA.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvTA_CellContentClick);
-            // 
-            // colTime
-            // 
-            this.colTime.HeaderText = "Time";
-            this.colTime.MaxInputLength = 100;
-            this.colTime.MinimumWidth = 6;
-            this.colTime.Name = "colTime";
-            this.colTime.Width = 125;
-            // 
-            // colPname
-            // 
-            this.colPname.HeaderText = "Patient Name";
-            this.colPname.MinimumWidth = 6;
-            this.colPname.Name = "colPname";
-            this.colPname.Width = 125;
-            // 
-            // colDentist
-            // 
-            this.colDentist.HeaderText = "Dentist";
-            this.colDentist.MaxInputLength = 200;
-            this.colDentist.MinimumWidth = 6;
-            this.colDentist.Name = "colDentist";
-            this.colDentist.Width = 125;
-            // 
-            // colTreatment
-            // 
-            this.colTreatment.HeaderText = "Treatment";
-            this.colTreatment.MaxInputLength = 200;
-            this.colTreatment.MinimumWidth = 6;
-            this.colTreatment.Name = "colTreatment";
-            this.colTreatment.Width = 125;
-            // 
-            // colStatus
-            // 
-            this.colStatus.HeaderText = "Status";
-            this.colStatus.MaxInputLength = 100;
-            this.colStatus.MinimumWidth = 6;
-            this.colStatus.Name = "colStatus";
-            this.colStatus.Width = 125;
             // 
             // button5
             // 
@@ -718,6 +680,7 @@
             this.dgvReminders.RowTemplate.Height = 24;
             this.dgvReminders.Size = new System.Drawing.Size(402, 122);
             this.dgvReminders.TabIndex = 2;
+            this.dgvReminders.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvReminders_CellContentClick);
             // 
             // colDate
             // 
@@ -913,6 +876,45 @@
             this.label9.TabIndex = 0;
             this.label9.Text = "Billing Summary (Today)";
             // 
+            // colTime
+            // 
+            this.colTime.HeaderText = "Time";
+            this.colTime.MaxInputLength = 100;
+            this.colTime.MinimumWidth = 6;
+            this.colTime.Name = "colTime";
+            this.colTime.Width = 125;
+            // 
+            // colPname
+            // 
+            this.colPname.HeaderText = "Patient Name";
+            this.colPname.MinimumWidth = 6;
+            this.colPname.Name = "colPname";
+            this.colPname.Width = 125;
+            // 
+            // txtDentist
+            // 
+            this.txtDentist.HeaderText = "Dentist";
+            this.txtDentist.MaxInputLength = 200;
+            this.txtDentist.MinimumWidth = 6;
+            this.txtDentist.Name = "txtDentist";
+            this.txtDentist.Width = 125;
+            // 
+            // txtTreatment
+            // 
+            this.txtTreatment.HeaderText = "Treatment";
+            this.txtTreatment.MaxInputLength = 200;
+            this.txtTreatment.MinimumWidth = 6;
+            this.txtTreatment.Name = "txtTreatment";
+            this.txtTreatment.Width = 125;
+            // 
+            // colStatus
+            // 
+            this.colStatus.HeaderText = "Status";
+            this.colStatus.MaxInputLength = 100;
+            this.colStatus.MinimumWidth = 6;
+            this.colStatus.Name = "colStatus";
+            this.colStatus.Width = 125;
+            // 
             // ReceptionistDashboard
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -993,11 +995,6 @@
         private System.Windows.Forms.Button button5;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.DataGridView dgvTA;
-        private System.Windows.Forms.DataGridViewTextBoxColumn colTime;
-        private System.Windows.Forms.DataGridViewTextBoxColumn colPname;
-        private System.Windows.Forms.DataGridViewTextBoxColumn colDentist;
-        private System.Windows.Forms.DataGridViewTextBoxColumn colTreatment;
-        private System.Windows.Forms.DataGridViewTextBoxColumn colStatus;
         private System.Windows.Forms.Panel dgvWalkInQueue;
         private System.Windows.Forms.DataGridView dataGridView2;
         private System.Windows.Forms.Button button6;
@@ -1031,5 +1028,10 @@
         private System.Windows.Forms.Label label13;
         private System.Windows.Forms.Button btnUpdate;
         private System.Windows.Forms.Button btnAddAppointment;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colTime;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colPname;
+        private System.Windows.Forms.DataGridViewTextBoxColumn txtDentist;
+        private System.Windows.Forms.DataGridViewTextBoxColumn txtTreatment;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colStatus;
     }
 }

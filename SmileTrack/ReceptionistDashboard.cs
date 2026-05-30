@@ -144,6 +144,25 @@ namespace SmileTrack
                 .Count(r => r.Date.Date >= DateTime.Today).ToString();
         }
 
+        private void LoadReminders()
+        {
+            var todayReminders = dgvTA.Rows
+                .Cast<DataGridViewRow>()
+                .Where(r => r.Cells["Time"].Value != null &&
+                            DateTime.Parse(r.Cells["Time"].Value.ToString()).Date == DateTime.Today)
+                .Select(r => new
+                {
+                    Date = DateTime.Parse(r.Cells["Time"].Value.ToString()).ToShortDateString(),
+                    PatientName = r.Cells["PatientName"].Value?.ToString(),
+                    Time = DateTime.Parse(r.Cells["Time"].Value.ToString()).ToShortTimeString()
+                })
+                .ToList();
+
+            dgcReminders.DataSource = null;
+            dgvReminders.DataSource = todayReminders;
+        }
+
+
 
 
         private void btnPatients_Click(object sender, EventArgs e)
@@ -173,11 +192,15 @@ namespace SmileTrack
 
             dataGridView2.Rows.Add(
                 rowNumber,
-                "Walk-in Patient " + rowNumber,   // placeholder name
+                "Walk-in Patient " + rowNumber,
                 DateTime.Now.ToString("hh:mm tt"),
-                "Waiting"                         // default status
+                "Waiting"
             );
+
+            // Refresh reminders too
+            LoadReminders();
         }
+
 
         private void dataGridView2_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
@@ -234,6 +257,7 @@ namespace SmileTrack
                 );
             }
         }
+
 
         private void panel7_Paint(object sender, PaintEventArgs e)
         {
@@ -297,6 +321,39 @@ namespace SmileTrack
         }
 
         private void btnAddAppointment_Click_1(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnAddAppointment_Click_2(object sender, EventArgs e)
+        {
+            int rowNumber = dgvTA.Rows.Count + 1;
+
+            dgvTA.Rows.Add(
+                DateTime.Now.ToString("hh:mm tt"),   // Time
+                txtPatientName.Text,                 // Patient Name
+                txtDentist.Text,                     // Dentist
+                txtTreatment.Text,                   // Treatment
+                "Scheduled"                          // Status
+            );
+
+            // Also add to Walk-in queue if needed
+            int walkInRow = dataGridView2.Rows.Count + 1;
+            dataGridView2.Rows.Add(
+                walkInRow,
+                txtPatientName.Text,
+                DateTime.Now.ToString("hh:mm tt"),
+                "Waiting"
+            );
+
+            // Refresh reminders if grid exists
+            if (dgvReminders != null)
+            {
+                LoadReminders();
+            }
+        }
+
+        private void dgvReminders_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
 
         }
