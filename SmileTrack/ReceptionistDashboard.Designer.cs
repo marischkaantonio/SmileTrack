@@ -55,7 +55,6 @@
             this.label2 = new System.Windows.Forms.Label();
             this.pictureBox3 = new System.Windows.Forms.PictureBox();
             this.panel4 = new System.Windows.Forms.Panel();
-            this.btnAddAppointment = new System.Windows.Forms.Button();
             this.btnUpdate = new System.Windows.Forms.Button();
             this.dgvTA = new System.Windows.Forms.DataGridView();
             this.colTime = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -65,6 +64,7 @@
             this.colStatus = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.button5 = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
+            this.btnAddAppointment = new System.Windows.Forms.Button();
             this.dgvWalkInQueue = new System.Windows.Forms.Panel();
             this.button8 = new System.Windows.Forms.Button();
             this.btnAddWalkIn = new System.Windows.Forms.Button();
@@ -411,7 +411,6 @@
             // panel4
             // 
             this.panel4.BackColor = System.Drawing.Color.White;
-            this.panel4.Controls.Add(this.btnAddAppointment);
             this.panel4.Controls.Add(this.btnUpdate);
             this.panel4.Controls.Add(this.dgvTA);
             this.panel4.Controls.Add(this.button5);
@@ -421,20 +420,6 @@
             this.panel4.Name = "panel4";
             this.panel4.Size = new System.Drawing.Size(484, 215);
             this.panel4.TabIndex = 3;
-            // 
-            // btnAddAppointment
-            // 
-            this.btnAddAppointment.BackColor = System.Drawing.Color.Aquamarine;
-            this.btnAddAppointment.Font = new System.Drawing.Font("Gill Sans Ultra Bold", 7.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnAddAppointment.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.btnAddAppointment.Location = new System.Drawing.Point(11, 185);
-            this.btnAddAppointment.Margin = new System.Windows.Forms.Padding(2);
-            this.btnAddAppointment.Name = "btnAddAppointment";
-            this.btnAddAppointment.Size = new System.Drawing.Size(63, 23);
-            this.btnAddAppointment.TabIndex = 15;
-            this.btnAddAppointment.Text = "Add ";
-            this.btnAddAppointment.UseVisualStyleBackColor = false;
-            this.btnAddAppointment.Click += new System.EventHandler(this.btnAddAppointment_Click_2);
             // 
             // btnUpdate
             // 
@@ -519,7 +504,6 @@
             this.button5.TabIndex = 1;
             this.button5.Text = "View All";
             this.button5.UseVisualStyleBackColor = false;
-            this.button5.Click += new System.EventHandler(this.button5_Click);
             // 
             // label1
             // 
@@ -532,11 +516,25 @@
             this.label1.TabIndex = 0;
             this.label1.Text = "Today\'s Appoinment";
             // 
+            // btnAddAppointment
+            // 
+            this.btnAddAppointment.BackColor = System.Drawing.Color.Aquamarine;
+            this.btnAddAppointment.Font = new System.Drawing.Font("Gill Sans Ultra Bold", 7.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnAddAppointment.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.btnAddAppointment.Location = new System.Drawing.Point(36, 227);
+            this.btnAddAppointment.Margin = new System.Windows.Forms.Padding(2);
+            this.btnAddAppointment.Name = "btnAddAppointment";
+            this.btnAddAppointment.Size = new System.Drawing.Size(91, 27);
+            this.btnAddAppointment.TabIndex = 15;
+            this.btnAddAppointment.Text = "Add Walk-In";
+            this.btnAddAppointment.UseVisualStyleBackColor = false;
+            this.btnAddAppointment.Click += new System.EventHandler(this.btnAddAppointment_Click_2);
+            // 
             // dgvWalkInQueue
             // 
             this.dgvWalkInQueue.BackColor = System.Drawing.Color.White;
+            this.dgvWalkInQueue.Controls.Add(this.btnAddAppointment);
             this.dgvWalkInQueue.Controls.Add(this.button8);
-            this.dgvWalkInQueue.Controls.Add(this.btnAddWalkIn);
             this.dgvWalkInQueue.Controls.Add(this.dataGridView2);
             this.dgvWalkInQueue.Controls.Add(this.button6);
             this.dgvWalkInQueue.Controls.Add(this.label7);
@@ -564,14 +562,13 @@
             this.btnAddWalkIn.BackColor = System.Drawing.Color.Aquamarine;
             this.btnAddWalkIn.Font = new System.Drawing.Font("Gill Sans Ultra Bold", 7.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnAddWalkIn.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.btnAddWalkIn.Location = new System.Drawing.Point(48, 223);
+            this.btnAddWalkIn.Location = new System.Drawing.Point(147, 0);
             this.btnAddWalkIn.Margin = new System.Windows.Forms.Padding(2);
             this.btnAddWalkIn.Name = "btnAddWalkIn";
-            this.btnAddWalkIn.Size = new System.Drawing.Size(102, 31);
+            this.btnAddWalkIn.Size = new System.Drawing.Size(17, 10);
             this.btnAddWalkIn.TabIndex = 12;
             this.btnAddWalkIn.Text = "+ Add Walk-in";
             this.btnAddWalkIn.UseVisualStyleBackColor = false;
-            this.btnAddWalkIn.Click += new System.EventHandler(this.btnAddWalkIn_Click);
             // 
             // dataGridView2
             // 
@@ -877,6 +874,7 @@
             this.ClientSize = new System.Drawing.Size(1090, 603);
             this.Controls.Add(this.panel7);
             this.Controls.Add(this.panel6);
+            this.Controls.Add(this.btnAddWalkIn);
             this.Controls.Add(this.dgvWalkInQueue);
             this.Controls.Add(this.panel4);
             this.Controls.Add(this.panel1);

@@ -188,20 +188,7 @@ namespace SmileTrack
 
         }
 
-        private void btnAddWalkIn_Click(object sender, EventArgs e)
-        {
-            int rowNumber = dataGridView2.Rows.Count + 1;
-
-            dataGridView2.Rows.Add(
-                rowNumber,
-                "Walk-in Patient " + rowNumber,
-                DateTime.Now.ToString("hh:mm tt"),
-                "Waiting"
-            );
-
-            // Refresh reminders too
-            LoadReminders();
-        }
+        
 
 
         private void dataGridView2_CellContentClick(object sender, DataGridViewCellEventArgs e)
@@ -286,7 +273,6 @@ namespace SmileTrack
             }
             else if (row.DataBoundItem != null)
             {
-      
                 var prop = row.DataBoundItem.GetType().GetProperty("PatientName");
                 if (prop != null)
                     patientName = prop.GetValue(row.DataBoundItem)?.ToString();
@@ -361,12 +347,16 @@ namespace SmileTrack
         {
             int rowNumber = dgvTA.Rows.Count + 1;
 
+            // Generate random patient and dentist
+            string randomPatient = AppointmentGenerator.GetRandomPatientName();
+            string randomDentist = AppointmentGenerator.GetRandomDentist();
+
             // Add appointment to today's list
             dgvTA.Rows.Add(
                 DateTime.Now.ToString("hh:mm tt"),  // Time
-                txtPatientName.HeaderText,                // Patient Name
-                txtDentist.HeaderText,                    // Dentist
-                txtTreatment.HeaderText,                  // Treatment
+                randomPatient,                      // Random Patient Name
+                randomDentist,                      // Random Dentist
+                AppointmentGenerator.GetRandomTreatment(),  // Treatment
                 "Scheduled"                         // Status
             );
 
@@ -374,7 +364,7 @@ namespace SmileTrack
             int walkInRow = dataGridView2.Rows.Count + 1;
             dataGridView2.Rows.Add(
                 walkInRow,
-                txtPatientName.HeaderText,
+                randomPatient,
                 DateTime.Now.ToString("hh:mm tt"),
                 "Waiting"
             );
@@ -394,35 +384,7 @@ namespace SmileTrack
 
         private void button5_Click(object sender, EventArgs e)
         {
-            if (dgvTA.Rows.Count == 0)
-            {
-                MessageBox.Show("No appointments to display.", "Information");
-                return;
-            }
 
-            StringBuilder sb = new StringBuilder();
-            sb.AppendLine("Today's Appointments:\n");
-
-            foreach (DataGridViewRow row in dgvTA.Rows)
-            {
-                if (!row.IsNewRow)
-                {
-                    string time = row.Cells["Time"].Value?.ToString();
-                    string patientName = row.Cells["PatientName"].Value?.ToString();
-                    string dentist = row.Cells["Dentist"].Value?.ToString();
-                    string treatment = row.Cells["Treatment"].Value?.ToString();
-                    string status = row.Cells["Status"].Value?.ToString();
-
-                    sb.AppendLine($"Time: {time}");
-                    sb.AppendLine($"Patient: {patientName}");
-                    sb.AppendLine($"Dentist: {dentist}");
-                    sb.AppendLine($"Treatment: {treatment}");
-                    sb.AppendLine($"Status: {status}");
-                    sb.AppendLine(new string('-', 40));
-                }
-            }
-
-            MessageBox.Show(sb.ToString(), "All Appointments");
         }
 
     }
