@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Drawing.Text;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using System.Windows.Forms.DataVisualization.Charting;
 
@@ -12,11 +10,9 @@ namespace SmileTrack
     public partial class DentistDashboard : Form
     {
         private string currentDoctor = "Dr. Margie";
-
+        private Label lblBell;   // 🔔 Notification bell
 
         List<string> TreatmentTypes = new List<string>();
-
-
 
         public DentistDashboard()
         {
@@ -29,10 +25,13 @@ namespace SmileTrack
             txtTreatmentDone.BorderStyle = BorderStyle.None;
             txtTreatmentDone.Font = new Font("Segoe UI", 18, FontStyle.Bold);
 
-            LoadChartData();
+            InitializeBell();
+            UpdateBellNotification();   // show initial upcoming appointment
 
+            LoadChartData();
         }
 
+        // 🟦 Appointment model
         public class Appointment
         {
             public DateTime Date { get; set; }
@@ -42,13 +41,58 @@ namespace SmileTrack
             public string Doctor { get; set; }
         }
 
+        // 🟩 Appointment manager (shared list)
         public static class AppointmentManager
         {
             public static List<Appointment> Appointments = new List<Appointment>();
         }
 
+        // 🟦 Initialize the bell label
+        private void InitializeBell()
+        {
+            lblBell = new Label();
+            lblBell.Text = "🔔 No upcoming appointments";
+            lblBell.Font = new Font("Segoe UI", 12, FontStyle.Bold);
+            lblBell.Cursor = Cursors.Hand;
+            lblBell.Location = new Point(10, 10);
+            lblBell.AutoSize = true;
 
+            lblBell.Click += LblBell_Click;
+            this.Controls.Add(lblBell);
+        }
 
+        // 🟩 Update bell with next appointment
+        private void UpdateBellNotification()
+        {
+            var upcoming = AppointmentManager.Appointments
+                .Where(a => a.Date >= DateTime.Now && a.Doctor == currentDoctor)
+                .OrderBy(a => a.Date)
+                .FirstOrDefault();
+
+            if (upcoming != null)
+            {
+                lblBell.Text = $"🔔 Next: {upcoming.Date:hh:mm tt} - {upcoming.Patient}";
+            }
+            else
+            {
+                lblBell.Text = "🔔 No upcoming appointments";
+            }
+        }
+
+        // 🟦 Bell click handler
+        private void LblBell_Click(object sender, EventArgs e)
+        {
+            var todays = AppointmentManager.Appointments
+                .Where(a => a.Date.Date == DateTime.Today && a.Doctor == currentDoctor)
+                .Select(a => $"{a.Date:hh:mm tt} - {a.Patient}")
+                .ToList();
+
+            string message = todays.Any()
+                ? string.Join(Environment.NewLine, todays)
+                : "No appointments today.";
+
+            MessageBox.Show(message, "Today's Appointments");
+        }
 
         private void btnSave_Click(object sender, EventArgs e)
         {
@@ -91,18 +135,11 @@ namespace SmileTrack
             {
                 series.Points.AddXY(item.Key, item.Value);
             }
-            foreach (var item in counts)
-            {
 
-
-                txtTreatmentDone.Text = TreatmentTypes.Count.ToString();
-                txtTreatmentDone.SelectAll();
-                txtTreatmentDone.SelectionAlignment = HorizontalAlignment.Center;
-                txtTreatmentDone.DeselectAll();
-            }
-
-
-
+            txtTreatmentDone.Text = TreatmentTypes.Count.ToString();
+            txtTreatmentDone.SelectAll();
+            txtTreatmentDone.SelectionAlignment = HorizontalAlignment.Center;
+            txtTreatmentDone.DeselectAll();
         }
 
         private void btnMySched_Click(object sender, EventArgs e)
@@ -112,19 +149,12 @@ namespace SmileTrack
 
         private void LoadMySchedule()
         {
-            var myAppoinments = AppointmentManager.Appointments
+            var myAppointments = AppointmentManager.Appointments
                 .Where(a => a.Date.Date == DateTime.Today && a.Doctor == currentDoctor)
                 .ToList();
 
             dgvSched.DataSource = null;
-            dgvSched.DataSource = myAppoinments;
-
-
-        }
-
-        private void label1_Click(object sender, EventArgs e)
-        {
-
+            dgvSched.DataSource = myAppointments;
         }
 
         private void btnLogOut_Click(object sender, EventArgs e)
@@ -137,8 +167,6 @@ namespace SmileTrack
             if (result == DialogResult.Yes)
             {
                 this.Hide();
-
-
                 LoginForm login = new LoginForm();
                 login.Show();
             }
@@ -146,51 +174,16 @@ namespace SmileTrack
 
         private void txtTodaysAppoinment_TextChanged(object sender, EventArgs e)
         {
-            // Automatically reload today's appointments for this dentist
             LoadMySchedule();
 
-            // Optional: visually highlight if there are appointments today
             if (int.TryParse(txtTodaysAppoinment.Text, out int count))
             {
                 txtTodaysAppoinment.ForeColor = count > 0 ? Color.Green : Color.Red;
                 txtTodaysAppoinment.Font = new Font("Segoe UI", 16, FontStyle.Bold);
             }
         }
-        private void UpdateBellNotification()
-        {
-            
-            var upcoming = Appointments
-                .Where(a => a.Date >= DateTime.Today)
-                .OrderBy(a => a.Date)
-                .FirstOrDefault();
 
-            if (upcoming != null)
-            {
-                lblBell.Text = $"🔔 Next: {upcoming.Date:hh:mm tt} - {upcoming.PatientName}";
-            }
-            else
-            {
-                lblBell.Text = "🔔 No upcoming appointments";
-            }
-        }
-        
-        private void label11_Click(object sender, EventArgs e)
-        {
-            Label lblBell = new Label();
-            lblBell.Text = "🔔 No upcoming appointments";
-            lblBell.Font = new Font("Segoe UI", 12, FontStyle.Bold);
-            lblBell.Cursor = Cursors.Hand;
-            lblBell.Location = new Point(10, 10);
-            lblBell.AutoSize = true;
-
-            lblBell.Click += LblBell_Click;
-            this.Controls.Add(lblBell);
-
-        }
+        private void btnTreatments_Click(object sender, EventArgs e) { }
+        private void cmbTreatmentType_SelectedIndexChanged(object sender, EventArgs e) { }
     }
 }
-      
-
-
-
-

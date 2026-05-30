@@ -28,22 +28,19 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.Panel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.btnDashboard = new System.Windows.Forms.Button();
             this.btnMySched = new System.Windows.Forms.Button();
             this.btnTreatments = new System.Windows.Forms.Button();
-            this.btnRepots = new System.Windows.Forms.Button();
-            this.btnSettings = new System.Windows.Forms.Button();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.panel2 = new System.Windows.Forms.Panel();
             this.btnLogOut = new System.Windows.Forms.Button();
             this.panelDentistDashboard = new System.Windows.Forms.Panel();
             this.textBox2 = new System.Windows.Forms.TextBox();
-            this.lblBell = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
             this.pictureBox6 = new System.Windows.Forms.PictureBox();
             this.label9 = new System.Windows.Forms.Label();
@@ -75,6 +72,7 @@
             this.txtPatientSeen = new System.Windows.Forms.RichTextBox();
             this.txtTodaysAppoinment = new System.Windows.Forms.RichTextBox();
             this.txtUpApp = new System.Windows.Forms.RichTextBox();
+            this.lbbell = new System.Windows.Forms.Label();
             this.Panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -96,8 +94,6 @@
             this.Panel1.Controls.Add(this.btnDashboard);
             this.Panel1.Controls.Add(this.btnMySched);
             this.Panel1.Controls.Add(this.btnTreatments);
-            this.Panel1.Controls.Add(this.btnRepots);
-            this.Panel1.Controls.Add(this.btnSettings);
             this.Panel1.Controls.Add(this.pictureBox1);
             this.Panel1.Controls.Add(this.panel2);
             this.Panel1.Controls.Add(this.btnLogOut);
@@ -158,39 +154,14 @@
             this.btnTreatments.TabIndex = 3;
             this.btnTreatments.Text = "Treatments";
             this.btnTreatments.UseVisualStyleBackColor = false;
-            // 
-            // btnRepots
-            // 
-            this.btnRepots.BackColor = System.Drawing.Color.Aquamarine;
-            this.btnRepots.Font = new System.Drawing.Font("Gill Sans Ultra Bold", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnRepots.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.btnRepots.Location = new System.Drawing.Point(2, 215);
-            this.btnRepots.Margin = new System.Windows.Forms.Padding(2);
-            this.btnRepots.Name = "btnRepots";
-            this.btnRepots.Size = new System.Drawing.Size(109, 31);
-            this.btnRepots.TabIndex = 6;
-            this.btnRepots.Text = "Reports";
-            this.btnRepots.UseVisualStyleBackColor = false;
-            // 
-            // btnSettings
-            // 
-            this.btnSettings.BackColor = System.Drawing.Color.Aquamarine;
-            this.btnSettings.Font = new System.Drawing.Font("Gill Sans Ultra Bold", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnSettings.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.btnSettings.Location = new System.Drawing.Point(2, 250);
-            this.btnSettings.Margin = new System.Windows.Forms.Padding(2);
-            this.btnSettings.Name = "btnSettings";
-            this.btnSettings.Size = new System.Drawing.Size(109, 31);
-            this.btnSettings.TabIndex = 7;
-            this.btnSettings.Text = "Settings";
-            this.btnSettings.UseVisualStyleBackColor = false;
+            this.btnTreatments.Click += new System.EventHandler(this.btnTreatments_Click);
             // 
             // pictureBox1
             // 
             this.pictureBox1.BackColor = System.Drawing.Color.Azure;
             this.pictureBox1.BackgroundImage = global::SmileTrack.Properties.Resources._4209059;
             this.pictureBox1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.pictureBox1.Location = new System.Drawing.Point(2, 285);
+            this.pictureBox1.Location = new System.Drawing.Point(2, 215);
             this.pictureBox1.Margin = new System.Windows.Forms.Padding(2);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Padding = new System.Windows.Forms.Padding(4);
@@ -200,7 +171,7 @@
             // 
             // panel2
             // 
-            this.panel2.Location = new System.Drawing.Point(2, 387);
+            this.panel2.Location = new System.Drawing.Point(2, 317);
             this.panel2.Margin = new System.Windows.Forms.Padding(2);
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(150, 81);
@@ -213,7 +184,7 @@
             this.btnLogOut.BackColor = System.Drawing.Color.Aquamarine;
             this.btnLogOut.Font = new System.Drawing.Font("Gill Sans Ultra Bold", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnLogOut.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.btnLogOut.Location = new System.Drawing.Point(2, 472);
+            this.btnLogOut.Location = new System.Drawing.Point(2, 402);
             this.btnLogOut.Margin = new System.Windows.Forms.Padding(2);
             this.btnLogOut.Name = "btnLogOut";
             this.btnLogOut.Size = new System.Drawing.Size(101, 31);
@@ -225,8 +196,8 @@
             // panelDentistDashboard
             // 
             this.panelDentistDashboard.BackColor = System.Drawing.Color.White;
+            this.panelDentistDashboard.Controls.Add(this.lbbell);
             this.panelDentistDashboard.Controls.Add(this.textBox2);
-            this.panelDentistDashboard.Controls.Add(this.lblBell);
             this.panelDentistDashboard.Controls.Add(this.label10);
             this.panelDentistDashboard.Controls.Add(this.pictureBox6);
             this.panelDentistDashboard.Controls.Add(this.label9);
@@ -263,19 +234,6 @@
             this.textBox2.Size = new System.Drawing.Size(144, 20);
             this.textBox2.TabIndex = 28;
             this.textBox2.Text = " 🔍Search patient";
-            // 
-            // lblBell
-            // 
-            this.lblBell.AutoSize = true;
-            this.lblBell.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblBell.ForeColor = System.Drawing.Color.DarkOrange;
-            this.lblBell.Location = new System.Drawing.Point(540, 20);
-            this.lblBell.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.lblBell.Name = "lblBell";
-            this.lblBell.Size = new System.Drawing.Size(23, 15);
-            this.lblBell.TabIndex = 26;
-            this.lblBell.Text = "🔔";
-            this.lblBell.Click += new System.EventHandler(this.label11_Click);
             // 
             // label10
             // 
@@ -351,6 +309,7 @@
             this.cmbTreatmentType.Name = "cmbTreatmentType";
             this.cmbTreatmentType.Size = new System.Drawing.Size(118, 21);
             this.cmbTreatmentType.TabIndex = 0;
+            this.cmbTreatmentType.SelectedIndexChanged += new System.EventHandler(this.cmbTreatmentType_SelectedIndexChanged);
             // 
             // btnSave
             // 
@@ -390,19 +349,19 @@
             // 
             // chart1
             // 
-            chartArea1.Name = "ChartArea1";
-            this.chart1.ChartAreas.Add(chartArea1);
-            legend1.Name = "Legend1";
-            legend1.TableStyle = System.Windows.Forms.DataVisualization.Charting.LegendTableStyle.Wide;
-            this.chart1.Legends.Add(legend1);
+            chartArea2.Name = "ChartArea1";
+            this.chart1.ChartAreas.Add(chartArea2);
+            legend2.Name = "Legend1";
+            legend2.TableStyle = System.Windows.Forms.DataVisualization.Charting.LegendTableStyle.Wide;
+            this.chart1.Legends.Add(legend2);
             this.chart1.Location = new System.Drawing.Point(56, 407);
             this.chart1.Margin = new System.Windows.Forms.Padding(2);
             this.chart1.Name = "chart1";
             this.chart1.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.Pastel;
-            series1.ChartArea = "ChartArea1";
-            series1.Legend = "Legend1";
-            series1.Name = "Series1";
-            this.chart1.Series.Add(series1);
+            series2.ChartArea = "ChartArea1";
+            series2.Legend = "Legend1";
+            series2.Name = "Series1";
+            this.chart1.Series.Add(series2);
             this.chart1.Size = new System.Drawing.Size(228, 180);
             this.chart1.TabIndex = 14;
             this.chart1.Text = "chart1";
@@ -604,6 +563,15 @@
             this.txtUpApp.TabIndex = 24;
             this.txtUpApp.Text = "";
             // 
+            // lbbell
+            // 
+            this.lbbell.AutoSize = true;
+            this.lbbell.Location = new System.Drawing.Point(484, 15);
+            this.lbbell.Name = "lbbell";
+            this.lbbell.Size = new System.Drawing.Size(35, 13);
+            this.lbbell.TabIndex = 29;
+            this.lbbell.Text = "label1";
+            // 
             // DentistDashboard
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -640,8 +608,6 @@
         private System.Windows.Forms.Button btnDashboard;
         private System.Windows.Forms.Button btnMySched;
         private System.Windows.Forms.Button btnTreatments;
-        private System.Windows.Forms.Button btnRepots;
-        private System.Windows.Forms.Button btnSettings;
         private System.Windows.Forms.PictureBox pictureBox2;
         private System.Windows.Forms.Button btnLogOut;
         private System.Windows.Forms.Panel panel2;
@@ -676,9 +642,10 @@
         private System.Windows.Forms.RichTextBox txtPatientSeen;
         private System.Windows.Forms.RichTextBox txtUpApp;
         private System.Windows.Forms.Label label10;
-        private System.Windows.Forms.Label lblBell;
+        
         private System.Windows.Forms.TextBox textBox2;
         private System.Windows.Forms.TextBox textBox1;
         public System.Windows.Forms.RichTextBox txtTodaysAppoinment;
+        private System.Windows.Forms.Label lbbell;
     }
 }

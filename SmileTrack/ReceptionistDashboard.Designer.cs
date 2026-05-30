@@ -30,7 +30,6 @@
         {
             this.panel1 = new System.Windows.Forms.Panel();
             this.panel3 = new System.Windows.Forms.Panel();
-            this.btnReminders = new System.Windows.Forms.Button();
             this.btnBillings = new System.Windows.Forms.Button();
             this.lblWelcome = new System.Windows.Forms.Label();
             this.btnLogout = new System.Windows.Forms.Button();
@@ -67,7 +66,6 @@
             this.btnAddAppointment = new System.Windows.Forms.Button();
             this.dgvWalkInQueue = new System.Windows.Forms.Panel();
             this.button8 = new System.Windows.Forms.Button();
-            this.btnAddWalkIn = new System.Windows.Forms.Button();
             this.dataGridView2 = new System.Windows.Forms.DataGridView();
             this.txtNo = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.txtPatientName = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -75,6 +73,7 @@
             this.txtStatus = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.button6 = new System.Windows.Forms.Button();
             this.label7 = new System.Windows.Forms.Label();
+            this.btnAddWalkIn = new System.Windows.Forms.Button();
             this.panel6 = new System.Windows.Forms.Panel();
             this.dgvReminders = new System.Windows.Forms.DataGridView();
             this.colDate = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -119,7 +118,6 @@
             // 
             this.panel1.BackColor = System.Drawing.Color.Teal;
             this.panel1.Controls.Add(this.panel3);
-            this.panel1.Controls.Add(this.btnReminders);
             this.panel1.Controls.Add(this.btnBillings);
             this.panel1.Controls.Add(this.lblWelcome);
             this.panel1.Controls.Add(this.btnLogout);
@@ -141,20 +139,6 @@
             this.panel3.Name = "panel3";
             this.panel3.Size = new System.Drawing.Size(245, 111);
             this.panel3.TabIndex = 3;
-            // 
-            // btnReminders
-            // 
-            this.btnReminders.BackColor = System.Drawing.Color.Aquamarine;
-            this.btnReminders.Font = new System.Drawing.Font("Gill Sans Ultra Bold", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnReminders.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.btnReminders.Location = new System.Drawing.Point(11, 341);
-            this.btnReminders.Margin = new System.Windows.Forms.Padding(2);
-            this.btnReminders.Name = "btnReminders";
-            this.btnReminders.Size = new System.Drawing.Size(120, 31);
-            this.btnReminders.TabIndex = 10;
-            this.btnReminders.Text = "Reminders";
-            this.btnReminders.UseVisualStyleBackColor = false;
-            this.btnReminders.Click += new System.EventHandler(this.btnReminders_Click);
             // 
             // btnBillings
             // 
@@ -504,6 +488,7 @@
             this.button5.TabIndex = 1;
             this.button5.Text = "View All";
             this.button5.UseVisualStyleBackColor = false;
+            this.button5.Click += new System.EventHandler(this.button5_Click_1);
             // 
             // label1
             // 
@@ -556,19 +541,6 @@
             this.button8.TabIndex = 13;
             this.button8.Text = "Refresh Qeue";
             this.button8.UseVisualStyleBackColor = false;
-            // 
-            // btnAddWalkIn
-            // 
-            this.btnAddWalkIn.BackColor = System.Drawing.Color.Aquamarine;
-            this.btnAddWalkIn.Font = new System.Drawing.Font("Gill Sans Ultra Bold", 7.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnAddWalkIn.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.btnAddWalkIn.Location = new System.Drawing.Point(147, 0);
-            this.btnAddWalkIn.Margin = new System.Windows.Forms.Padding(2);
-            this.btnAddWalkIn.Name = "btnAddWalkIn";
-            this.btnAddWalkIn.Size = new System.Drawing.Size(17, 10);
-            this.btnAddWalkIn.TabIndex = 12;
-            this.btnAddWalkIn.Text = "+ Add Walk-in";
-            this.btnAddWalkIn.UseVisualStyleBackColor = false;
             // 
             // dataGridView2
             // 
@@ -642,6 +614,19 @@
             this.label7.Size = new System.Drawing.Size(84, 13);
             this.label7.TabIndex = 0;
             this.label7.Text = "Walk-in Qeue";
+            // 
+            // btnAddWalkIn
+            // 
+            this.btnAddWalkIn.BackColor = System.Drawing.Color.Aquamarine;
+            this.btnAddWalkIn.Font = new System.Drawing.Font("Gill Sans Ultra Bold", 7.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnAddWalkIn.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.btnAddWalkIn.Location = new System.Drawing.Point(147, 0);
+            this.btnAddWalkIn.Margin = new System.Windows.Forms.Padding(2);
+            this.btnAddWalkIn.Name = "btnAddWalkIn";
+            this.btnAddWalkIn.Size = new System.Drawing.Size(17, 10);
+            this.btnAddWalkIn.TabIndex = 12;
+            this.btnAddWalkIn.Text = "+ Add Walk-in";
+            this.btnAddWalkIn.UseVisualStyleBackColor = false;
             // 
             // panel6
             // 
@@ -935,7 +920,6 @@
         private System.Windows.Forms.Label lblNewPatient;
         private System.Windows.Forms.Label lblWelcome;
         private System.Windows.Forms.Button btnBillings;
-        private System.Windows.Forms.Button btnReminders;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.PictureBox pictureBox7;
         private System.Windows.Forms.Label lblWalkin;
