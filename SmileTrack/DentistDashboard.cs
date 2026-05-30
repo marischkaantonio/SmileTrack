@@ -156,6 +156,37 @@ namespace SmileTrack
                 txtTodaysAppoinment.Font = new Font("Segoe UI", 16, FontStyle.Bold);
             }
         }
+        private void UpdateBellNotification()
+        {
+            
+            var upcoming = Appointments
+                .Where(a => a.Date >= DateTime.Today)
+                .OrderBy(a => a.Date)
+                .FirstOrDefault();
+
+            if (upcoming != null)
+            {
+                lblBell.Text = $"🔔 Next: {upcoming.Date:hh:mm tt} - {upcoming.PatientName}";
+            }
+            else
+            {
+                lblBell.Text = "🔔 No upcoming appointments";
+            }
+        }
+        
+        private void label11_Click(object sender, EventArgs e)
+        {
+            Label lblBell = new Label();
+            lblBell.Text = "🔔 No upcoming appointments";
+            lblBell.Font = new Font("Segoe UI", 12, FontStyle.Bold);
+            lblBell.Cursor = Cursors.Hand;
+            lblBell.Location = new Point(10, 10);
+            lblBell.AutoSize = true;
+
+            lblBell.Click += LblBell_Click;
+            this.Controls.Add(lblBell);
+
+        }
     }
 }
       

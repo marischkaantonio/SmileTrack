@@ -28,9 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.Panel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.btnDashboard = new System.Windows.Forms.Button();
@@ -43,7 +43,7 @@
             this.btnLogOut = new System.Windows.Forms.Button();
             this.panelDentistDashboard = new System.Windows.Forms.Panel();
             this.textBox2 = new System.Windows.Forms.TextBox();
-            this.label11 = new System.Windows.Forms.Label();
+            this.lblBell = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
             this.pictureBox6 = new System.Windows.Forms.PictureBox();
             this.label9 = new System.Windows.Forms.Label();
@@ -226,7 +226,7 @@
             // 
             this.panelDentistDashboard.BackColor = System.Drawing.Color.White;
             this.panelDentistDashboard.Controls.Add(this.textBox2);
-            this.panelDentistDashboard.Controls.Add(this.label11);
+            this.panelDentistDashboard.Controls.Add(this.lblBell);
             this.panelDentistDashboard.Controls.Add(this.label10);
             this.panelDentistDashboard.Controls.Add(this.pictureBox6);
             this.panelDentistDashboard.Controls.Add(this.label9);
@@ -255,8 +255,6 @@
             this.panelDentistDashboard.Size = new System.Drawing.Size(907, 629);
             this.panelDentistDashboard.TabIndex = 1;
             // 
-            
-        
             // textBox2
             // 
             this.textBox2.Location = new System.Drawing.Point(335, 15);
@@ -266,17 +264,18 @@
             this.textBox2.TabIndex = 28;
             this.textBox2.Text = " 🔍Search patient";
             // 
-            // label11
+            // lblBell
             // 
-            this.label11.AutoSize = true;
-            this.label11.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label11.ForeColor = System.Drawing.Color.DarkOrange;
-            this.label11.Location = new System.Drawing.Point(540, 20);
-            this.label11.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(23, 15);
-            this.label11.TabIndex = 26;
-            this.label11.Text = "🔔";
+            this.lblBell.AutoSize = true;
+            this.lblBell.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblBell.ForeColor = System.Drawing.Color.DarkOrange;
+            this.lblBell.Location = new System.Drawing.Point(540, 20);
+            this.lblBell.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lblBell.Name = "lblBell";
+            this.lblBell.Size = new System.Drawing.Size(23, 15);
+            this.lblBell.TabIndex = 26;
+            this.lblBell.Text = "🔔";
+            this.lblBell.Click += new System.EventHandler(this.label11_Click);
             // 
             // label10
             // 
@@ -391,19 +390,19 @@
             // 
             // chart1
             // 
-            chartArea2.Name = "ChartArea1";
-            this.chart1.ChartAreas.Add(chartArea2);
-            legend2.Name = "Legend1";
-            legend2.TableStyle = System.Windows.Forms.DataVisualization.Charting.LegendTableStyle.Wide;
-            this.chart1.Legends.Add(legend2);
+            chartArea1.Name = "ChartArea1";
+            this.chart1.ChartAreas.Add(chartArea1);
+            legend1.Name = "Legend1";
+            legend1.TableStyle = System.Windows.Forms.DataVisualization.Charting.LegendTableStyle.Wide;
+            this.chart1.Legends.Add(legend1);
             this.chart1.Location = new System.Drawing.Point(56, 407);
             this.chart1.Margin = new System.Windows.Forms.Padding(2);
             this.chart1.Name = "chart1";
             this.chart1.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.Pastel;
-            series2.ChartArea = "ChartArea1";
-            series2.Legend = "Legend1";
-            series2.Name = "Series1";
-            this.chart1.Series.Add(series2);
+            series1.ChartArea = "ChartArea1";
+            series1.Legend = "Legend1";
+            series1.Name = "Series1";
+            this.chart1.Series.Add(series1);
             this.chart1.Size = new System.Drawing.Size(228, 180);
             this.chart1.TabIndex = 14;
             this.chart1.Text = "chart1";
@@ -677,7 +676,7 @@
         private System.Windows.Forms.RichTextBox txtPatientSeen;
         private System.Windows.Forms.RichTextBox txtUpApp;
         private System.Windows.Forms.Label label10;
-        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.Label lblBell;
         private System.Windows.Forms.TextBox textBox2;
         private System.Windows.Forms.TextBox textBox1;
         public System.Windows.Forms.RichTextBox txtTodaysAppoinment;
