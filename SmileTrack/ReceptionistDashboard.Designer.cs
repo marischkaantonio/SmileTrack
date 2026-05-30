@@ -30,10 +30,7 @@
         {
             this.panel1 = new System.Windows.Forms.Panel();
             this.panel3 = new System.Windows.Forms.Panel();
-            this.button4 = new System.Windows.Forms.Button();
             this.btnReminders = new System.Windows.Forms.Button();
-            this.btnWalkIn = new System.Windows.Forms.Button();
-            this.btnAppoinment = new System.Windows.Forms.Button();
             this.btnBillings = new System.Windows.Forms.Button();
             this.lblWelcome = new System.Windows.Forms.Label();
             this.btnLogout = new System.Windows.Forms.Button();
@@ -61,6 +58,11 @@
             this.btnAddAppointment = new System.Windows.Forms.Button();
             this.btnUpdate = new System.Windows.Forms.Button();
             this.dgvTA = new System.Windows.Forms.DataGridView();
+            this.colTime = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colPname = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.txtDentist = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.txtTreatment = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colStatus = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.button5 = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.dgvWalkInQueue = new System.Windows.Forms.Panel();
@@ -93,11 +95,6 @@
             this.label10 = new System.Windows.Forms.Label();
             this.button10 = new System.Windows.Forms.Button();
             this.label9 = new System.Windows.Forms.Label();
-            this.colTime = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colPname = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.txtDentist = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.txtTreatment = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colStatus = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -122,10 +119,7 @@
             // 
             this.panel1.BackColor = System.Drawing.Color.Teal;
             this.panel1.Controls.Add(this.panel3);
-            this.panel1.Controls.Add(this.button4);
             this.panel1.Controls.Add(this.btnReminders);
-            this.panel1.Controls.Add(this.btnWalkIn);
-            this.panel1.Controls.Add(this.btnAppoinment);
             this.panel1.Controls.Add(this.btnBillings);
             this.panel1.Controls.Add(this.lblWelcome);
             this.panel1.Controls.Add(this.btnLogout);
@@ -148,26 +142,12 @@
             this.panel3.Size = new System.Drawing.Size(245, 111);
             this.panel3.TabIndex = 3;
             // 
-            // button4
-            // 
-            this.button4.BackColor = System.Drawing.Color.Aquamarine;
-            this.button4.Font = new System.Drawing.Font("Gill Sans Ultra Bold", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button4.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.button4.Location = new System.Drawing.Point(9, 353);
-            this.button4.Margin = new System.Windows.Forms.Padding(2);
-            this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(120, 31);
-            this.button4.TabIndex = 11;
-            this.button4.Text = "Reports";
-            this.button4.UseVisualStyleBackColor = false;
-            this.button4.Click += new System.EventHandler(this.button4_Click);
-            // 
             // btnReminders
             // 
             this.btnReminders.BackColor = System.Drawing.Color.Aquamarine;
             this.btnReminders.Font = new System.Drawing.Font("Gill Sans Ultra Bold", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnReminders.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.btnReminders.Location = new System.Drawing.Point(9, 317);
+            this.btnReminders.Location = new System.Drawing.Point(11, 341);
             this.btnReminders.Margin = new System.Windows.Forms.Padding(2);
             this.btnReminders.Name = "btnReminders";
             this.btnReminders.Size = new System.Drawing.Size(120, 31);
@@ -176,39 +156,12 @@
             this.btnReminders.UseVisualStyleBackColor = false;
             this.btnReminders.Click += new System.EventHandler(this.btnReminders_Click);
             // 
-            // btnWalkIn
-            // 
-            this.btnWalkIn.BackColor = System.Drawing.Color.Aquamarine;
-            this.btnWalkIn.Font = new System.Drawing.Font("Gill Sans Ultra Bold", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnWalkIn.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.btnWalkIn.Location = new System.Drawing.Point(9, 245);
-            this.btnWalkIn.Margin = new System.Windows.Forms.Padding(2);
-            this.btnWalkIn.Name = "btnWalkIn";
-            this.btnWalkIn.Size = new System.Drawing.Size(120, 31);
-            this.btnWalkIn.TabIndex = 9;
-            this.btnWalkIn.Text = "Walk-in Qeue";
-            this.btnWalkIn.UseVisualStyleBackColor = false;
-            this.btnWalkIn.Click += new System.EventHandler(this.btnWalkIn_Click);
-            // 
-            // btnAppoinment
-            // 
-            this.btnAppoinment.BackColor = System.Drawing.Color.Aquamarine;
-            this.btnAppoinment.Font = new System.Drawing.Font("Gill Sans Ultra Bold", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnAppoinment.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.btnAppoinment.Location = new System.Drawing.Point(9, 210);
-            this.btnAppoinment.Margin = new System.Windows.Forms.Padding(2);
-            this.btnAppoinment.Name = "btnAppoinment";
-            this.btnAppoinment.Size = new System.Drawing.Size(120, 31);
-            this.btnAppoinment.TabIndex = 8;
-            this.btnAppoinment.Text = "Patient";
-            this.btnAppoinment.UseVisualStyleBackColor = false;
-            // 
             // btnBillings
             // 
             this.btnBillings.BackColor = System.Drawing.Color.Aquamarine;
             this.btnBillings.Font = new System.Drawing.Font("Gill Sans Ultra Bold", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnBillings.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.btnBillings.Location = new System.Drawing.Point(9, 281);
+            this.btnBillings.Location = new System.Drawing.Point(9, 271);
             this.btnBillings.Margin = new System.Windows.Forms.Padding(2);
             this.btnBillings.Name = "btnBillings";
             this.btnBillings.Size = new System.Drawing.Size(120, 31);
@@ -244,7 +197,7 @@
             // 
             this.pictureBox2.BackgroundImage = global::SmileTrack.Properties.Resources.istockphoto_1281615253_170667a;
             this.pictureBox2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.pictureBox2.Location = new System.Drawing.Point(17, 393);
+            this.pictureBox2.Location = new System.Drawing.Point(29, 420);
             this.pictureBox2.Margin = new System.Windows.Forms.Padding(2);
             this.pictureBox2.Name = "pictureBox2";
             this.pictureBox2.Size = new System.Drawing.Size(89, 80);
@@ -256,7 +209,7 @@
             this.btnPatients.BackColor = System.Drawing.Color.Aquamarine;
             this.btnPatients.Font = new System.Drawing.Font("Gill Sans Ultra Bold", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnPatients.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.btnPatients.Location = new System.Drawing.Point(9, 174);
+            this.btnPatients.Location = new System.Drawing.Point(9, 204);
             this.btnPatients.Margin = new System.Windows.Forms.Padding(2);
             this.btnPatients.Name = "btnPatients";
             this.btnPatients.Size = new System.Drawing.Size(120, 31);
@@ -515,6 +468,45 @@
             this.dgvTA.TabIndex = 2;
             this.dgvTA.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvTA_CellContentClick);
             // 
+            // colTime
+            // 
+            this.colTime.HeaderText = "Time";
+            this.colTime.MaxInputLength = 100;
+            this.colTime.MinimumWidth = 6;
+            this.colTime.Name = "colTime";
+            this.colTime.Width = 125;
+            // 
+            // colPname
+            // 
+            this.colPname.HeaderText = "Patient Name";
+            this.colPname.MinimumWidth = 6;
+            this.colPname.Name = "colPname";
+            this.colPname.Width = 125;
+            // 
+            // txtDentist
+            // 
+            this.txtDentist.HeaderText = "Dentist";
+            this.txtDentist.MaxInputLength = 200;
+            this.txtDentist.MinimumWidth = 6;
+            this.txtDentist.Name = "txtDentist";
+            this.txtDentist.Width = 125;
+            // 
+            // txtTreatment
+            // 
+            this.txtTreatment.HeaderText = "Treatment";
+            this.txtTreatment.MaxInputLength = 200;
+            this.txtTreatment.MinimumWidth = 6;
+            this.txtTreatment.Name = "txtTreatment";
+            this.txtTreatment.Width = 125;
+            // 
+            // colStatus
+            // 
+            this.colStatus.HeaderText = "Status";
+            this.colStatus.MaxInputLength = 100;
+            this.colStatus.MinimumWidth = 6;
+            this.colStatus.Name = "colStatus";
+            this.colStatus.Width = 125;
+            // 
             // button5
             // 
             this.button5.BackColor = System.Drawing.Color.LightGray;
@@ -527,6 +519,7 @@
             this.button5.TabIndex = 1;
             this.button5.Text = "View All";
             this.button5.UseVisualStyleBackColor = false;
+            this.button5.Click += new System.EventHandler(this.button5_Click);
             // 
             // label1
             // 
@@ -876,45 +869,6 @@
             this.label9.TabIndex = 0;
             this.label9.Text = "Billing Summary (Today)";
             // 
-            // colTime
-            // 
-            this.colTime.HeaderText = "Time";
-            this.colTime.MaxInputLength = 100;
-            this.colTime.MinimumWidth = 6;
-            this.colTime.Name = "colTime";
-            this.colTime.Width = 125;
-            // 
-            // colPname
-            // 
-            this.colPname.HeaderText = "Patient Name";
-            this.colPname.MinimumWidth = 6;
-            this.colPname.Name = "colPname";
-            this.colPname.Width = 125;
-            // 
-            // txtDentist
-            // 
-            this.txtDentist.HeaderText = "Dentist";
-            this.txtDentist.MaxInputLength = 200;
-            this.txtDentist.MinimumWidth = 6;
-            this.txtDentist.Name = "txtDentist";
-            this.txtDentist.Width = 125;
-            // 
-            // txtTreatment
-            // 
-            this.txtTreatment.HeaderText = "Treatment";
-            this.txtTreatment.MaxInputLength = 200;
-            this.txtTreatment.MinimumWidth = 6;
-            this.txtTreatment.Name = "txtTreatment";
-            this.txtTreatment.Width = 125;
-            // 
-            // colStatus
-            // 
-            this.colStatus.HeaderText = "Status";
-            this.colStatus.MaxInputLength = 100;
-            this.colStatus.MinimumWidth = 6;
-            this.colStatus.Name = "colStatus";
-            this.colStatus.Width = 125;
-            // 
             // ReceptionistDashboard
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -983,9 +937,6 @@
         private System.Windows.Forms.Label lblNewPatient;
         private System.Windows.Forms.Label lblWelcome;
         private System.Windows.Forms.Button btnBillings;
-        private System.Windows.Forms.Button btnWalkIn;
-        private System.Windows.Forms.Button btnAppoinment;
-        private System.Windows.Forms.Button button4;
         private System.Windows.Forms.Button btnReminders;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.PictureBox pictureBox7;

@@ -146,7 +146,9 @@ namespace SmileTrack
 
         private void LoadReminders()
         {
-            var todayReminders = dgvTA.Rows
+            if (!dataGridView2.Columns.Contains("Time")) return;
+
+            var todayReminders = dataGridView2.Rows
                 .Cast<DataGridViewRow>()
                 .Where(r => r.Cells["Time"].Value != null &&
                             DateTime.Parse(r.Cells["Time"].Value.ToString()).Date == DateTime.Today)
@@ -158,7 +160,7 @@ namespace SmileTrack
                 })
                 .ToList();
 
-            dgcReminders.DataSource = null;
+            dgvReminders.DataSource = null;
             dgvReminders.DataSource = todayReminders;
         }
 
@@ -266,30 +268,60 @@ namespace SmileTrack
 
         private void btnUpdate_Click(object sender, EventArgs e)
         {
-            if (dgvTA.CurrentRow != null)
+            // C#
+            var row = dgvTA.CurrentRow;
+            if (row == null)
             {
-                string patientName = dgvTA.CurrentRow.Cells["PatientName"].Value?.ToString();
-
-                // Example: mark appointment as Completed
-                AppointmentUpdater.UpdateAppointmentStatus(patientName, "Completed");
+                MessageBox.Show("No appointment selected.", "Update");
+                return;
             }
 
-            // Refresh grid
+            string patientName = null;
+
+            // 1) Preferred: check DataBoundItem
+            if (row.DataBoundItem is System.Data.DataRowView drv)
+            {
+                if (drv.Row.Table.Columns.Contains("PatientName"))
+                    patientName = drv["PatientName"]?.ToString();
+            }
+            else if (row.DataBoundItem != null)
+            {
+      
+                var prop = row.DataBoundItem.GetType().GetProperty("PatientName");
+                if (prop != null)
+                    patientName = prop.GetValue(row.DataBoundItem)?.ToString();
+            }
+
+            // 2) Fallback: find a column by Name/DataPropertyName/HeaderText
+            if (string.IsNullOrEmpty(patientName))
+            {
+                var col = dgvTA.Columns
+                    .Cast<DataGridViewColumn>()
+                    .FirstOrDefault(c =>
+                        string.Equals(c.Name, "PatientName", StringComparison.OrdinalIgnoreCase) ||
+                        string.Equals(c.DataPropertyName, "PatientName", StringComparison.OrdinalIgnoreCase) ||
+                        string.Equals(c.HeaderText, "PatientName", StringComparison.OrdinalIgnoreCase));
+
+                if (col != null)
+                    patientName = row.Cells[col.Index].Value?.ToString();
+            }
+
+            if (string.IsNullOrEmpty(patientName))
+            {
+                MessageBox.Show("Could not determine patient name. Check grid columns.", "Update");
+                return;
+            }
+
+            // proceed with update...
+            AppointmentUpdater.UpdateAppointmentStatus(patientName, "Completed");
+
+            // Perform update once
+            AppointmentUpdater.UpdateAppointmentStatus(patientName, "Completed");
+
+            // Refresh UI
             AppointmentUpdater.RefreshTodaysAppointments(dgvTA);
-
-            // Refresh summary cards
             LoadSummaryCards();
-
-            MessageBox.Show("Today's appointments updated successfully.", "Update");
-
-            foreach (Form form in Application.OpenForms)
-            {
-                if (form is ReceptionistDashboard receptionistDash)
-                {
-                    receptionistDash.LoadTodaysAppointments();
-                    receptionistDash.LoadSummaryCards();
-                }
-            }
+            MessageBox.Show("Today's appointment updated successfully.", "Update");
         }
         private void btnAddAppointment_Click(object sender, EventArgs e)
         {
@@ -329,19 +361,20 @@ namespace SmileTrack
         {
             int rowNumber = dgvTA.Rows.Count + 1;
 
+            // Add appointment to today's list
             dgvTA.Rows.Add(
-                DateTime.Now.ToString("hh:mm tt"),   // Time
-                txtPatientName.Text,                 // Patient Name
-                txtDentist.Text,                     // Dentist
-                txtTreatment.Text,                   // Treatment
-                "Scheduled"                          // Status
+                DateTime.Now.ToString("hh:mm tt"),  // Time
+                txtPatientName.HeaderText,                // Patient Name
+                txtDentist.HeaderText,                    // Dentist
+                txtTreatment.HeaderText,                  // Treatment
+                "Scheduled"                         // Status
             );
 
             // Also add to Walk-in queue if needed
             int walkInRow = dataGridView2.Rows.Count + 1;
             dataGridView2.Rows.Add(
                 walkInRow,
-                txtPatientName.Text,
+                txtPatientName.HeaderText,
                 DateTime.Now.ToString("hh:mm tt"),
                 "Waiting"
             );
@@ -353,10 +386,45 @@ namespace SmileTrack
             }
         }
 
+
         private void dgvReminders_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
 
         }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            if (dgvTA.Rows.Count == 0)
+            {
+                MessageBox.Show("No appointments to display.", "Information");
+                return;
+            }
+
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine("Today's Appointments:\n");
+
+            foreach (DataGridViewRow row in dgvTA.Rows)
+            {
+                if (!row.IsNewRow)
+                {
+                    string time = row.Cells["Time"].Value?.ToString();
+                    string patientName = row.Cells["PatientName"].Value?.ToString();
+                    string dentist = row.Cells["Dentist"].Value?.ToString();
+                    string treatment = row.Cells["Treatment"].Value?.ToString();
+                    string status = row.Cells["Status"].Value?.ToString();
+
+                    sb.AppendLine($"Time: {time}");
+                    sb.AppendLine($"Patient: {patientName}");
+                    sb.AppendLine($"Dentist: {dentist}");
+                    sb.AppendLine($"Treatment: {treatment}");
+                    sb.AppendLine($"Status: {status}");
+                    sb.AppendLine(new string('-', 40));
+                }
+            }
+
+            MessageBox.Show(sb.ToString(), "All Appointments");
+        }
+
     }
 }
 
