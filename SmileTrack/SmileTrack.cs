@@ -12,7 +12,7 @@ namespace SmileTrack
         // Update appointment status by patient name
         public static void UpdateAppointmentStatus(string patientName, string newStatus)
         {
-            var appt = ReceptionistDashboard.AppointmentManager.Appointments
+            var appt = frmReceptionistDashboard.AppointmentManager.Appointments
                 .FirstOrDefault(a => a.PatientName == patientName && a.Date.Date == DateTime.Today);
 
             if (appt != null)
@@ -35,7 +35,7 @@ namespace SmileTrack
                 dgv.Columns.Add("Status", "Status");
             }
 
-            var todaysAppointments = ReceptionistDashboard.AppointmentManager.Appointments
+            var todaysAppointments = frmReceptionistDashboard.AppointmentManager.Appointments
                 .Where(a => a.Date.Date == DateTime.Today)
                 .ToList();
 
@@ -54,7 +54,7 @@ namespace SmileTrack
         // Add a new appointment
         public static void AddAppointment(DateTime date, string patientName, string dentist, string treatment, string status)
         {
-            var newAppt = new ReceptionistDashboard.Appointment
+            var newAppt = new frmReceptionistDashboard.Appointment
             {
                 Date = date,
                 PatientName = patientName,
@@ -63,12 +63,12 @@ namespace SmileTrack
                 Status = status
             };
 
-            ReceptionistDashboard.AppointmentManager.Appointments.Add(newAppt);
+            frmReceptionistDashboard.AppointmentManager.Appointments.Add(newAppt);
         }
 
         public static void AddAppointmentFromPatient(string fullName, string dentist, string treatment)
         {
-            var newAppt = new ReceptionistDashboard.Appointment
+            var newAppt = new frmReceptionistDashboard.Appointment
             {
                 Date = DateTime.Now, // automatically sets to current date/time
                 PatientName = fullName,
@@ -77,7 +77,7 @@ namespace SmileTrack
                 Status = "Scheduled"
             };
 
-            ReceptionistDashboard.AppointmentManager.Appointments.Add(newAppt);
+            frmReceptionistDashboard.AppointmentManager.Appointments.Add(newAppt);
         }
 
     }

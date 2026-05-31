@@ -110,6 +110,12 @@
     <Compile Include="Patient Info Appoinment.Designer.cs">
       <DependentUpon>Patient Info Appoinment.cs</DependentUpon>
     </Compile>
+    <Compile Include="Patient Record.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Patient Record.Designer.cs">
+      <DependentUpon>Patient Record.cs</DependentUpon>
+    </Compile>
     <Compile Include="ReceptionistDashboard.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -154,6 +160,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Patient Info Appoinment.resx">
       <DependentUpon>Patient Info Appoinment.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Patient Record.resx">
+      <DependentUpon>Patient Record.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ReceptionistDashboard.resx">
       <DependentUpon>ReceptionistDashboard.cs</DependentUpon>

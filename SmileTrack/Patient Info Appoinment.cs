@@ -20,23 +20,44 @@ namespace SmileTrack
         {
             InitializeComponent();
 
+            // Gender Group
             GroupBox grpGender = new GroupBox();
             grpGender.Text = "Gender";
-            grpGender.Location = new Point(20, 20); // adjust position
-            grpGender.Size = new Size(200, 60);     // adjust size
+            grpGender.Location = new Point(20, 20);
+            grpGender.Size = new Size(200, 60);
+
+            RadioButton rbMale = new RadioButton();
+            rbMale.Text = "Male";
+            rbMale.Location = new Point(10, 20);
+
+            RadioButton rbFemale = new RadioButton();
+            rbFemale.Text = "Female";
+            rbFemale.Location = new Point(100, 20);
+
             grpGender.Controls.Add(rbMale);
             grpGender.Controls.Add(rbFemale);
             this.Controls.Add(grpGender);
 
-            // Group Visit Type radio buttons
+            // Visit Type Group
             GroupBox grpVisitType = new GroupBox();
             grpVisitType.Text = "Visit Type";
-            grpVisitType.Location = new Point(20, 100); // adjust position
-            grpVisitType.Size = new Size(200, 60);      // adjust size
-            grpVisitType.Controls.Add(rbWalkin);
+            grpVisitType.Location = new Point(20, 100);
+            grpVisitType.Size = new Size(200, 60);
+
+            RadioButton rbWalkIn = new RadioButton();
+            rbWalkIn.Text = "Walk-In";
+            rbWalkIn.Location = new Point(10, 20);
+
+            RadioButton rbAppointment = new RadioButton();
+            rbAppointment.Text = "Appointment";
+            rbAppointment.Location = new Point(100, 20);
+
+            grpVisitType.Controls.Add(rbWalkIn);
             grpVisitType.Controls.Add(rbAppointment);
             this.Controls.Add(grpVisitType);
         }
+
+        
 
         private void Patient_Info_Appoinment_Load(object sender, EventArgs e)
         {
@@ -47,75 +68,50 @@ namespace SmileTrack
 
         private void btnSave_Click(object sender, EventArgs e)
         {
+
+            using (SqlConnection con = new SqlConnection(
+                @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=SmileTrackDB;Integrated Security=True;Encrypt=False"))
             {
-                try
-                {
-                    con.Open();
+                con.Open();
 
+                // Insert Patient
+                SqlCommand cmdPatient = new SqlCommand(
+                    @"INSERT INTO Patients (FirstName, LastName, BirthDate, Age, Gender, ContactNo, Email) 
+              VALUES (@fname, @lname, @bdate, @age, @gender, @contact, @email);
+              SELECT SCOPE_IDENTITY();", con);
 
-                    SqlCommand checkCmd = new SqlCommand("SELECT PatientID FROM Patients WHERE ContactNo=@ContactNo", con);
-                    checkCmd.Parameters.AddWithValue("@ContactNo", txtContact.Text);
-                    object result = checkCmd.ExecuteScalar();
+                cmdPatient.Parameters.AddWithValue("@fname", txtFname.Text);
+                cmdPatient.Parameters.AddWithValue("@lname", txtLname.Text);
+                cmdPatient.Parameters.AddWithValue("@bdate", dtpBirthdate.Value.Date);
+                cmdPatient.Parameters.AddWithValue("@age", nudAge.Value);
+                cmdPatient.Parameters.AddWithValue("@gender", rbMale.Checked ? "Male" : "Female");
+                cmdPatient.Parameters.AddWithValue("@contact", txtContact.Text);
+                cmdPatient.Parameters.AddWithValue("@email", txtEmail.Text);
 
-                    int patientId;
+                int patientID = Convert.ToInt32(cmdPatient.ExecuteScalar());
 
-                    if (result == null)
-                    {
-                        string gender = rbMale.Checked ? "Male" : "Female";
+                // Insert Appointment
+                SqlCommand cmdAppt = new SqlCommand(
+                    @"INSERT INTO Appointments (PatientID, DentistName, Treatment, Status, AppointmentDateTime, Notes) 
+              VALUES (@pid, @dentist, @treatment, @status, @datetime, @notes)", con);
 
-                        SqlCommand insertPatient = new SqlCommand(
-                            "INSERT INTO Patients (Firstname, Lastname, Birthdate, Age, Gender, ContactNo, Email, Address) " +
-                            "OUTPUT INSERTED.PatientID VALUES (@Firstname,@Lastname,@Birthdate,@Age,@Gender,@ContactNo,@Email,@Address)", con);
+                cmdAppt.Parameters.AddWithValue("@pid", patientID);
+                cmdAppt.Parameters.AddWithValue("@dentist", cmbDentist.SelectedItem?.ToString() ?? "");
+                cmdAppt.Parameters.AddWithValue("@treatment", cmbTreatmentType.SelectedItem?.ToString() ?? "");
+                cmdAppt.Parameters.AddWithValue("@status", cmbStatus.SelectedItem?.ToString() ?? "");
+                cmdAppt.Parameters.AddWithValue("@datetime", dtAppoinment.Value);
+                cmdAppt.Parameters.AddWithValue("@notes", richtxtNotes.Text);
 
+                cmdAppt.ExecuteNonQuery();
 
-
-                        insertPatient.Parameters.AddWithValue("@Firstname", txtFname.Text);
-                        insertPatient.Parameters.AddWithValue("@Lastname", txtLname.Text);
-                        insertPatient.Parameters.AddWithValue("@Birthdate", dtpBirthdate.Value);
-                        insertPatient.Parameters.AddWithValue("@Age", int.Parse(nudAge.Text));
-                        insertPatient.Parameters.AddWithValue("@Gender", gender);
-                        insertPatient.Parameters.AddWithValue("@ContactNo", txtContact.Text);
-                        insertPatient.Parameters.AddWithValue("@Email", txtEmail.Text);
-                        insertPatient.Parameters.AddWithValue("@Address", txtAddress.Text);
-
-                        patientId = (int)insertPatient.ExecuteScalar();
-                    }
-                    else
-                    {
-                        patientId = Convert.ToInt32(result);
-                    }
-
-
-                    string visitType = rbWalkin.Checked ? "Walk-in" : "Appointment";
-
-                    SqlCommand insertAppointment = new SqlCommand(
-                        "INSERT INTO Appointments (PatientID, Dentist, TreatmentType, VisitType, Status, DateTime, Notes) " +
-                        "VALUES (@PatientID,@Dentist,@TreatmentType,@VisitType,@Status,@DateTime,@Notes)", con);
-
-                    insertAppointment.Parameters.AddWithValue("@PatientID", patientId);
-                    insertAppointment.Parameters.AddWithValue("@Dentist", cmbDentist.Text);
-                    insertAppointment.Parameters.AddWithValue("@TreatmentType", cmbTreatmentType.Text);
-                    insertAppointment.Parameters.AddWithValue("@VisitType", visitType);
-                    insertAppointment.Parameters.AddWithValue("@Status", cmbStatus.Text);
-                    insertAppointment.Parameters.AddWithValue("@DateTime", dtAppoinment.Value);
-                    insertAppointment.Parameters.AddWithValue("@Notes", richtxtNotes.Text);
-
-                    insertAppointment.ExecuteNonQuery();
-
-                    insertAppointment.ExecuteNonQuery();
-
-                    MessageBox.Show("Patient and Appointment saved successfully!");
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show("Error: " + ex.Message);
-                }
-                finally
-                {
-                    con.Close();
-                }
+                MessageBox.Show("Patient and appointment saved successfully!", "Success");
             }
+
+
+            frmPatientRecords recordsForm = new frmPatientRecords();
+            recordsForm.Show();
         }
+
 
         private void txtPatientID_TextChanged(object sender, EventArgs e)
         {
@@ -310,47 +306,48 @@ namespace SmileTrack
         }
         private void btnUpdate_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(txtPatientID.Text))
-            {
-                MessageBox.Show("Please search or select a patient first.",
-                                "Update Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
-            using (SqlConnection con = new SqlConnection(
+             using (SqlConnection con = new SqlConnection(
                 @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=SmileTrackDB;Integrated Security=True;Encrypt=False"))
             {
                 con.Open();
                 SqlCommand cmd = new SqlCommand(
                     @"UPDATE Appointments 
-              SET DentistName=@dentist, 
-                  Treatment=@treatment, 
-                  Status=@status, 
-                  AppointmentDateTime=@datetime, 
-                  Notes=@notes 
-              WHERE PatientID=@pid", con);
+              SET DentistName=@dentist, Treatment=@treatment, Status=@status, 
+                  AppointmentDateTime=@datetime, Notes=@notes 
+              WHERE AppointmentID=@apptid", con);
 
                 cmd.Parameters.AddWithValue("@dentist", cmbDentist.SelectedItem?.ToString() ?? "");
                 cmd.Parameters.AddWithValue("@treatment", cmbTreatmentType.SelectedItem?.ToString() ?? "");
                 cmd.Parameters.AddWithValue("@status", cmbStatus.SelectedItem?.ToString() ?? "");
-                cmd.Parameters.AddWithValue("@datetime", dtAppoinment.Value); // combined date+time
+                cmd.Parameters.AddWithValue("@datetime", dtAppoinment.Value);
                 cmd.Parameters.AddWithValue("@notes", richtxtNotes.Text);
-                cmd.Parameters.AddWithValue("@pid", txtPatientID.Text);
+                cmd.Parameters.AddWithValue("@apptid", txtAppointmentID.Text); // hidden field or selected row
 
-                int rows = cmd.ExecuteNonQuery();
-                if (rows > 0)
-                {
-                    MessageBox.Show("Appointment updated successfully!",
-                                    "Update", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-                }
-                else
-                {
-                    MessageBox.Show("No appointment found for this patient.",
-                                    "Update Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
+                cmd.ExecuteNonQuery();
+                MessageBox.Show("Appointment updated successfully!", "Success");
             }
+
+            frmPatientRecords recordsForm = new frmPatientRecords();
+            recordsForm.Show();
+        }
+
+        private void btnHome_Click(object sender, EventArgs e)
+        {
+            this.Hide();
+
+
+            frmReceptionistDashboard receptionistForm = new frmReceptionistDashboard();
+            receptionistForm.Show();
+        }
+
+        private void grpGender_Enter(object sender, EventArgs e)
+        {
+            rbMale.Checked = false;
+            rbFemale.Checked = false;
         }
     }
 }
+
+
+
 

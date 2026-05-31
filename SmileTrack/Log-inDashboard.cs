@@ -60,7 +60,7 @@ namespace SmileTrack
             }
             else if (username == "recept1" && password == "recept")
             {
-                new ReceptionistDashboard().Show();
+                new frmReceptionistDashboard().Show();
                 this.Hide();
                 loggedIn = true;
             }
@@ -89,7 +89,7 @@ namespace SmileTrack
                             new DentistDashboard().Show();
                             break;
                         case "receptionist":
-                            new ReceptionistDashboard().Show();
+                            new frmReceptionistDashboard().Show();
                             break;
                         default:
                             MessageBox.Show("Unknown role. Please check user setup.");

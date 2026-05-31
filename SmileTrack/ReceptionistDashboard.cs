@@ -12,12 +12,12 @@ using static SmileTrack.DentistDashboard;
 
 namespace SmileTrack
 {
-    public partial class ReceptionistDashboard : Form
+    public partial class frmReceptionistDashboard : Form
     {
         SqlConnection con = new SqlConnection("Data Source=.;Initial Catalog=SmileTrackDB;Integrated Security=True");
 
 
-        public ReceptionistDashboard()
+        public frmReceptionistDashboard()
         {
             InitializeComponent();
         }
@@ -296,6 +296,16 @@ namespace SmileTrack
         {
             Patient_Info_Appoinment patientForm = new Patient_Info_Appoinment();
             patientForm.Show();
+        }
+
+        private void btnDashboard_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnBillings_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
