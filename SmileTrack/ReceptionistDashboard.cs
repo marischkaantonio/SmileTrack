@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Data.SqlClient;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -13,6 +14,7 @@ namespace SmileTrack
 {
     public partial class ReceptionistDashboard : Form
     {
+        SqlConnection con = new SqlConnection("Data Source=.;Initial Catalog=SmileTrackDB;Integrated Security=True");
 
 
         public ReceptionistDashboard()
@@ -67,16 +69,16 @@ namespace SmileTrack
         private void LoadTodaysAppointments()
         {
             // Clear existing rows
-            dgvTA.Rows.Clear();
+            dgvAppointments.Rows.Clear();
 
             // Ensure columns exist
-            if (dgvTA.Columns.Count == 0)
+            if (dgvAppointments.Columns.Count == 0)
             {
-                dgvTA.Columns.Add("Time", "Time");
-                dgvTA.Columns.Add("PatientName", "Patient Name");
-                dgvTA.Columns.Add("Dentist", "Dentist");
-                dgvTA.Columns.Add("Treatment", "Treatment");
-                dgvTA.Columns.Add("Status", "Status");
+                dgvAppointments.Columns.Add("Time", "Time");
+                dgvAppointments.Columns.Add("PatientName", "Patient Name");
+                dgvAppointments.Columns.Add("Dentist", "Dentist");
+                dgvAppointments.Columns.Add("Treatment", "Treatment");
+                dgvAppointments.Columns.Add("Status", "Status");
             }
 
             // Filter appointments for today
@@ -87,7 +89,7 @@ namespace SmileTrack
             // Populate DataGridView
             foreach (var appt in todaysAppointments)
             {
-                dgvTA.Rows.Add(
+                dgvAppointments.Rows.Add(
                     appt.Date.ToString("hh:mm tt"),
                     appt.PatientName,      // Add these properties to Appointment class if not yet present
                     appt.Dentist,
@@ -110,8 +112,37 @@ namespace SmileTrack
             LoadSummaryCards();
 
             lblWelcome.Text = $"Welcome, {LoggedInUser}!";
-            LoadTodaysAppointments();
+           
 
+        }
+        private void LoadDashboard()
+        {
+            // Appointments today
+            SqlDataAdapter daAppointments = new SqlDataAdapter(
+                "SELECT DateTime, Firstname+' '+Lastname AS PatientName, Dentist, TreatmentType " +
+                "FROM Appointments INNER JOIN Patients ON Appointments.PatientID=Patients.PatientID " +
+                "WHERE Status='Scheduled' AND CAST(DateTime AS DATE)=CAST(GETDATE() AS DATE)", con);
+            DataTable dtAppointments = new DataTable();
+            daAppointments.Fill(dtAppointments);
+            dgvAppointments.DataSource = dtAppointments;
+
+            // Walk-ins today
+            SqlDataAdapter daWalkins = new SqlDataAdapter(
+                "SELECT Firstname+' '+Lastname AS PatientName, DateTime " +
+                "FROM Appointments INNER JOIN Patients ON Appointments.PatientID=Patients.PatientID " +
+                "WHERE VisitType='Walk-in' AND CAST(DateTime AS DATE)=CAST(GETDATE() AS DATE)", con);
+            DataTable dtWalkins = new DataTable();
+            daWalkins.Fill(dtWalkins);
+            dgvWalkIn.DataSource = dtWalkins;
+
+            // Reminders
+            SqlDataAdapter daReminders = new SqlDataAdapter(
+                "SELECT DateTime, Firstname+' '+Lastname AS PatientName " +
+                "FROM Appointments INNER JOIN Patients ON Appointments.PatientID=Patients.PatientID " +
+                "WHERE Status='Scheduled' AND DateTime>GETDATE()", con);
+            DataTable dtReminders = new DataTable();
+            daReminders.Fill(dtReminders);
+            dgvReminders.DataSource = dtReminders;
         }
 
 
@@ -146,58 +177,17 @@ namespace SmileTrack
 
         private void LoadReminders()
         {
-            if (!dataGridView2.Columns.Contains("Time")) return;
-
-            var todayReminders = dataGridView2.Rows
-                .Cast<DataGridViewRow>()
-                .Where(r => r.Cells["Time"].Value != null &&
-                            DateTime.Parse(r.Cells["Time"].Value.ToString()).Date == DateTime.Today)
-                .Select(r => new
-                {
-                    Date = DateTime.Parse(r.Cells["Time"].Value.ToString()).ToShortDateString(),
-                    PatientName = r.Cells["PatientName"].Value?.ToString(),
-                    Time = DateTime.Parse(r.Cells["Time"].Value.ToString()).ToShortTimeString()
-                })
-                .ToList();
-
-            dgvReminders.DataSource = null;
-            dgvReminders.DataSource = todayReminders;
-        }
-
-
-
-
-        private void btnPatients_Click(object sender, EventArgs e)
-        {
-            PatientForm patientForm = new PatientForm();
-            patientForm.Show();
-        }
-
-        private void btnBillings_Click(object sender, EventArgs e)
-        {
-            this.Hide();
-
-            BillingForm billing = new BillingForm();
-            billing.ShowDialog();
-
-            this.Show();
-        }
-
-        private void btnAppoinment_Click(object sender, EventArgs e)
-        {
-
-        }
-
         
+            SqlDataAdapter daReminders = new SqlDataAdapter(
+                "SELECT DateTime, Firstname+' '+Lastname AS PatientName " +
+                "FROM Appointments INNER JOIN Patients ON Appointments.PatientID=Patients.PatientID " +
+                "WHERE Status='Scheduled' AND DateTime>GETDATE()", con);
 
-
-        private void dataGridView2_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-            dataGridView2.Columns.Add("No", "No.");
-            dataGridView2.Columns.Add("PatientName", "Patient Name");
-            dataGridView2.Columns.Add("TimeIn", "Time-in");
-            dataGridView2.Columns.Add("Status", "Status");
+            DataTable dtReminders = new DataTable();
+            daReminders.Fill(dtReminders);
+            dgvReminders.DataSource = dtReminders;
         }
+
 
         private void button6_Click(object sender, EventArgs e)
         {
@@ -234,7 +224,7 @@ namespace SmileTrack
         {
             if (e.RowIndex >= 0)
             {
-                DataGridViewRow row = dgvTA.Rows[e.RowIndex];
+                DataGridViewRow row = dgvAppointments.Rows[e.RowIndex];
                 string patientName = row.Cells["PatientName"].Value?.ToString();
                 string dentist = row.Cells["Dentist"].Value?.ToString();
                 string treatment = row.Cells["Treatment"].Value?.ToString();
@@ -253,106 +243,19 @@ namespace SmileTrack
 
         }
 
-        private void btnUpdate_Click(object sender, EventArgs e)
-        {
-            // C#
-            var row = dgvTA.CurrentRow;
-            if (row == null)
-            {
-                MessageBox.Show("No appointment selected.", "Update");
-                return;
-            }
-
-            string patientName = null;
-
-            // 1) Preferred: check DataBoundItem
-            if (row.DataBoundItem is System.Data.DataRowView drv)
-            {
-                if (drv.Row.Table.Columns.Contains("PatientName"))
-                    patientName = drv["PatientName"]?.ToString();
-            }
-            else if (row.DataBoundItem != null)
-            {
-                var prop = row.DataBoundItem.GetType().GetProperty("PatientName");
-                if (prop != null)
-                    patientName = prop.GetValue(row.DataBoundItem)?.ToString();
-            }
-
-            // 2) Fallback: find a column by Name/DataPropertyName/HeaderText
-            if (string.IsNullOrEmpty(patientName))
-            {
-                var col = dgvTA.Columns
-                    .Cast<DataGridViewColumn>()
-                    .FirstOrDefault(c =>
-                        string.Equals(c.Name, "PatientName", StringComparison.OrdinalIgnoreCase) ||
-                        string.Equals(c.DataPropertyName, "PatientName", StringComparison.OrdinalIgnoreCase) ||
-                        string.Equals(c.HeaderText, "PatientName", StringComparison.OrdinalIgnoreCase));
-
-                if (col != null)
-                    patientName = row.Cells[col.Index].Value?.ToString();
-            }
-
-            if (string.IsNullOrEmpty(patientName))
-            {
-                MessageBox.Show("Could not determine patient name. Check grid columns.", "Update");
-                return;
-            }
-
-            // proceed with update...
-            AppointmentUpdater.UpdateAppointmentStatus(patientName, "Completed");
-
-            // Perform update once
-            AppointmentUpdater.UpdateAppointmentStatus(patientName, "Completed");
-
-            // Refresh UI
-            AppointmentUpdater.RefreshTodaysAppointments(dgvTA);
-            LoadSummaryCards();
-            MessageBox.Show("Today's appointment updated successfully.", "Update");
-        }
-        private void btnAddAppointment_Click(object sender, EventArgs e)
-        {
-            AppointmentUpdater.AddAppointment(
-                DateTime.Now,
-                "Juan Dela Cruz",
-                "Dr. Margie",
-                "Cleaning",
-                "Pending"
-            );
-
-            AppointmentUpdater.RefreshTodaysAppointments(dgvTA);
-            LoadSummaryCards();
-        }
-
-        private void button10_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void btnWalkIn_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void button4_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void btnAddAppointment_Click_1(object sender, EventArgs e)
-        {
-
-        }
+      
+       
 
         private void btnAddAppointment_Click_2(object sender, EventArgs e)
         {
-            int rowNumber = dgvTA.Rows.Count + 1;
+            int rowNumber = dgvAppointments.Rows.Count + 1;
 
             // Generate random patient and dentist
             string randomPatient = AppointmentGenerator.GetRandomPatientName();
             string randomDentist = AppointmentGenerator.GetRandomDentist();
 
             // Add appointment to today's list
-            dgvTA.Rows.Add(
+            dgvAppointments.Rows.Add(
                 DateTime.Now.ToString("hh:mm tt"),  // Time
                 randomPatient,                      // Random Patient Name
                 randomDentist,                      // Random Dentist
@@ -361,8 +264,8 @@ namespace SmileTrack
             );
 
             // Also add to Walk-in queue if needed
-            int walkInRow = dataGridView2.Rows.Count + 1;
-            dataGridView2.Rows.Add(
+            int walkInRow = dgvWalkIn.Rows.Count + 1;
+            dgvWalkIn.Rows.Add(
                 walkInRow,
                 randomPatient,
                 DateTime.Now.ToString("hh:mm tt"),
@@ -387,9 +290,12 @@ namespace SmileTrack
 
         }
 
-        private void button5_Click_1(object sender, EventArgs e)
-        {
+      
 
+        private void btnPatients_Click(object sender, EventArgs e)
+        {
+            Patient_Info_Appoinment patientForm = new Patient_Info_Appoinment();
+            patientForm.Show();
         }
     }
 }

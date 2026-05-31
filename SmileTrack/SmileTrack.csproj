@@ -104,17 +104,11 @@
     <Compile Include="DentistDashboard.Designer.cs">
       <DependentUpon>DentistDashboard.cs</DependentUpon>
     </Compile>
-    <Compile Include="PatientForm.cs">
+    <Compile Include="Patient Info Appoinment.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="PatientForm.Designer.cs">
-      <DependentUpon>PatientForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="patients.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="patients.Designer.cs">
-      <DependentUpon>patients.cs</DependentUpon>
+    <Compile Include="Patient Info Appoinment.Designer.cs">
+      <DependentUpon>Patient Info Appoinment.cs</DependentUpon>
     </Compile>
     <Compile Include="ReceptionistDashboard.cs">
       <SubType>Form</SubType>
@@ -158,8 +152,8 @@
     <EmbeddedResource Include="DentistDashboard.resx">
       <DependentUpon>DentistDashboard.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="PatientForm.resx">
-      <DependentUpon>PatientForm.cs</DependentUpon>
+    <EmbeddedResource Include="Patient Info Appoinment.resx">
+      <DependentUpon>Patient Info Appoinment.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ReceptionistDashboard.resx">
       <DependentUpon>ReceptionistDashboard.cs</DependentUpon>

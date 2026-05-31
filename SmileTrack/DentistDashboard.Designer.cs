@@ -28,9 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea5 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend5 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series5 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.Panel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.btnDashboard = new System.Windows.Forms.Button();
@@ -40,6 +40,7 @@
             this.panel2 = new System.Windows.Forms.Panel();
             this.btnLogOut = new System.Windows.Forms.Button();
             this.panelDentistDashboard = new System.Windows.Forms.Panel();
+            this.lbbell = new System.Windows.Forms.Label();
             this.textBox2 = new System.Windows.Forms.TextBox();
             this.label10 = new System.Windows.Forms.Label();
             this.pictureBox6 = new System.Windows.Forms.PictureBox();
@@ -58,10 +59,6 @@
             this.LastVisit = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.label5 = new System.Windows.Forms.Label();
             this.dgvSched = new System.Windows.Forms.DataGridView();
-            this.Time = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Patient = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Treatment = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Status = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.label4 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
@@ -72,7 +69,10 @@
             this.txtPatientSeen = new System.Windows.Forms.RichTextBox();
             this.txtTodaysAppoinment = new System.Windows.Forms.RichTextBox();
             this.txtUpApp = new System.Windows.Forms.RichTextBox();
-            this.lbbell = new System.Windows.Forms.Label();
+            this.Status = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Treatment = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Patient = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Time = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -123,9 +123,9 @@
             this.btnDashboard.Location = new System.Drawing.Point(2, 110);
             this.btnDashboard.Margin = new System.Windows.Forms.Padding(2);
             this.btnDashboard.Name = "btnDashboard";
-            this.btnDashboard.Size = new System.Drawing.Size(109, 31);
+            this.btnDashboard.Size = new System.Drawing.Size(116, 31);
             this.btnDashboard.TabIndex = 1;
-            this.btnDashboard.Text = "Dashboard";
+            this.btnDashboard.Text = "🏠Dashboard";
             this.btnDashboard.UseVisualStyleBackColor = false;
             // 
             // btnMySched
@@ -225,6 +225,17 @@
             this.panelDentistDashboard.Name = "panelDentistDashboard";
             this.panelDentistDashboard.Size = new System.Drawing.Size(907, 629);
             this.panelDentistDashboard.TabIndex = 1;
+            // 
+            // lbbell
+            // 
+            this.lbbell.AutoSize = true;
+            this.lbbell.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbbell.ForeColor = System.Drawing.Color.DarkGoldenrod;
+            this.lbbell.Location = new System.Drawing.Point(497, 18);
+            this.lbbell.Name = "lbbell";
+            this.lbbell.Size = new System.Drawing.Size(23, 15);
+            this.lbbell.TabIndex = 29;
+            this.lbbell.Text = "🔔";
             // 
             // textBox2
             // 
@@ -349,19 +360,19 @@
             // 
             // chart1
             // 
-            chartArea2.Name = "ChartArea1";
-            this.chart1.ChartAreas.Add(chartArea2);
-            legend2.Name = "Legend1";
-            legend2.TableStyle = System.Windows.Forms.DataVisualization.Charting.LegendTableStyle.Wide;
-            this.chart1.Legends.Add(legend2);
+            chartArea5.Name = "ChartArea1";
+            this.chart1.ChartAreas.Add(chartArea5);
+            legend5.Name = "Legend1";
+            legend5.TableStyle = System.Windows.Forms.DataVisualization.Charting.LegendTableStyle.Wide;
+            this.chart1.Legends.Add(legend5);
             this.chart1.Location = new System.Drawing.Point(56, 407);
             this.chart1.Margin = new System.Windows.Forms.Padding(2);
             this.chart1.Name = "chart1";
             this.chart1.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.Pastel;
-            series2.ChartArea = "ChartArea1";
-            series2.Legend = "Legend1";
-            series2.Name = "Series1";
-            this.chart1.Series.Add(series2);
+            series5.ChartArea = "ChartArea1";
+            series5.Legend = "Legend1";
+            series5.Name = "Series1";
+            this.chart1.Series.Add(series5);
             this.chart1.Size = new System.Drawing.Size(228, 180);
             this.chart1.TabIndex = 14;
             this.chart1.Text = "chart1";
@@ -370,7 +381,7 @@
             // 
             this.label6.AutoSize = true;
             this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label6.Location = new System.Drawing.Point(412, 223);
+            this.label6.Location = new System.Drawing.Point(578, 226);
             this.label6.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(104, 13);
@@ -383,12 +394,12 @@
             this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.dataGridViewTextBoxColumn2,
             this.LastVisit});
-            this.dataGridView1.Location = new System.Drawing.Point(427, 241);
+            this.dataGridView1.Location = new System.Drawing.Point(581, 241);
             this.dataGridView1.Margin = new System.Windows.Forms.Padding(2);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.RowHeadersWidth = 51;
             this.dataGridView1.RowTemplate.Height = 24;
-            this.dataGridView1.Size = new System.Drawing.Size(262, 122);
+            this.dataGridView1.Size = new System.Drawing.Size(299, 122);
             this.dataGridView1.TabIndex = 12;
             // 
             // dataGridViewTextBoxColumn2
@@ -429,36 +440,8 @@
             this.dgvSched.Name = "dgvSched";
             this.dgvSched.RowHeadersWidth = 51;
             this.dgvSched.RowTemplate.Height = 24;
-            this.dgvSched.Size = new System.Drawing.Size(379, 122);
+            this.dgvSched.Size = new System.Drawing.Size(511, 122);
             this.dgvSched.TabIndex = 10;
-            // 
-            // Time
-            // 
-            this.Time.HeaderText = "Time";
-            this.Time.MinimumWidth = 6;
-            this.Time.Name = "Time";
-            this.Time.Width = 125;
-            // 
-            // Patient
-            // 
-            this.Patient.HeaderText = "Patient";
-            this.Patient.MinimumWidth = 6;
-            this.Patient.Name = "Patient";
-            this.Patient.Width = 125;
-            // 
-            // Treatment
-            // 
-            this.Treatment.HeaderText = "Treatment";
-            this.Treatment.MinimumWidth = 6;
-            this.Treatment.Name = "Treatment";
-            this.Treatment.Width = 125;
-            // 
-            // Status
-            // 
-            this.Status.HeaderText = "Status";
-            this.Status.MinimumWidth = 6;
-            this.Status.Name = "Status";
-            this.Status.Width = 125;
             // 
             // label4
             // 
@@ -563,14 +546,33 @@
             this.txtUpApp.TabIndex = 24;
             this.txtUpApp.Text = "";
             // 
-            // lbbell
+            // Status
             // 
-            this.lbbell.AutoSize = true;
-            this.lbbell.Location = new System.Drawing.Point(484, 15);
-            this.lbbell.Name = "lbbell";
-            this.lbbell.Size = new System.Drawing.Size(35, 13);
-            this.lbbell.TabIndex = 29;
-            this.lbbell.Text = "label1";
+            this.Status.HeaderText = "Status";
+            this.Status.MinimumWidth = 6;
+            this.Status.Name = "Status";
+            this.Status.Width = 125;
+            // 
+            // Treatment
+            // 
+            this.Treatment.HeaderText = "Treatment";
+            this.Treatment.MinimumWidth = 6;
+            this.Treatment.Name = "Treatment";
+            this.Treatment.Width = 125;
+            // 
+            // Patient
+            // 
+            this.Patient.HeaderText = "Patient";
+            this.Patient.MinimumWidth = 6;
+            this.Patient.Name = "Patient";
+            this.Patient.Width = 125;
+            // 
+            // Time
+            // 
+            this.Time.HeaderText = "Time";
+            this.Time.MinimumWidth = 6;
+            this.Time.Name = "Time";
+            this.Time.Width = 125;
             // 
             // DentistDashboard
             // 
@@ -620,10 +622,6 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Time;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Patient;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Treatment;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Status;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.DataGridView dataGridView1;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn2;
@@ -647,5 +645,9 @@
         private System.Windows.Forms.TextBox textBox1;
         public System.Windows.Forms.RichTextBox txtTodaysAppoinment;
         private System.Windows.Forms.Label lbbell;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Time;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Patient;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Treatment;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Status;
     }
 }
