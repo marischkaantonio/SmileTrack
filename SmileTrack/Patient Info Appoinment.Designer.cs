@@ -30,11 +30,11 @@
         {
             this.components = new System.ComponentModel.Container();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.txtAppointmentID = new System.Windows.Forms.TextBox();
+            this.label6 = new System.Windows.Forms.Label();
             this.btnUpdate = new System.Windows.Forms.Button();
             this.txtPatientID = new System.Windows.Forms.TextBox();
             this.label17 = new System.Windows.Forms.Label();
-            this.rbAppointment = new System.Windows.Forms.RadioButton();
-            this.rbWalkin = new System.Windows.Forms.RadioButton();
             this.label16 = new System.Windows.Forms.Label();
             this.btnHome = new System.Windows.Forms.Button();
             this.btnSearchPatient = new System.Windows.Forms.Button();
@@ -53,8 +53,6 @@
             this.txtAddress = new System.Windows.Forms.TextBox();
             this.txtEmail = new System.Windows.Forms.TextBox();
             this.txtContact = new System.Windows.Forms.TextBox();
-            this.rbFemale = new System.Windows.Forms.RadioButton();
-            this.rbMale = new System.Windows.Forms.RadioButton();
             this.nudAge = new System.Windows.Forms.NumericUpDown();
             this.dtpBirthdate = new System.Windows.Forms.DateTimePicker();
             this.txtLname = new System.Windows.Forms.TextBox();
@@ -70,18 +68,20 @@
             this.panel2 = new System.Windows.Forms.Panel();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
+            this.grpVisitType = new System.Windows.Forms.GroupBox();
+            this.rbWalkin = new System.Windows.Forms.RadioButton();
+            this.rbAppointment = new System.Windows.Forms.RadioButton();
+            this.grpGender = new System.Windows.Forms.GroupBox();
+            this.rbFemale = new System.Windows.Forms.RadioButton();
+            this.rbMale = new System.Windows.Forms.RadioButton();
             this.errorProvider1 = new System.Windows.Forms.ErrorProvider(this.components);
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
-            this.label6 = new System.Windows.Forms.Label();
-            this.txtAppointmentID = new System.Windows.Forms.TextBox();
-            this.grpGender = new System.Windows.Forms.GroupBox();
-            this.grpVisitType = new System.Windows.Forms.GroupBox();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudAge)).BeginInit();
             this.panel2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).BeginInit();
-            this.grpGender.SuspendLayout();
             this.grpVisitType.SuspendLayout();
+            this.grpGender.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).BeginInit();
             this.SuspendLayout();
             // 
             // panel1
@@ -130,6 +130,23 @@
             this.panel1.Size = new System.Drawing.Size(898, 477);
             this.panel1.TabIndex = 0;
             // 
+            // txtAppointmentID
+            // 
+            this.txtAppointmentID.Location = new System.Drawing.Point(608, 87);
+            this.txtAppointmentID.Name = "txtAppointmentID";
+            this.txtAppointmentID.Size = new System.Drawing.Size(200, 20);
+            this.txtAppointmentID.TabIndex = 41;
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label6.Location = new System.Drawing.Point(489, 87);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(98, 13);
+            this.label6.TabIndex = 40;
+            this.label6.Text = "Appointment ID:";
+            // 
             // btnUpdate
             // 
             this.btnUpdate.BackColor = System.Drawing.Color.MidnightBlue;
@@ -161,30 +178,6 @@
             this.label17.Size = new System.Drawing.Size(68, 13);
             this.label17.TabIndex = 37;
             this.label17.Text = "Patient ID:";
-            // 
-            // rbAppointment
-            // 
-            this.rbAppointment.AutoSize = true;
-            this.rbAppointment.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.rbAppointment.Location = new System.Drawing.Point(101, 11);
-            this.rbAppointment.Name = "rbAppointment";
-            this.rbAppointment.Size = new System.Drawing.Size(91, 17);
-            this.rbAppointment.TabIndex = 34;
-            this.rbAppointment.TabStop = true;
-            this.rbAppointment.Text = "Appoinment";
-            this.rbAppointment.UseVisualStyleBackColor = true;
-            // 
-            // rbWalkin
-            // 
-            this.rbWalkin.AutoSize = true;
-            this.rbWalkin.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.rbWalkin.Location = new System.Drawing.Point(6, 11);
-            this.rbWalkin.Name = "rbWalkin";
-            this.rbWalkin.Size = new System.Drawing.Size(68, 17);
-            this.rbWalkin.TabIndex = 33;
-            this.rbWalkin.TabStop = true;
-            this.rbWalkin.Text = "Walk-in";
-            this.rbWalkin.UseVisualStyleBackColor = true;
             // 
             // label16
             // 
@@ -222,6 +215,7 @@
             this.btnSearchPatient.TabIndex = 30;
             this.btnSearchPatient.Text = "🔍Searh Patient";
             this.btnSearchPatient.UseVisualStyleBackColor = false;
+            this.btnSearchPatient.Click += new System.EventHandler(this.btnSearchPatient_Click);
             // 
             // btnClear
             // 
@@ -235,6 +229,7 @@
             this.btnClear.TabIndex = 29;
             this.btnClear.Text = "🧹Clear";
             this.btnClear.UseVisualStyleBackColor = false;
+            this.btnClear.Click += new System.EventHandler(this.btnClear_Click_1);
             // 
             // btnSave
             // 
@@ -248,6 +243,7 @@
             this.btnSave.TabIndex = 28;
             this.btnSave.Text = "✔️Save";
             this.btnSave.UseVisualStyleBackColor = false;
+            this.btnSave.Click += new System.EventHandler(this.btnSave_Click_1);
             // 
             // richtxtNotes
             // 
@@ -267,6 +263,11 @@
             // cmbStatus
             // 
             this.cmbStatus.FormattingEnabled = true;
+            this.cmbStatus.Items.AddRange(new object[] {
+            "Waiting",
+            "Scheduled",
+            "Completed",
+            "Cancelled"});
             this.cmbStatus.Location = new System.Drawing.Point(608, 220);
             this.cmbStatus.Name = "cmbStatus";
             this.cmbStatus.Size = new System.Drawing.Size(199, 21);
@@ -276,15 +277,22 @@
             // cmbTreatmentType
             // 
             this.cmbTreatmentType.FormattingEnabled = true;
+            this.cmbTreatmentType.Items.AddRange(new object[] {
+            "Teeth Cleaning",
+            "Crown/Dentures",
+            "Braces",
+            "Dental Extraction"});
             this.cmbTreatmentType.Location = new System.Drawing.Point(609, 151);
             this.cmbTreatmentType.Name = "cmbTreatmentType";
             this.cmbTreatmentType.Size = new System.Drawing.Size(199, 21);
             this.cmbTreatmentType.TabIndex = 24;
-            this.cmbTreatmentType.SelectedIndexChanged += new System.EventHandler(this.cmbTreatmentType_SelectedIndexChanged);
             // 
             // cmbDentist
             // 
             this.cmbDentist.FormattingEnabled = true;
+            this.cmbDentist.Items.AddRange(new object[] {
+            "Dr. Primrose",
+            "Dr. Margie"});
             this.cmbDentist.Location = new System.Drawing.Point(609, 117);
             this.cmbDentist.Name = "cmbDentist";
             this.cmbDentist.Size = new System.Drawing.Size(199, 21);
@@ -363,31 +371,6 @@
             this.txtContact.Size = new System.Drawing.Size(200, 20);
             this.txtContact.TabIndex = 15;
             this.txtContact.TextChanged += new System.EventHandler(this.txtContact_TextChanged);
-            // 
-            // rbFemale
-            // 
-            this.rbFemale.AutoSize = true;
-            this.rbFemale.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.rbFemale.Location = new System.Drawing.Point(118, 10);
-            this.rbFemale.Name = "rbFemale";
-            this.rbFemale.Size = new System.Drawing.Size(65, 17);
-            this.rbFemale.TabIndex = 14;
-            this.rbFemale.TabStop = true;
-            this.rbFemale.Text = "Female";
-            this.rbFemale.UseVisualStyleBackColor = true;
-            // 
-            // rbMale
-            // 
-            this.rbMale.AutoSize = true;
-            this.rbMale.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.rbMale.Location = new System.Drawing.Point(6, 12);
-            this.rbMale.Name = "rbMale";
-            this.rbMale.Size = new System.Drawing.Size(52, 17);
-            this.rbMale.TabIndex = 13;
-            this.rbMale.TabStop = true;
-            this.rbMale.Text = "Male";
-            this.rbMale.UseVisualStyleBackColor = true;
-            this.rbMale.CheckedChanged += new System.EventHandler(this.rbMale_CheckedChanged);
             // 
             // nudAge
             // 
@@ -534,26 +517,39 @@
             this.label1.TabIndex = 0;
             this.label1.Text = "Patient Information";
             // 
-            // errorProvider1
+            // grpVisitType
             // 
-            this.errorProvider1.ContainerControl = this;
+            this.grpVisitType.Controls.Add(this.rbWalkin);
+            this.grpVisitType.Controls.Add(this.rbAppointment);
+            this.grpVisitType.Location = new System.Drawing.Point(610, 178);
+            this.grpVisitType.Name = "grpVisitType";
+            this.grpVisitType.Size = new System.Drawing.Size(198, 33);
+            this.grpVisitType.TabIndex = 43;
+            this.grpVisitType.TabStop = false;
             // 
-            // label6
+            // rbWalkin
             // 
-            this.label6.AutoSize = true;
-            this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label6.Location = new System.Drawing.Point(489, 87);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(98, 13);
-            this.label6.TabIndex = 40;
-            this.label6.Text = "Appointment ID:";
+            this.rbWalkin.AutoSize = true;
+            this.rbWalkin.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.rbWalkin.Location = new System.Drawing.Point(6, 11);
+            this.rbWalkin.Name = "rbWalkin";
+            this.rbWalkin.Size = new System.Drawing.Size(68, 17);
+            this.rbWalkin.TabIndex = 33;
+            this.rbWalkin.TabStop = true;
+            this.rbWalkin.Text = "Walk-in";
+            this.rbWalkin.UseVisualStyleBackColor = true;
             // 
-            // txtAppointmentID
+            // rbAppointment
             // 
-            this.txtAppointmentID.Location = new System.Drawing.Point(608, 87);
-            this.txtAppointmentID.Name = "txtAppointmentID";
-            this.txtAppointmentID.Size = new System.Drawing.Size(200, 20);
-            this.txtAppointmentID.TabIndex = 41;
+            this.rbAppointment.AutoSize = true;
+            this.rbAppointment.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.rbAppointment.Location = new System.Drawing.Point(101, 11);
+            this.rbAppointment.Name = "rbAppointment";
+            this.rbAppointment.Size = new System.Drawing.Size(91, 17);
+            this.rbAppointment.TabIndex = 34;
+            this.rbAppointment.TabStop = true;
+            this.rbAppointment.Text = "Appoinment";
+            this.rbAppointment.UseVisualStyleBackColor = true;
             // 
             // grpGender
             // 
@@ -566,15 +562,34 @@
             this.grpGender.TabStop = false;
             this.grpGender.Enter += new System.EventHandler(this.grpGender_Enter);
             // 
-            // grpVisitType
+            // rbFemale
             // 
-            this.grpVisitType.Controls.Add(this.rbWalkin);
-            this.grpVisitType.Controls.Add(this.rbAppointment);
-            this.grpVisitType.Location = new System.Drawing.Point(610, 178);
-            this.grpVisitType.Name = "grpVisitType";
-            this.grpVisitType.Size = new System.Drawing.Size(198, 33);
-            this.grpVisitType.TabIndex = 43;
-            this.grpVisitType.TabStop = false;
+            this.rbFemale.AutoSize = true;
+            this.rbFemale.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.rbFemale.Location = new System.Drawing.Point(118, 10);
+            this.rbFemale.Name = "rbFemale";
+            this.rbFemale.Size = new System.Drawing.Size(65, 17);
+            this.rbFemale.TabIndex = 14;
+            this.rbFemale.TabStop = true;
+            this.rbFemale.Text = "Female";
+            this.rbFemale.UseVisualStyleBackColor = true;
+            // 
+            // rbMale
+            // 
+            this.rbMale.AutoSize = true;
+            this.rbMale.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.rbMale.Location = new System.Drawing.Point(6, 12);
+            this.rbMale.Name = "rbMale";
+            this.rbMale.Size = new System.Drawing.Size(52, 17);
+            this.rbMale.TabIndex = 13;
+            this.rbMale.TabStop = true;
+            this.rbMale.Text = "Male";
+            this.rbMale.UseVisualStyleBackColor = true;
+            this.rbMale.CheckedChanged += new System.EventHandler(this.rbMale_CheckedChanged);
+            // 
+            // errorProvider1
+            // 
+            this.errorProvider1.ContainerControl = this;
             // 
             // Patient_Info_Appoinment
             // 
@@ -589,11 +604,11 @@
             ((System.ComponentModel.ISupportInitialize)(this.nudAge)).EndInit();
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).EndInit();
-            this.grpGender.ResumeLayout(false);
-            this.grpGender.PerformLayout();
             this.grpVisitType.ResumeLayout(false);
             this.grpVisitType.PerformLayout();
+            this.grpGender.ResumeLayout(false);
+            this.grpGender.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).EndInit();
             this.ResumeLayout(false);
 
         }

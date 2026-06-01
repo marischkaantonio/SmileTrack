@@ -99,7 +99,6 @@
             this.txtSearch.Name = "txtSearch";
             this.txtSearch.Size = new System.Drawing.Size(150, 20);
             this.txtSearch.TabIndex = 2;
-            this.txtSearch.TextChanged += new System.EventHandler(this.txtSearch_TextChanged);
             // 
             // panel1
             // 
@@ -129,7 +128,6 @@
             this.btnExport.TabIndex = 29;
             this.btnExport.Text = "Export to PDF";
             this.btnExport.UseVisualStyleBackColor = false;
-            this.btnExport.Click += new System.EventHandler(this.btnExport_Click);
             // 
             // cmbFilterbyStatus
             // 
@@ -138,7 +136,6 @@
             this.cmbFilterbyStatus.Name = "cmbFilterbyStatus";
             this.cmbFilterbyStatus.Size = new System.Drawing.Size(153, 21);
             this.cmbFilterbyStatus.TabIndex = 7;
-            this.cmbFilterbyStatus.SelectedIndexChanged += new System.EventHandler(this.cmbFilterbyStatus_SelectedIndexChanged);
             // 
             // label3
             // 
@@ -157,7 +154,6 @@
             this.cmbFilterbyDentist.Name = "cmbFilterbyDentist";
             this.cmbFilterbyDentist.Size = new System.Drawing.Size(153, 21);
             this.cmbFilterbyDentist.TabIndex = 5;
-            this.cmbFilterbyDentist.SelectedIndexChanged += new System.EventHandler(this.cmbFilterbyDentist_SelectedIndexChanged);
             // 
             // label2
             // 
@@ -179,7 +175,6 @@
             this.btnSearch.TabIndex = 3;
             this.btnSearch.Text = "🔍";
             this.btnSearch.UseVisualStyleBackColor = false;
-            this.btnSearch.Click += new System.EventHandler(this.btnSearch_Click);
             // 
             // panel2
             // 
@@ -204,11 +199,11 @@
             this.Email,
             this.Address,
             this.Status});
-            this.dgvPatientRecord.Location = new System.Drawing.Point(7, 24);
+            this.dgvPatientRecord.Location = new System.Drawing.Point(7, 23);
             this.dgvPatientRecord.Name = "dgvPatientRecord";
             this.dgvPatientRecord.Size = new System.Drawing.Size(544, 247);
             this.dgvPatientRecord.TabIndex = 0;
-            this.dgvPatientRecord.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellContentClick);
+            this.dgvPatientRecord.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvPatientRecord_CellContentClick);
             // 
             // PatientID
             // 
@@ -285,7 +280,6 @@
             this.btnClear.TabIndex = 31;
             this.btnClear.Text = "Refresh";
             this.btnClear.UseVisualStyleBackColor = false;
-            this.btnClear.Click += new System.EventHandler(this.btnClear_Click);
             // 
             // btnClose
             // 
@@ -299,7 +293,6 @@
             this.btnClose.TabIndex = 30;
             this.btnClose.Text = "Close";
             this.btnClose.UseVisualStyleBackColor = false;
-            this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
             // 
             // panel4
             // 

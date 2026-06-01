@@ -13,38 +13,67 @@ namespace SmileTrack
 {
     public partial class frmPatientRecords : Form
     {
+        private string connectionString;
+
         public frmPatientRecords()
         {
             InitializeComponent();
         }
-
-        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        private void LoadPatientRecords(string searchQuery = "")
         {
-           {
-            if (e.RowIndex >= 0)
+            
+            string query = @"
+        SELECT 
+            p.PatientID AS [Patient ID], 
+            p.FirstName AS [First Name], 
+            p.LastName AS [Last Name], 
+            p.BirthDate AS [Birth Date], 
+            p.Age AS [Age], 
+            p.Gender AS [Gender],
+            p.ContactNo AS [Contact No],
+            p.Email AS [Email],
+            p.Address AS [Address],
+            a.[AppointmentDateTime] AS [Last Appointment],
+            a.Treatment AS [Treatment],
+            a.Dentist AS [Dentist],
+            a.Status AS [Status]
+        FROM Patients p
+        INNER JOIN Appointments a ON p.PatientID = a.PatientID";
+
+            if (!string.IsNullOrWhiteSpace(searchQuery))
             {
-                DataGridViewRow row = dgvPatientRecord.Rows[e.RowIndex];
+                query += " WHERE p.FirstName LIKE @search OR p.LastName LIKE @search OR CAST(p.PatientID AS VARCHAR) LIKE @search";
+            }
 
-                // Basic info already visible in DGV
-                // Appointment details shown in labels
-                lblPatientID.Text = row.Cells["PatientID"].Value?.ToString();
-                lblFname.Text = row.Cells["FirstName"].Value?.ToString() + " " + row.Cells["LastName"].Value?.ToString();
-                lblLName.Text = row.Cells["LastName"].Value?.ToString() + " " + row.Cells["LastName"].Value?.ToString();
-                lblContact.Text = row.Cells["ContactNo."].Value?.ToString();
-                lblEmail.Text = row.Cells["Email"].Value?.ToString();
-                lblBdate.Text = Convert.ToDateTime(row.Cells["BirthDate"].Value).ToShortDateString();
-                lblGender.Text = row.Cells["Gender"].Value?.ToString();
-                lblStatus.Text = row.Cells["Status"].Value?.ToString();
+            try
+            {
+                using (SqlConnection con = new SqlConnection(connectionString))
+                {
+                    using (SqlCommand cmd = new SqlCommand(query, con))
+                    {
+                        if (!string.IsNullOrWhiteSpace(searchQuery))
+                        {
+                            cmd.Parameters.AddWithValue("@search", "%" + searchQuery + "%");
+                        }
 
-                // Appointment details (if joined in query)
-                lblTreatment.Text = row.Cells["Treatment"].Value?.ToString();
-                lblLastAppointment.Text = Convert.ToDateTime(row.Cells["AppointmentDateTime"].Value).ToShortDateString();
-                lblDentist.Text = row.Cells["DentistName"].Value?.ToString();
-                
+                        SqlDataAdapter da = new SqlDataAdapter(cmd);
+                        DataTable dt = new DataTable();
+                        da.Fill(dt);
+
+                        // Siguraduhing malinis at bago ang binding
+                        dgvPatientRecord.DataSource = null;
+                        dgvPatientRecord.AutoGenerateColumns = true;
+                        dgvPatientRecord.DataSource = dt;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error loading records: " + ex.Message, "Database Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
-    }
+        
 
         private void btnSearch_Click(object sender, EventArgs e)
         {
@@ -145,6 +174,42 @@ namespace SmileTrack
             dgvPatientRecord.DataSource = null; // clear grid
         }
 
+        private void frmPatientRecords_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void dgvPatientRecord_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+          
+            if (e.RowIndex >= 0)
+            {
+                DataGridViewRow row = dgvPatientRecord.Rows[e.RowIndex];
+
+                lblPatientID.Text = row.Cells["Patient ID"].Value?.ToString();
+                lblFname.Text = row.Cells["First Name"].Value?.ToString();
+                lblLName.Text = row.Cells["Last Name"].Value?.ToString();
+                lblContact.Text = row.Cells["Contact No"].Value?.ToString();
+                lblEmail.Text = row.Cells["Email"].Value?.ToString();
+                lblBdate.Text = row.Cells["Birth Date"].Value?.ToString();
+                lblGender.Text = row.Cells["Gender"].Value?.ToString();
+                lblStatus.Text = row.Cells["Status"].Value?.ToString();
+                lblTreatment.Text = row.Cells["Treatment"].Value?.ToString();
+                lblDentist.Text = row.Cells["Dentist"].Value?.ToString();
+
+                // Safe DateTime conversion
+                if (row.Cells["Last Appointment"].Value != null && row.Cells["Last Appointment"].Value != DBNull.Value)
+                {
+                    lblLastAppointment.Text = Convert.ToDateTime(row.Cells["Last Appointment"].Value).ToShortDateString();
+                }
+                else
+                {
+                    lblLastAppointment.Text = "No Appointment";
+                }
+            }
+        }
+
     }
 }
+
 
