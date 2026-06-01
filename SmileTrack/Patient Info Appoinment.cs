@@ -14,15 +14,16 @@ using System.Windows.Forms;
 namespace SmileTrack
 {
     public partial class Patient_Info_Appoinment : Form
+
     {
-        SqlConnection con = new SqlConnection(
-    @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=SmileTrackDB;Integrated Security=True;Encrypt=False");
+        private string connectionString = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=SmileTrackDB;Integrated Security=True;Encrypt=False";
+        private SqlConnection con;
 
         public Patient_Info_Appoinment()
         {
             InitializeComponent();
 
-
+        
             GroupBox grpGender = new GroupBox();
             grpGender.Text = "Gender";
             grpGender.Location = new Point(20, 20);
@@ -73,35 +74,41 @@ namespace SmileTrack
         private void txtPatientID_TextChanged(object sender, EventArgs e)
         {
 
-
-            if (int.TryParse(txtPatientID.Text, out int patientId))
+            if (int.TryParse(txtPatientID.Text, out int patientID))
             {
-
-                SqlCommand cmd = new SqlCommand("SELECT * FROM Patients WHERE PatientID = @id", con);
-
-
-                cmd.Parameters.Add("@id", SqlDbType.Int).Value = patientId;
-
-                SqlDataAdapter da = new SqlDataAdapter(cmd);
-                DataTable dt = new DataTable();
-                da.Fill(dt);
-
-                if (dt.Rows.Count > 0)
+                try
                 {
+                    using (SqlConnection con = new SqlConnection(connectionString))
+                    {
+                        con.Open();
 
-                    txtFname.Text = dt.Rows[0]["FirstName"].ToString();
-                    txtLname.Text = dt.Rows[0]["LastName"].ToString();
+                        using (SqlCommand cmd = new SqlCommand("SELECT * FROM Patients WHERE PatientID = @id", con))
+                        {
+                            cmd.Parameters.Add("@id", SqlDbType.Int).Value = patientID;
 
+                            SqlDataAdapter da = new SqlDataAdapter(cmd);
+                            DataTable dt = new DataTable();
+                            da.Fill(dt);
+
+                            if (dt.Rows.Count > 0)
+                            {
+                                txtFname.Text = dt.Rows[0]["FirstName"].ToString();
+                                txtLname.Text = dt.Rows[0]["LastName"].ToString();
+                            }
+                            else
+                            {
+                                txtFname.Clear();
+                                txtLname.Clear();
+                            }
+                        }
+                    }
                 }
-                else
+                catch (Exception ex)
                 {
-
-                    txtFname.Clear();
-                    txtLname.Clear();
+                    MessageBox.Show("Error loading patient: " + ex.Message, "Database Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }
-
 
 
         private void txtPatientID_KeyPress(object sender, KeyPressEventArgs e)
@@ -174,18 +181,33 @@ namespace SmileTrack
 
         private void cmbDentist_SelectedIndexChanged(object sender, EventArgs e)
         {
-            string selectedDentist = cmbDentist.SelectedItem.ToString();
+              string selectedDentist = cmbDentist.SelectedItem.ToString();
             cmbDentist.Text = "Selected Dentist: " + selectedDentist;
 
-            // Example: load dentist schedule
-            SqlCommand cmd = new SqlCommand("SELECT * FROM Appointments WHERE Dentist=@dentist", con);
-            cmd.Parameters.AddWithValue("@dentist", selectedDentist);
-            SqlDataAdapter da = new SqlDataAdapter(cmd);
-            DataTable dt = new DataTable();
-            da.Fill(dt);
+            try
+            {
+                using (SqlConnection con = new SqlConnection(connectionString))
+                {
+                    con.Open();
 
+                    string query = "SELECT * FROM Appointments WHERE Dentist=@dentist";
+                    using (SqlCommand cmd = new SqlCommand(query, con))
+                    {
+                        cmd.Parameters.AddWithValue("@dentist", selectedDentist);
+
+                        SqlDataAdapter da = new SqlDataAdapter(cmd);
+                        DataTable dt = new DataTable();
+                        da.Fill(dt);
+
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error loading dentist schedule: " + ex.Message,
+                                "Database Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
-
 
 
 
@@ -195,8 +217,8 @@ namespace SmileTrack
 
         }
 
-      
-      
+
+
         private void btnHome_Click(object sender, EventArgs e)
         {
             this.Hide();
@@ -211,86 +233,82 @@ namespace SmileTrack
             rbMale.Checked = false;
             rbFemale.Checked = false;
         }
-
-        private void btnSave_Click_1(object sender, EventArgs e)
+        private void ClearFields()
         {
-            if (string.IsNullOrWhiteSpace(txtFname.Text) || string.IsNullOrWhiteSpace(txtLname.Text))
-            {
-                MessageBox.Show("Please enter the patient's first and last name.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
 
-            if (cmbDentist.SelectedItem == null || cmbTreatmentType.SelectedItem == null || cmbStatus.SelectedItem == null)
-            {
-                MessageBox.Show("Please select a Dentist, Treatment, and Status.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
+            txtPatientID.Clear();
+            txtFname.Clear();
+            txtLname.Clear();
+            dtpBirthdate.Value = DateTime.Now;
+            nudAge.Value = 0;
+            rbMale.Checked = false;
+            rbFemale.Checked = false;
+            txtContact.Clear();
+            txtEmail.Clear();
+            txtAddress.Clear();
 
-            // Auto-capitalize para sa unahang letra ng pangalan
-            System.Globalization.TextInfo textInfo = System.Globalization.CultureInfo.CurrentCulture.TextInfo;
-            string formattedFirstName = textInfo.ToTitleCase(txtFname.Text.Trim().ToLower());
-            string formattedLastName = textInfo.ToTitleCase(txtLname.Text.Trim().ToLower());
 
+            cmbDentist.SelectedIndex = -1;
+            cmbTreatmentType.SelectedIndex = -1;
+            rbWalkin.Checked = false;
+            rbAppointment.Checked = false;
+            cmbStatus.SelectedIndex = -1;
+            dtAppoinment.Value = DateTime.Now;
+            richtxtNotes.Clear();
+        }
+       
+        private void btnSave_Click_1(object sender, EventArgs e)
+
+        {
+           
             try
             {
-                using (SqlConnection con = new SqlConnection(@"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=SmileTrackDB;Integrated Security=True;Encrypt=False"))
+                using (SqlConnection con = new SqlConnection(connectionString))
                 {
                     con.Open();
 
-                    // INSERT PATIENT (Identity Column Friendly)
-                    SqlCommand cmdPatient = new SqlCommand(
-                        @"INSERT INTO Patients (FirstName, LastName, BirthDate, Age, Gender, ContactNo, Email) 
-                VALUES (@fname, @lname, @bdate, @age, @gender, @contact, @email);
-                SELECT SCOPE_IDENTITY();", con);
+                    string query = @"INSERT INTO Patients 
+                             (FirstName, LastName, BirthDate, Age, Gender, ContactNo, Email, Address) 
+                             VALUES (@fname, @lname, @bdate, @age, @gender, @contact, @email, @address)";
 
-                    cmdPatient.Parameters.AddWithValue("@fname", formattedFirstName);
-                    cmdPatient.Parameters.AddWithValue("@lname", formattedLastName);
-                    cmdPatient.Parameters.AddWithValue("@bdate", dtpBirthdate.Value.Date);
-                    cmdPatient.Parameters.AddWithValue("@age", nudAge.Value);
-                    cmdPatient.Parameters.AddWithValue("@gender", rbMale.Checked ? "Male" : "Female");
-                    cmdPatient.Parameters.AddWithValue("@contact", txtContact.Text.Trim());
-                    cmdPatient.Parameters.AddWithValue("@email", txtEmail.Text.Trim());
+                    using (SqlCommand cmd = new SqlCommand(query, con))
+                    {
+                        cmd.Parameters.AddWithValue("@fname", txtFname.Text.Trim());
+                        cmd.Parameters.AddWithValue("@lname", txtLname.Text.Trim());
+                        cmd.Parameters.AddWithValue("@bdate", dtpBirthdate.Value);
+                        cmd.Parameters.AddWithValue("@age", nudAge.Value);
+                        cmd.Parameters.AddWithValue("@gender", rbMale.Checked ? "Male" : "Female");
+                        cmd.Parameters.AddWithValue("@contact", txtContact.Text.Trim());
+                        cmd.Parameters.AddWithValue("@email", txtEmail.Text.Trim());
+                        cmd.Parameters.AddWithValue("@address", txtAddress.Text.Trim());
 
-                    // Kuhanin ang generated ID ng pasyente
-                    int generatedPatientID = Convert.ToInt32(cmdPatient.ExecuteScalar());
-
-                    // INSERT APPOINTMENT (Inayos ang mga column names base sa image_518c14.png)
-                    // DentistName -> naging Dentist
-                    // AppointmentDateTime -> naging DateTime
-                    // Idinagdag na rin natin ang VisitType!
-                    SqlCommand cmdAppt = new SqlCommand(
-                        @"INSERT INTO Appointments (PatientID, Dentist, Treatment, VisitType, Status, DateTime, Notes) 
-                VALUES (@pid, @dentist, @treatment, @visittype, @status, @datetime, @notes)", con);
-
-                    cmdAppt.Parameters.AddWithValue("@pid", generatedPatientID);
-                    cmdAppt.Parameters.AddWithValue("@dentist", cmbDentist.SelectedItem.ToString());
-                    cmdAppt.Parameters.AddWithValue("@treatment", cmbTreatmentType.SelectedItem.ToString());
-
-                    // Lihis na pagkuha kung Walk-in o Appointment ang pinili ng user
-                    cmdAppt.Parameters.AddWithValue("@visittype", rbWalkin.Checked ? "Walk-in" : "Appointment");
-
-                    cmdAppt.Parameters.AddWithValue("@status", cmbStatus.SelectedItem.ToString());
-                    cmdAppt.Parameters.AddWithValue("@datetime", dtAppoinment.Value); // Siguraduhing tama ang pangalan ng dtp mo
-                    cmdAppt.Parameters.AddWithValue("@notes", richtxtNotes.Text.Trim());
-
-                    cmdAppt.ExecuteNonQuery();
-
-                    MessageBox.Show($"Patient and appointment saved successfully! Assigned Patient ID: {generatedPatientID}", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        cmd.ExecuteNonQuery();
+                    }
                 }
 
-                frmPatientRecords recordsForm = new frmPatientRecords();
-                recordsForm.Show();
+                MessageBox.Show("Patient saved successfully!", "Save", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+               
+                frmPatientRecords recordForm = new frmPatientRecords();
+                recordForm.Show();
+                recordForm.LoadRecordFrm(); 
+
+                frmReceptionistDashboard dash = new frmReceptionistDashboard();
+                dash.Show();
+                dash.LoadDashboard();
+               
             }
             catch (Exception ex)
             {
-                MessageBox.Show("An error occurred: " + ex.Message, "Database Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Error saving patient: " + ex.Message, "Database Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
+
         private void btnUpdate_Click(object sender, EventArgs e)
         {
-                using (SqlConnection con = new SqlConnection(
-               @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=SmileTrackDB;Integrated Security=True;Encrypt=False"))
+            using (SqlConnection con = new SqlConnection(
+           @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=SmileTrackDB;Integrated Security=True;Encrypt=False"))
             {
                 con.Open();
                 SqlCommand cmd = new SqlCommand(
@@ -316,39 +334,41 @@ namespace SmileTrack
 
         private void btnSearchPatient_Click(object sender, EventArgs e)
         {
-             
-            using (SqlConnection con = new SqlConnection(
-     @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=SmileTrackDB;Integrated Security=True;Encrypt=False"))
+            try
             {
-                con.Open();
-                SqlCommand cmd = new SqlCommand(
-                    "SELECT TOP 1 * FROM Patients WHERE PatientID = @pid", con);
-                cmd.Parameters.AddWithValue("@pid", txtPatientID.Text); // <-- use PatientID textbox
-
-                SqlDataReader reader = cmd.ExecuteReader();
-                if (reader.Read())
+                using (SqlConnection con = new SqlConnection(connectionString))
                 {
-                    // Auto-fill patient info into form fields
-                    txtFname.Text = reader["FirstName"].ToString();
-                    txtLname.Text = reader["LastName"].ToString();
-                    txtContact.Text = reader["ContactNo"].ToString();
-                    txtEmail.Text = reader["Email"].ToString();
-                    txtAddress.Text = reader["Address"].ToString();
+                    con.Open();
 
-                    // Birthdate + auto-calculate age
-                    DateTime birthdate = Convert.ToDateTime(reader["Birthdate"]);
-                    dtpBirthdate.Value = birthdate;
-                    int age = DateTime.Today.Year - birthdate.Year;
-                    if (birthdate.Date > DateTime.Today.AddYears(-age)) age--;
-                    nudAge.Value = age;
-                }
-                else
-                {
-                    MessageBox.Show("No patient found with that PatientID.", "Search",
-                                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    string query = "SELECT * FROM Patients WHERE PatientID = @pid";
+                    using (SqlCommand cmd = new SqlCommand(query, con))
+                    {
+                        cmd.Parameters.AddWithValue("@pid", txtPatientID.Text.Trim());
+
+                        SqlDataAdapter da = new SqlDataAdapter(cmd);
+                        DataTable dt = new DataTable();
+                        da.Fill(dt);
+
+                        if (dt.Rows.Count > 0)
+                        {
+                            DataRow row = dt.Rows[0];
+                            txtFname.Text = row["FirstName"].ToString();
+                            txtLname.Text = row["LastName"].ToString();
+                        }
+                        else
+                        {
+                            MessageBox.Show("No patient found.");
+                        }
+                    }
                 }
             }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error searching patient: " + ex.Message);
+            }
         }
+
+
 
         private void btnClear_Click_1(object sender, EventArgs e)
         {

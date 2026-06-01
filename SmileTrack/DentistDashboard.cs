@@ -142,11 +142,7 @@ namespace SmileTrack
             txtTreatmentDone.DeselectAll();
         }
 
-        private void btnMySched_Click(object sender, EventArgs e)
-        {
-            AppointmentUpdater.RefreshTodaysAppointments(dgvSched);
-        }
-
+        
         private void LoadMySchedule()
         {
             var myAppointments = AppointmentManager.Appointments

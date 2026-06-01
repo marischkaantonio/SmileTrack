@@ -33,8 +33,10 @@
             this.btnBillings = new System.Windows.Forms.Button();
             this.lblWelcome = new System.Windows.Forms.Label();
             this.btnLogout = new System.Windows.Forms.Button();
+            this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.btnPatients = new System.Windows.Forms.Button();
             this.btnDashboard = new System.Windows.Forms.Button();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.label13 = new System.Windows.Forms.Label();
             this.lblWalkin = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
@@ -80,12 +82,10 @@
             this.lblUnpaid = new System.Windows.Forms.Label();
             this.label11 = new System.Windows.Forms.Label();
             this.panel8 = new System.Windows.Forms.Panel();
-            this.LblPaid = new System.Windows.Forms.Label();
+            this.lblPaid = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
             this.button10 = new System.Windows.Forms.Button();
             this.label9 = new System.Windows.Forms.Label();
-            this.pictureBox2 = new System.Windows.Forms.PictureBox();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.pictureBox7 = new System.Windows.Forms.PictureBox();
             this.pictureBox6 = new System.Windows.Forms.PictureBox();
             this.pictureBox5 = new System.Windows.Forms.PictureBox();
@@ -93,6 +93,8 @@
             this.pictureBox3 = new System.Windows.Forms.PictureBox();
             this.panelReceptDashboard = new System.Windows.Forms.Panel();
             this.panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.panel4.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvAppointments)).BeginInit();
             this.dgvWalkInQueue.SuspendLayout();
@@ -103,8 +105,6 @@
             this.panel10.SuspendLayout();
             this.panel9.SuspendLayout();
             this.panel8.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox7)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox6)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox5)).BeginInit();
@@ -151,7 +151,6 @@
             this.btnBillings.TabIndex = 7;
             this.btnBillings.Text = "💰Billings";
             this.btnBillings.UseVisualStyleBackColor = false;
-            this.btnBillings.Click += new System.EventHandler(this.btnBillings_Click);
             // 
             // lblWelcome
             // 
@@ -174,7 +173,17 @@
             this.btnLogout.TabIndex = 5;
             this.btnLogout.Text = "Log-out";
             this.btnLogout.UseVisualStyleBackColor = false;
-            this.btnLogout.Click += new System.EventHandler(this.btnLogout_Click);
+            // 
+            // pictureBox2
+            // 
+            this.pictureBox2.BackgroundImage = global::SmileTrack.Properties.Resources.istockphoto_1281615253_170667a;
+            this.pictureBox2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.pictureBox2.Location = new System.Drawing.Point(29, 420);
+            this.pictureBox2.Margin = new System.Windows.Forms.Padding(2);
+            this.pictureBox2.Name = "pictureBox2";
+            this.pictureBox2.Size = new System.Drawing.Size(89, 80);
+            this.pictureBox2.TabIndex = 4;
+            this.pictureBox2.TabStop = false;
             // 
             // btnPatients
             // 
@@ -202,7 +211,17 @@
             this.btnDashboard.TabIndex = 2;
             this.btnDashboard.Text = "🏠Dashboard";
             this.btnDashboard.UseVisualStyleBackColor = false;
-            this.btnDashboard.Click += new System.EventHandler(this.btnDashboard_Click);
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.BackgroundImage = global::SmileTrack.Properties.Resources._7fbf6c74_85d6_441b_b2e0_5faf4c8635f6;
+            this.pictureBox1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.pictureBox1.Location = new System.Drawing.Point(0, 0);
+            this.pictureBox1.Margin = new System.Windows.Forms.Padding(2);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(150, 122);
+            this.pictureBox1.TabIndex = 0;
+            this.pictureBox1.TabStop = false;
             // 
             // label13
             // 
@@ -343,7 +362,6 @@
             this.dgvAppointments.RowTemplate.Height = 24;
             this.dgvAppointments.Size = new System.Drawing.Size(461, 141);
             this.dgvAppointments.TabIndex = 2;
-            this.dgvAppointments.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvTA_CellContentClick);
             // 
             // colTime
             // 
@@ -479,7 +497,6 @@
             this.button6.TabIndex = 1;
             this.button6.Text = "View All";
             this.button6.UseVisualStyleBackColor = false;
-            this.button6.Click += new System.EventHandler(this.button6_Click);
             // 
             // label7
             // 
@@ -532,7 +549,6 @@
             this.dgvReminders.RowTemplate.Height = 24;
             this.dgvReminders.Size = new System.Drawing.Size(402, 122);
             this.dgvReminders.TabIndex = 2;
-            this.dgvReminders.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvReminders_CellContentClick);
             // 
             // colDate
             // 
@@ -602,7 +618,6 @@
             this.panel7.Name = "panel7";
             this.panel7.Size = new System.Drawing.Size(474, 284);
             this.panel7.TabIndex = 14;
-            this.panel7.Paint += new System.Windows.Forms.PaintEventHandler(this.panel7_Paint);
             // 
             // panel10
             // 
@@ -673,7 +688,7 @@
             // panel8
             // 
             this.panel8.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
-            this.panel8.Controls.Add(this.LblPaid);
+            this.panel8.Controls.Add(this.lblPaid);
             this.panel8.Controls.Add(this.label10);
             this.panel8.Location = new System.Drawing.Point(10, 57);
             this.panel8.Margin = new System.Windows.Forms.Padding(2);
@@ -681,16 +696,16 @@
             this.panel8.Size = new System.Drawing.Size(143, 81);
             this.panel8.TabIndex = 14;
             // 
-            // LblPaid
+            // lblPaid
             // 
-            this.LblPaid.AutoSize = true;
-            this.LblPaid.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LblPaid.Location = new System.Drawing.Point(37, 23);
-            this.LblPaid.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.LblPaid.Name = "LblPaid";
-            this.LblPaid.Size = new System.Drawing.Size(61, 17);
-            this.LblPaid.TabIndex = 1;
-            this.LblPaid.Text = "label13";
+            this.lblPaid.AutoSize = true;
+            this.lblPaid.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblPaid.Location = new System.Drawing.Point(37, 23);
+            this.lblPaid.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lblPaid.Name = "lblPaid";
+            this.lblPaid.Size = new System.Drawing.Size(61, 17);
+            this.lblPaid.TabIndex = 1;
+            this.lblPaid.Text = "label13";
             // 
             // label10
             // 
@@ -726,28 +741,6 @@
             this.label9.Size = new System.Drawing.Size(142, 13);
             this.label9.TabIndex = 0;
             this.label9.Text = "Billing Summary (Today)";
-            // 
-            // pictureBox2
-            // 
-            this.pictureBox2.BackgroundImage = global::SmileTrack.Properties.Resources.istockphoto_1281615253_170667a;
-            this.pictureBox2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.pictureBox2.Location = new System.Drawing.Point(29, 420);
-            this.pictureBox2.Margin = new System.Windows.Forms.Padding(2);
-            this.pictureBox2.Name = "pictureBox2";
-            this.pictureBox2.Size = new System.Drawing.Size(89, 80);
-            this.pictureBox2.TabIndex = 4;
-            this.pictureBox2.TabStop = false;
-            // 
-            // pictureBox1
-            // 
-            this.pictureBox1.BackgroundImage = global::SmileTrack.Properties.Resources._7fbf6c74_85d6_441b_b2e0_5faf4c8635f6;
-            this.pictureBox1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.pictureBox1.Location = new System.Drawing.Point(0, 0);
-            this.pictureBox1.Margin = new System.Windows.Forms.Padding(2);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(150, 122);
-            this.pictureBox1.TabIndex = 0;
-            this.pictureBox1.TabStop = false;
             // 
             // pictureBox7
             // 
@@ -827,9 +820,10 @@
             this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "frmReceptionistDashboard";
             this.Text = "ReceptionistDashboard";
-            this.Load += new System.EventHandler(this.ReceptionistDashboard_Load);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.panel4.ResumeLayout(false);
             this.panel4.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvAppointments)).EndInit();
@@ -847,8 +841,6 @@
             this.panel9.PerformLayout();
             this.panel8.ResumeLayout(false);
             this.panel8.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox7)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox6)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox5)).EndInit();
@@ -912,7 +904,7 @@
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.Label lblTotalRevenue;
         private System.Windows.Forms.Label lblUnpaid;
-        private System.Windows.Forms.Label LblPaid;
+        private System.Windows.Forms.Label lblPaid;
         private System.Windows.Forms.DataGridViewTextBoxColumn txtNo;
         private System.Windows.Forms.DataGridViewTextBoxColumn txtPatientName;
         private System.Windows.Forms.DataGridViewTextBoxColumn txtTimeIn;

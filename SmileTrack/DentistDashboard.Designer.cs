@@ -140,7 +140,6 @@
             this.btnMySched.TabIndex = 2;
             this.btnMySched.Text = "MySchedule";
             this.btnMySched.UseVisualStyleBackColor = false;
-            this.btnMySched.Click += new System.EventHandler(this.btnMySched_Click);
             // 
             // btnTreatments
             // 

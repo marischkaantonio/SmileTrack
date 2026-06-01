@@ -21,7 +21,7 @@ namespace SmileTrack
         }
         private void LoadPatientRecords(string searchQuery = "")
         {
-            
+
             string query = @"
         SELECT 
             p.PatientID AS [Patient ID], 
@@ -73,7 +73,7 @@ namespace SmileTrack
             }
         }
 
-        
+
 
         private void btnSearch_Click(object sender, EventArgs e)
         {
@@ -93,7 +93,7 @@ namespace SmileTrack
                 dgvPatientRecord.DataSource = dt;
             }
         }
-        
+
 
         private void txtSearch_TextChanged(object sender, EventArgs e)
         {
@@ -102,7 +102,7 @@ namespace SmileTrack
 
         private void cmbFilterbyDentist_SelectedIndexChanged(object sender, EventArgs e)
         {
-               string dentist = cmbFilterbyDentist.SelectedItem.ToString();
+            string dentist = cmbFilterbyDentist.SelectedItem.ToString();
 
             using (SqlConnection con = new SqlConnection(
                 @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=SmileTrackDB;Integrated Security=True;Encrypt=False"))
@@ -119,11 +119,11 @@ namespace SmileTrack
             }
         }
 
-        
+
 
         private void cmbFilterbyStatus_SelectedIndexChanged(object sender, EventArgs e)
         {
-           
+
             string status = cmbFilterbyStatus.SelectedItem.ToString();
 
             using (SqlConnection con = new SqlConnection(
@@ -137,14 +137,14 @@ namespace SmileTrack
                 SqlDataAdapter da = new SqlDataAdapter(cmd);
                 DataTable dt = new DataTable();
                 da.Fill(dt);
-               dgvPatientRecord.DataSource = dt;
+                dgvPatientRecord.DataSource = dt;
             }
         }
 
-        
+
         private void btnExport_Click(object sender, EventArgs e)
         {
-           
+
             // Example using SaveFileDialog
             SaveFileDialog sfd = new SaveFileDialog();
             sfd.Filter = "PDF files (*.pdf)|*.pdf";
@@ -155,25 +155,37 @@ namespace SmileTrack
             }
         }
 
-     
+
 
         private void btnClose_Click(object sender, EventArgs e)
         {
-           
+
             this.Close(); // closes Patient Records form
         }
 
-        
+
 
         private void btnClear_Click(object sender, EventArgs e)
         {
-         
+
             txtSearch.Clear();
             cmbFilterbyDentist.SelectedIndex = -1;
             cmbFilterbyStatus.SelectedIndex = -1;
             dgvPatientRecord.DataSource = null; // clear grid
         }
+        private void LoadPatients()
+        {
+            using (SqlConnection con = new SqlConnection(connectionString))
+            {
+                con.Open();
+                string query = "SELECT PatientID, FirstName, LastName, BirthDate, Age, Gender FROM Patients";
+                SqlDataAdapter da = new SqlDataAdapter(query, con);
+                DataTable dt = new DataTable();
+                da.Fill(dt);
 
+                dgvPatientRecord.DataSource = dt;
+            }
+        }
         private void frmPatientRecords_Load(object sender, EventArgs e)
         {
 
@@ -181,7 +193,7 @@ namespace SmileTrack
 
         private void dgvPatientRecord_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
-          
+
             if (e.RowIndex >= 0)
             {
                 DataGridViewRow row = dgvPatientRecord.Rows[e.RowIndex];
@@ -209,7 +221,20 @@ namespace SmileTrack
             }
         }
 
+        public void LoadRecordFrm()
+        {
+            using (SqlConnection con = new SqlConnection(connectionString))
+            {
+                con.Open();
+                string query = "SELECT PatientID, FirstName, LastName, BirthDate, Age, Gender FROM Patients";
+                SqlDataAdapter da = new SqlDataAdapter(query, con);
+                DataTable dt = new DataTable();
+                da.Fill(dt);
+                dgvPatientRecord.DataSource = dt;
+            }
+        }
     }
 }
+
 
 

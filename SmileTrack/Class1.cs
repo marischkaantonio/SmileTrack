@@ -107,7 +107,7 @@ namespace SmileTrack
         // Randomly pick a dentist (Rimrose or Marjie)
         public static string GetRandomDentist()
         {
-            string[] dentists = { "Dr. Rimrose", "Dr. Marjie" };
+            string[] dentists = { "Dr. Primrose", "Dr. Margie" };
             int index = random.Next(dentists.Length);
             return dentists[index];
         }
