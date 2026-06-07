@@ -22,49 +22,30 @@ namespace SmileTrack
         public Patient_Info_Appoinment()
         {
             InitializeComponent();
-
-        
-            GroupBox grpGender = new GroupBox();
-            grpGender.Text = "Gender";
-            grpGender.Location = new Point(20, 20);
-            grpGender.Size = new Size(200, 60);
-
-            RadioButton rbMale = new RadioButton();
-            rbMale.Text = "Male";
-            rbMale.Location = new Point(10, 20);
-
-            RadioButton rbFemale = new RadioButton();
-            rbFemale.Text = "Female";
-            rbFemale.Location = new Point(100, 20);
-
-            grpGender.Controls.Add(rbMale);
-            grpGender.Controls.Add(rbFemale);
-            this.Controls.Add(grpGender);
-
-
-            GroupBox grpVisitType = new GroupBox();
-            grpVisitType.Text = "Visit Type";
-            grpVisitType.Location = new Point(20, 100);
-            grpVisitType.Size = new Size(200, 60);
-
-            RadioButton rbWalkIn = new RadioButton();
-            rbWalkIn.Text = "Walk-In";
-            rbWalkIn.Location = new Point(10, 20);
-
-            RadioButton rbAppointment = new RadioButton();
-            rbAppointment.Text = "Appointment";
-            rbAppointment.Location = new Point(100, 20);
-
-            grpVisitType.Controls.Add(rbWalkIn);
-            grpVisitType.Controls.Add(rbAppointment);
-            this.Controls.Add(grpVisitType);
+            // Optionally initialize any runtime-only UI state
+            rbWalkin.Checked = false;
+            rbAppointment.Checked = false;
+            rbMale.Checked = false;
+            rbFemale.Checked = false;            // Optionally initialize any runtime-only UI state
+            rbWalkin.Checked = false;
+            rbAppointment.Checked = false;
+            rbMale.Checked = false;
+            rbFemale.Checked = false;           // Optionally initialize any runtime-only UI state
+            rbWalkin.Checked = false;
+            rbAppointment.Checked = false;
+            rbMale.Checked = false;
+            rbFemale.Checked = false;            // Optionally initialize any runtime-only UI state
+            rbWalkin.Checked = false;
+            rbAppointment.Checked = false;
+            rbMale.Checked = false;
+            rbFemale.Checked = false;
         }
 
 
 
         private void Patient_Info_Appoinment_Load(object sender, EventArgs e)
         {
-
+               
         }
 
 
@@ -288,15 +269,15 @@ namespace SmileTrack
 
                 MessageBox.Show("Patient saved successfully!", "Save", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-               
+
                 frmPatientRecords recordForm = new frmPatientRecords();
                 recordForm.Show();
-                recordForm.LoadRecordFrm(); 
+                NewMethod(recordForm);
 
                 frmReceptionistDashboard dash = new frmReceptionistDashboard();
                 dash.Show();
                 dash.LoadDashboard();
-               
+
             }
             catch (Exception ex)
             {
@@ -304,6 +285,10 @@ namespace SmileTrack
             }
         }
 
+        private static void NewMethod(frmPatientRecords recordForm)
+        {
+            recordForm.LoadPatients();
+        }
 
         private void btnUpdate_Click(object sender, EventArgs e)
         {

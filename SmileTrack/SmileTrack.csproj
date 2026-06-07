@@ -123,12 +123,6 @@
     <Compile Include="ReceptionistDashboard.Designer.cs">
       <DependentUpon>ReceptionistDashboard.cs</DependentUpon>
     </Compile>
-    <Compile Include="Reminders.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Reminders.Designer.cs">
-      <DependentUpon>Reminders.cs</DependentUpon>
-    </Compile>
     <Compile Include="SmileTrack.cs" />
     <Compile Include="Splash.cs">
       <SubType>Form</SubType>

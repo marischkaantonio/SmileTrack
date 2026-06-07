@@ -2,15 +2,10 @@
 {
     partial class BillingForm
     {
-        /// <summary>
-        /// Required designer variable.
-        /// </summary>
         private System.ComponentModel.IContainer components = null;
 
-        /// <summary>
-        /// Clean up any resources being used.
-        /// </summary>
-        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+      
+
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
@@ -22,10 +17,7 @@
 
         #region Windows Form Designer generated code
 
-        /// <summary>
-        /// Required method for Designer support - do not modify
-        /// the contents of this method with the code editor.
-        /// </summary>
+     
         private void InitializeComponent()
         {
             this.pageSetupDialog1 = new System.Windows.Forms.PageSetupDialog();
@@ -71,6 +63,14 @@
             this.panel11 = new System.Windows.Forms.Panel();
             this.panel12 = new System.Windows.Forms.Panel();
             this.dgvInvoices = new System.Windows.Forms.DataGridView();
+            this.colInvoiceNo = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colInvoiceDate = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colPatientName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colTotal = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colPaidAmount = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colBalance = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colStatus = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Action = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.label20 = new System.Windows.Forms.Label();
             this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.label24 = new System.Windows.Forms.Label();
@@ -88,14 +88,6 @@
             this.btnNext = new System.Windows.Forms.Button();
             this.btnPrev = new System.Windows.Forms.Button();
             this.lblPageInfo = new System.Windows.Forms.Label();
-            this.colInvoiceNo = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colInvoiceDate = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colPatientName = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colTotal = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colPaidAmount = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colBalance = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colStatus = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Action = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dgvInvoiceItems.SuspendLayout();
             this.panel3.SuspendLayout();
             this.panel6.SuspendLayout();
@@ -597,6 +589,66 @@
             this.dgvInvoices.TabIndex = 2;
             this.dgvInvoices.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvInvoices_CellContentClick);
             // 
+            // colInvoiceNo
+            // 
+            this.colInvoiceNo.HeaderText = "Invoice No.";
+            this.colInvoiceNo.MaxInputLength = 300;
+            this.colInvoiceNo.MinimumWidth = 6;
+            this.colInvoiceNo.Name = "colInvoiceNo";
+            this.colInvoiceNo.Width = 125;
+            // 
+            // colInvoiceDate
+            // 
+            this.colInvoiceDate.HeaderText = "Invoice Date";
+            this.colInvoiceDate.MaxInputLength = 300;
+            this.colInvoiceDate.MinimumWidth = 6;
+            this.colInvoiceDate.Name = "colInvoiceDate";
+            this.colInvoiceDate.Width = 125;
+            // 
+            // colPatientName
+            // 
+            this.colPatientName.HeaderText = "Patient Name";
+            this.colPatientName.MaxInputLength = 5;
+            this.colPatientName.MinimumWidth = 6;
+            this.colPatientName.Name = "colPatientName";
+            this.colPatientName.Width = 125;
+            // 
+            // colTotal
+            // 
+            this.colTotal.HeaderText = "Total Amount";
+            this.colTotal.MaxInputLength = 100;
+            this.colTotal.MinimumWidth = 6;
+            this.colTotal.Name = "colTotal";
+            this.colTotal.Width = 125;
+            // 
+            // colPaidAmount
+            // 
+            this.colPaidAmount.HeaderText = "Paid Amount";
+            this.colPaidAmount.MaxInputLength = 100;
+            this.colPaidAmount.MinimumWidth = 6;
+            this.colPaidAmount.Name = "colPaidAmount";
+            this.colPaidAmount.Width = 125;
+            // 
+            // colBalance
+            // 
+            this.colBalance.HeaderText = "Balance";
+            this.colBalance.MaxInputLength = 100;
+            this.colBalance.MinimumWidth = 6;
+            this.colBalance.Name = "colBalance";
+            this.colBalance.Width = 125;
+            // 
+            // colStatus
+            // 
+            this.colStatus.HeaderText = "Status";
+            this.colStatus.MinimumWidth = 6;
+            this.colStatus.Name = "colStatus";
+            this.colStatus.Width = 125;
+            // 
+            // Action
+            // 
+            this.Action.HeaderText = "Action";
+            this.Action.Name = "Action";
+            // 
             // label20
             // 
             this.label20.AutoSize = true;
@@ -785,66 +837,6 @@
             this.lblPageInfo.TabIndex = 30;
             this.lblPageInfo.Text = "Page 1 0f N";
             // 
-            // colInvoiceNo
-            // 
-            this.colInvoiceNo.HeaderText = "Invoice No.";
-            this.colInvoiceNo.MaxInputLength = 300;
-            this.colInvoiceNo.MinimumWidth = 6;
-            this.colInvoiceNo.Name = "colInvoiceNo";
-            this.colInvoiceNo.Width = 125;
-            // 
-            // colInvoiceDate
-            // 
-            this.colInvoiceDate.HeaderText = "Invoice Date";
-            this.colInvoiceDate.MaxInputLength = 300;
-            this.colInvoiceDate.MinimumWidth = 6;
-            this.colInvoiceDate.Name = "colInvoiceDate";
-            this.colInvoiceDate.Width = 125;
-            // 
-            // colPatientName
-            // 
-            this.colPatientName.HeaderText = "Patient Name";
-            this.colPatientName.MaxInputLength = 5;
-            this.colPatientName.MinimumWidth = 6;
-            this.colPatientName.Name = "colPatientName";
-            this.colPatientName.Width = 125;
-            // 
-            // colTotal
-            // 
-            this.colTotal.HeaderText = "Total Amount";
-            this.colTotal.MaxInputLength = 100;
-            this.colTotal.MinimumWidth = 6;
-            this.colTotal.Name = "colTotal";
-            this.colTotal.Width = 125;
-            // 
-            // colPaidAmount
-            // 
-            this.colPaidAmount.HeaderText = "Paid Amount";
-            this.colPaidAmount.MaxInputLength = 100;
-            this.colPaidAmount.MinimumWidth = 6;
-            this.colPaidAmount.Name = "colPaidAmount";
-            this.colPaidAmount.Width = 125;
-            // 
-            // colBalance
-            // 
-            this.colBalance.HeaderText = "Balance";
-            this.colBalance.MaxInputLength = 100;
-            this.colBalance.MinimumWidth = 6;
-            this.colBalance.Name = "colBalance";
-            this.colBalance.Width = 125;
-            // 
-            // colStatus
-            // 
-            this.colStatus.HeaderText = "Status";
-            this.colStatus.MinimumWidth = 6;
-            this.colStatus.Name = "colStatus";
-            this.colStatus.Width = 125;
-            // 
-            // Action
-            // 
-            this.Action.HeaderText = "Action";
-            this.Action.Name = "Action";
-            // 
             // BillingForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -860,6 +852,7 @@
             this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "BillingForm";
             this.Text = "Billing";
+            this.Load += new System.EventHandler(this.BillingForm_Load_1);
             this.dgvInvoiceItems.ResumeLayout(false);
             this.dgvInvoiceItems.PerformLayout();
             this.panel3.ResumeLayout(false);
