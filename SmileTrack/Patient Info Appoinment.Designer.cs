@@ -75,7 +75,8 @@
             this.rbFemale = new System.Windows.Forms.RadioButton();
             this.rbMale = new System.Windows.Forms.RadioButton();
             this.errorProvider1 = new System.Windows.Forms.ErrorProvider(this.components);
-            this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
+            this.txtTime = new System.Windows.Forms.TextBox();
+            this.label7 = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudAge)).BeginInit();
             this.panel2.SuspendLayout();
@@ -87,6 +88,8 @@
             // panel1
             // 
             this.panel1.BackColor = System.Drawing.SystemColors.Control;
+            this.panel1.Controls.Add(this.label7);
+            this.panel1.Controls.Add(this.txtTime);
             this.panel1.Controls.Add(this.txtAppointmentID);
             this.panel1.Controls.Add(this.label6);
             this.panel1.Controls.Add(this.btnUpdate);
@@ -152,7 +155,7 @@
             this.btnUpdate.BackColor = System.Drawing.Color.MidnightBlue;
             this.btnUpdate.Font = new System.Drawing.Font("Gill Sans Ultra Bold", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnUpdate.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.btnUpdate.Location = new System.Drawing.Point(743, 432);
+            this.btnUpdate.Location = new System.Drawing.Point(591, 432);
             this.btnUpdate.Margin = new System.Windows.Forms.Padding(2);
             this.btnUpdate.Name = "btnUpdate";
             this.btnUpdate.Size = new System.Drawing.Size(131, 31);
@@ -208,7 +211,7 @@
             this.btnSearchPatient.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(0)))));
             this.btnSearchPatient.Font = new System.Drawing.Font("Gill Sans Ultra Bold", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnSearchPatient.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.btnSearchPatient.Location = new System.Drawing.Point(490, 432);
+            this.btnSearchPatient.Location = new System.Drawing.Point(379, 432);
             this.btnSearchPatient.Margin = new System.Windows.Forms.Padding(2);
             this.btnSearchPatient.Name = "btnSearchPatient";
             this.btnSearchPatient.Size = new System.Drawing.Size(210, 31);
@@ -222,7 +225,7 @@
             this.btnClear.BackColor = System.Drawing.Color.Silver;
             this.btnClear.Font = new System.Drawing.Font("Gill Sans Ultra Bold", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnClear.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.btnClear.Location = new System.Drawing.Point(325, 432);
+            this.btnClear.Location = new System.Drawing.Point(242, 432);
             this.btnClear.Margin = new System.Windows.Forms.Padding(2);
             this.btnClear.Name = "btnClear";
             this.btnClear.Size = new System.Drawing.Size(131, 31);
@@ -236,7 +239,7 @@
             this.btnSave.BackColor = System.Drawing.Color.Blue;
             this.btnSave.Font = new System.Drawing.Font("Gill Sans Ultra Bold", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnSave.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.btnSave.Location = new System.Drawing.Point(160, 432);
+            this.btnSave.Location = new System.Drawing.Point(96, 432);
             this.btnSave.Margin = new System.Windows.Forms.Padding(2);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(131, 31);
@@ -247,7 +250,7 @@
             // 
             // richtxtNotes
             // 
-            this.richtxtNotes.Location = new System.Drawing.Point(608, 303);
+            this.richtxtNotes.Location = new System.Drawing.Point(608, 328);
             this.richtxtNotes.Name = "richtxtNotes";
             this.richtxtNotes.Size = new System.Drawing.Size(199, 96);
             this.richtxtNotes.TabIndex = 27;
@@ -303,7 +306,7 @@
             // 
             this.label15.AutoSize = true;
             this.label15.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label15.Location = new System.Drawing.Point(492, 307);
+            this.label15.Location = new System.Drawing.Point(492, 331);
             this.label15.Name = "label15";
             this.label15.Size = new System.Drawing.Size(44, 13);
             this.label15.TabIndex = 22;
@@ -315,9 +318,9 @@
             this.label14.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label14.Location = new System.Drawing.Point(489, 268);
             this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(71, 13);
+            this.label14.Size = new System.Drawing.Size(38, 13);
             this.label14.TabIndex = 21;
-            this.label14.Text = "Date/Time:";
+            this.label14.Text = "Date:";
             // 
             // label13
             // 
@@ -591,6 +594,23 @@
             // 
             this.errorProvider1.ContainerControl = this;
             // 
+            // txtTime
+            // 
+            this.txtTime.Location = new System.Drawing.Point(608, 296);
+            this.txtTime.Name = "txtTime";
+            this.txtTime.Size = new System.Drawing.Size(94, 20);
+            this.txtTime.TabIndex = 45;
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label7.Location = new System.Drawing.Point(489, 291);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(38, 13);
+            this.label7.TabIndex = 46;
+            this.label7.Text = "Time:";
+            // 
             // Patient_Info_Appoinment
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -657,10 +677,11 @@
         private System.Windows.Forms.Label label17;
         private System.Windows.Forms.ErrorProvider errorProvider1;
         private System.Windows.Forms.Button btnUpdate;
-        private System.ComponentModel.BackgroundWorker backgroundWorker1;
         private System.Windows.Forms.TextBox txtAppointmentID;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.GroupBox grpGender;
         private System.Windows.Forms.GroupBox grpVisitType;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.TextBox txtTime;
     }
 }

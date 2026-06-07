@@ -362,6 +362,14 @@ ORDER BY UserName;";
                 MessageBox.Show($"Failed to open Reports form: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+
+            FormAdminDashboard dashboard = new FormAdminDashboard();
+            dashboard.Show();
+            this.Close();
+        }
     }
 }
 

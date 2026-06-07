@@ -39,17 +39,8 @@
             this.btnSearch = new System.Windows.Forms.Button();
             this.panel2 = new System.Windows.Forms.Panel();
             this.dgvPatientRecord = new System.Windows.Forms.DataGridView();
-            this.PatientID = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.FName = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.LastName = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.BDate = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Age = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Gender = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Contact = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Email = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Address = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Status = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.panel3 = new System.Windows.Forms.Panel();
+            this.btnDelete = new System.Windows.Forms.Button();
             this.btnClear = new System.Windows.Forms.Button();
             this.btnClose = new System.Windows.Forms.Button();
             this.panel4 = new System.Windows.Forms.Panel();
@@ -76,7 +67,6 @@
             this.label6 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
-            this.btnDelete = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvPatientRecord)).BeginInit();
@@ -120,7 +110,7 @@
             // btnExport
             // 
             this.btnExport.BackColor = System.Drawing.Color.Blue;
-            this.btnExport.Font = new System.Drawing.Font("Gill Sans Ultra Bold", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnExport.Font = new System.Drawing.Font("Gill Sans Ultra Bold", 9F);
             this.btnExport.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
             this.btnExport.Location = new System.Drawing.Point(911, 6);
             this.btnExport.Margin = new System.Windows.Forms.Padding(2);
@@ -133,6 +123,10 @@
             // cmbFilterbyStatus
             // 
             this.cmbFilterbyStatus.FormattingEnabled = true;
+            this.cmbFilterbyStatus.Items.AddRange(new object[] {
+            "Cancelled",
+            "Scheduled",
+            "Waiting"});
             this.cmbFilterbyStatus.Location = new System.Drawing.Point(672, 11);
             this.cmbFilterbyStatus.Name = "cmbFilterbyStatus";
             this.cmbFilterbyStatus.Size = new System.Drawing.Size(153, 21);
@@ -151,10 +145,14 @@
             // cmbFilterbyDentist
             // 
             this.cmbFilterbyDentist.FormattingEnabled = true;
+            this.cmbFilterbyDentist.Items.AddRange(new object[] {
+            "Dr. Margie",
+            "Dr. Primrose"});
             this.cmbFilterbyDentist.Location = new System.Drawing.Point(404, 10);
             this.cmbFilterbyDentist.Name = "cmbFilterbyDentist";
             this.cmbFilterbyDentist.Size = new System.Drawing.Size(153, 21);
             this.cmbFilterbyDentist.TabIndex = 5;
+            this.cmbFilterbyDentist.SelectedIndexChanged += new System.EventHandler(this.cmbFilterbyDentist_SelectedIndexChanged_1);
             // 
             // label2
             // 
@@ -189,75 +187,11 @@
             // dgvPatientRecord
             // 
             this.dgvPatientRecord.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvPatientRecord.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.PatientID,
-            this.FName,
-            this.LastName,
-            this.BDate,
-            this.Age,
-            this.Gender,
-            this.Contact,
-            this.Email,
-            this.Address,
-            this.Status});
-            this.dgvPatientRecord.Location = new System.Drawing.Point(7, 23);
+            this.dgvPatientRecord.Location = new System.Drawing.Point(21, 26);
             this.dgvPatientRecord.Name = "dgvPatientRecord";
             this.dgvPatientRecord.Size = new System.Drawing.Size(544, 247);
             this.dgvPatientRecord.TabIndex = 0;
             this.dgvPatientRecord.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvPatientRecord_CellContentClick);
-            // 
-            // PatientID
-            // 
-            this.PatientID.HeaderText = "Patient ID";
-            this.PatientID.Name = "PatientID";
-            // 
-            // FName
-            // 
-            this.FName.HeaderText = "FirstName";
-            this.FName.Name = "FName";
-            // 
-            // LastName
-            // 
-            this.LastName.HeaderText = "LastName";
-            this.LastName.Name = "LastName";
-            // 
-            // BDate
-            // 
-            this.BDate.HeaderText = "BirthDate";
-            this.BDate.Name = "BDate";
-            // 
-            // Age
-            // 
-            this.Age.HeaderText = "Age";
-            this.Age.MaxInputLength = 20;
-            this.Age.Name = "Age";
-            this.Age.Width = 50;
-            // 
-            // Gender
-            // 
-            this.Gender.HeaderText = "Gender";
-            this.Gender.MaxInputLength = 20;
-            this.Gender.Name = "Gender";
-            // 
-            // Contact
-            // 
-            this.Contact.HeaderText = "ContactNo.";
-            this.Contact.Name = "Contact";
-            // 
-            // Email
-            // 
-            this.Email.HeaderText = "Email";
-            this.Email.Name = "Email";
-            // 
-            // Address
-            // 
-            this.Address.HeaderText = "Address";
-            this.Address.Name = "Address";
-            // 
-            // Status
-            // 
-            this.Status.HeaderText = "Status";
-            this.Status.Name = "Status";
             // 
             // panel3
             // 
@@ -270,10 +204,24 @@
             this.panel3.Size = new System.Drawing.Size(1074, 55);
             this.panel3.TabIndex = 30;
             // 
+            // btnDelete
+            // 
+            this.btnDelete.BackColor = System.Drawing.Color.Red;
+            this.btnDelete.Font = new System.Drawing.Font("Gill Sans Ultra Bold", 9F);
+            this.btnDelete.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.btnDelete.Location = new System.Drawing.Point(935, 12);
+            this.btnDelete.Margin = new System.Windows.Forms.Padding(2);
+            this.btnDelete.Name = "btnDelete";
+            this.btnDelete.Size = new System.Drawing.Size(118, 31);
+            this.btnDelete.TabIndex = 32;
+            this.btnDelete.Text = "Delete";
+            this.btnDelete.UseVisualStyleBackColor = false;
+            this.btnDelete.Click += new System.EventHandler(this.btnDelete_Click);
+            // 
             // btnClear
             // 
             this.btnClear.BackColor = System.Drawing.Color.Silver;
-            this.btnClear.Font = new System.Drawing.Font("Gill Sans Ultra Bold", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnClear.Font = new System.Drawing.Font("Gill Sans Ultra Bold", 9F);
             this.btnClear.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
             this.btnClear.Location = new System.Drawing.Point(810, 12);
             this.btnClear.Margin = new System.Windows.Forms.Padding(2);
@@ -286,7 +234,7 @@
             // btnClose
             // 
             this.btnClose.BackColor = System.Drawing.Color.Blue;
-            this.btnClose.Font = new System.Drawing.Font("Gill Sans Ultra Bold", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnClose.Font = new System.Drawing.Font("Gill Sans Ultra Bold", 9F);
             this.btnClose.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
             this.btnClose.Location = new System.Drawing.Point(672, 13);
             this.btnClose.Margin = new System.Windows.Forms.Padding(2);
@@ -551,19 +499,6 @@
             this.label4.TabIndex = 30;
             this.label4.Text = "Patient Details";
             // 
-            // btnDelete
-            // 
-            this.btnDelete.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.btnDelete.Font = new System.Drawing.Font("Gill Sans Ultra Bold", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnDelete.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.btnDelete.Location = new System.Drawing.Point(347, 13);
-            this.btnDelete.Margin = new System.Windows.Forms.Padding(2);
-            this.btnDelete.Name = "btnDelete";
-            this.btnDelete.Size = new System.Drawing.Size(98, 31);
-            this.btnDelete.TabIndex = 32;
-            this.btnDelete.Text = "Delete";
-            this.btnDelete.UseVisualStyleBackColor = false;
-            // 
             // frmPatientRecords
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -608,16 +543,6 @@
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.DataGridViewTextBoxColumn PatientID;
-        private System.Windows.Forms.DataGridViewTextBoxColumn FName;
-        private System.Windows.Forms.DataGridViewTextBoxColumn LastName;
-        private System.Windows.Forms.DataGridViewTextBoxColumn BDate;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Age;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Gender;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Contact;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Email;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Address;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Status;
         private System.Windows.Forms.Label lblPatientID;
         private System.Windows.Forms.Label label15;
         private System.Windows.Forms.Label label14;

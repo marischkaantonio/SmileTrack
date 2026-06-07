@@ -181,5 +181,86 @@ SELECT SCOPE_IDENTITY();";
                 return Convert.ToInt32(id);
             }
         }
+
+        public static bool DeletePatient(int patientId)
+        {
+            if (patientId <= 0)
+                return false;
+
+            using (var con = new System.Data.SqlClient.SqlConnection(ConnectionString))
+            {
+                con.Open();
+                using (var tran = con.BeginTransaction())
+                using (var cmd = con.CreateCommand())
+                {
+                    cmd.Transaction = tran;
+                    try
+                    {
+                        // Delete invoice items for invoices that belong to this patient
+                        cmd.CommandText = @"
+DELETE ii
+FROM InvoiceItems ii
+WHERE ii.InvoiceID IN (SELECT InvoiceID FROM Invoices WHERE PatientID = @pid);";
+                        cmd.Parameters.Clear();
+                        cmd.Parameters.AddWithValue("@pid", patientId);
+                        cmd.ExecuteNonQuery();
+
+                        // Delete invoices for this patient
+                        cmd.CommandText = "DELETE FROM Invoices WHERE PatientID = @pid;";
+                        cmd.ExecuteNonQuery();
+
+                        // Delete appointments for this patient
+                        cmd.CommandText = "DELETE FROM Appointments WHERE PatientID = @pid;";
+                        cmd.ExecuteNonQuery();
+
+                        // Finally delete the patient
+                        cmd.CommandText = "DELETE FROM Patients WHERE PatientID = @pid;";
+                        var rows = cmd.ExecuteNonQuery();
+
+                        tran.Commit();
+                        return rows > 0;
+                    }
+                    catch
+                    {
+                        try { tran.Rollback(); } catch { }
+                        throw;
+                    }
+                }
+            }
+        }
+
+        public static bool UpdatePatient(int patientId, string fname, string lname, DateTime? bdate, int age, string gender, string contact, string email, string address)
+        {
+            if (patientId <= 0) return false;
+
+            const string sql = @"
+        UPDATE Patients
+        SET FirstName = @fname,
+            LastName = @lname,
+            BirthDate = @bdate,
+            Age = @age,
+            Gender = @gender,
+            ContactNo = @contact,
+            Email = @email,
+            Address = @address
+        WHERE PatientID = @id;";
+
+            using (var con = new System.Data.SqlClient.SqlConnection(ConnectionString))
+            using (var cmd = new System.Data.SqlClient.SqlCommand(sql, con))
+            {
+                cmd.Parameters.AddWithValue("@fname", fname ?? string.Empty);
+                cmd.Parameters.AddWithValue("@lname", lname ?? string.Empty);
+                cmd.Parameters.AddWithValue("@bdate", (object)bdate ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@age", age);
+                cmd.Parameters.AddWithValue("@gender", gender ?? string.Empty);
+                cmd.Parameters.AddWithValue("@contact", contact ?? string.Empty);
+                cmd.Parameters.AddWithValue("@email", email ?? string.Empty);
+                cmd.Parameters.AddWithValue("@address", address ?? string.Empty);
+                cmd.Parameters.AddWithValue("@id", patientId);
+
+                con.Open();
+                return cmd.ExecuteNonQuery() > 0;
+            }
+        }
     }
 }

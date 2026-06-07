@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.SqlClient;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
@@ -11,11 +10,9 @@ namespace SmileTrack
 {
     public partial class DentistDashboard : Form
     {
-       
         private string currentDoctor;
-        private Label lblBell;  
-
-        List<string> TreatmentTypes = new List<string>();
+        private readonly List<string> TreatmentTypes = new List<string>();
+        private Timer refreshTimer;
 
         public DentistDashboard()
         {
@@ -27,13 +24,11 @@ namespace SmileTrack
             SetCurrentDoctor(doctorName);
         }
 
-       
         public void SetCurrentDoctor(string doctorName)
         {
             currentDoctor = (doctorName ?? string.Empty).Trim();
             if (string.IsNullOrEmpty(currentDoctor))
             {
-              
                 currentDoctor = Environment.UserName ?? string.Empty;
             }
 
@@ -42,15 +37,22 @@ namespace SmileTrack
 
         private void DentistDashboard_Load(object sender, EventArgs e)
         {
+            // Ensure UI basics
             txtTreatmentDone.ReadOnly = true;
             txtTreatmentDone.BorderStyle = BorderStyle.None;
             txtTreatmentDone.Font = new Font("Segoe UI", 18, FontStyle.Bold);
 
-            InitializeBell();
+            // lbbell exists in designer; wire its click handler
+            if (lbbell != null)
+            {
+                lbbell.Cursor = Cursors.Hand;
+                lbbell.Click -= Lbbell_Click;
+                lbbell.Click += Lbbell_Click;
+            }
 
+            // determine current doctor if not set
             if (string.IsNullOrWhiteSpace(currentDoctor))
             {
-            
                 var identityName = System.Threading.Thread.CurrentPrincipal?.Identity?.Name;
                 if (!string.IsNullOrWhiteSpace(identityName))
                     currentDoctor = identityName;
@@ -58,13 +60,21 @@ namespace SmileTrack
                     currentDoctor = Environment.UserName ?? "Unknown Dentist";
             }
 
-           
+            // Load data
             LoadAppointmentsFromDb();
-
-            UpdateBellNotification();  
-
             LoadChartData();
+            PopulatePatientOverview();
+
+            // optional periodic refresh for bell/appointments
+            refreshTimer = new Timer { Interval = 60_000 }; // 1 minute
+            refreshTimer.Tick += (s, ev) =>
+            {
+                LoadAppointmentsFromDb(); // safe light-weight reload
+            };
+            refreshTimer.Start();
         }
+
+        #region Appointment model + manager
 
         public class Appointment
         {
@@ -75,27 +85,15 @@ namespace SmileTrack
             public string Doctor { get; set; }
         }
 
-        // Appointment manager (shared list)
         public static class AppointmentManager
         {
             public static List<Appointment> Appointments = new List<Appointment>();
         }
 
-        // Initialize the bell label
-        private void InitializeBell()
-        {
-            lblBell = new Label();
-            lblBell.Text = "🔔 No upcoming appointments";
-            lblBell.Font = new Font("Segoe UI", 12, FontStyle.Bold);
-            lblBell.Cursor = Cursors.Hand;
-            lblBell.Location = new Point(10, 10);
-            lblBell.AutoSize = true;
+        #endregion
 
-            lblBell.Click += LblBell_Click;
-            this.Controls.Add(lblBell);
-        }
+        #region Database operations / loading
 
-        // Load appointments from the database for the current doctor
         private void LoadAppointmentsFromDb()
         {
             try
@@ -110,20 +108,22 @@ SELECT a.AppointmentDateTime AS AppointmentDateTime,
        a.Dentist
 FROM Appointments a
 LEFT JOIN Patients p ON a.PatientID = p.PatientID
-WHERE a.Dentist = @doctor
+WHERE ISNULL(a.Dentist, '') = @doctor
 ORDER BY a.AppointmentDateTime;";
 
+                var param = new System.Data.SqlClient.SqlParameter("@doctor", currentDoctor);
 
-                var param = new SqlParameter("@doctor", currentDoctor);
-
-                DataTable dt = DatabaseHelper.ExecuteQuery(sql, param);
+                var dt = DatabaseHelper.ExecuteQuery(sql, param);
 
                 var list = new List<Appointment>();
-                foreach (DataRow r in dt.Rows)
+                foreach (System.Data.DataRow r in dt.Rows)
                 {
+                    DateTime date;
+                    DateTime.TryParse(Convert.ToString(r["AppointmentDateTime"]), out date);
+
                     var appt = new Appointment
                     {
-                        Date = Convert.ToDateTime(r["AppointmentDateTime"]),
+                        Date = date,
                         Patient = r["PatientName"]?.ToString() ?? string.Empty,
                         Treatment = r["Treatment"]?.ToString() ?? string.Empty,
                         Status = r["Status"]?.ToString() ?? string.Empty,
@@ -132,10 +132,13 @@ ORDER BY a.AppointmentDateTime;";
                     list.Add(appt);
                 }
 
-                // Replace in-memory list and refresh UI
                 AppointmentManager.Appointments = list;
+
+                // Update UI
                 LoadMySchedule();
                 UpdateBellNotification();
+                UpdateSummaryBoxes();
+                PopulatePatientOverview();
             }
             catch (Exception ex)
             {
@@ -143,7 +146,10 @@ ORDER BY a.AppointmentDateTime;";
             }
         }
 
-        // Update bell with next appointment
+        #endregion
+
+        #region UI updates
+
         private void UpdateBellNotification()
         {
             var upcoming = AppointmentManager.Appointments
@@ -151,87 +157,151 @@ ORDER BY a.AppointmentDateTime;";
                 .OrderBy(a => a.Date)
                 .FirstOrDefault();
 
+            if (lbbell == null)
+                return;
+
             if (upcoming != null)
             {
-                lblBell.Text = $"🔔 Next: {upcoming.Date:hh:mm tt} - {upcoming.Patient}";
+                lbbell.Text = $"🔔 Next: {upcoming.Date:hh:mm tt} - {upcoming.Patient}";
+                lbbell.ForeColor = Color.DarkGoldenrod;
             }
             else
             {
-                lblBell.Text = "🔔 No upcoming appointments";
+                lbbell.Text = "🔔 No upcoming appointments";
+                lbbell.ForeColor = Color.Gray;
             }
         }
 
-        // Bell click handler shows today's appointments
-        private void LblBell_Click(object sender, EventArgs e)
+        private void Lbbell_Click(object sender, EventArgs e)
         {
             var todays = AppointmentManager.Appointments
                 .Where(a => a.Date.Date == DateTime.Today && string.Equals(a.Doctor, currentDoctor, StringComparison.OrdinalIgnoreCase))
-                .Select(a => $"{a.Date:hh:mm tt} - {a.Patient}")
+                .OrderBy(a => a.Date)
+                .Select(a => $"{a.Date:hh:mm tt} - {a.Patient} ({a.Treatment})")
                 .ToList();
 
             string message = todays.Any()
                 ? string.Join(Environment.NewLine, todays)
                 : "No appointments today.";
 
-            MessageBox.Show(message, $"Today's Appointments — {currentDoctor}");
+            MessageBox.Show(message, $"Today's Appointments — {currentDoctor}", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
-        private void btnSave_Click(object sender, EventArgs e)
+        private void LoadMySchedule()
         {
-            string treatmentType = cmbTreatmentType.SelectedItem?.ToString() ?? "Unknown";
-            string notes = txtNotes.Text ?? "";
+            if (dgvSched == null)
+                return;
 
-            TreatmentTypes.Add(treatmentType);
+            dgvSched.Rows.Clear();
 
-            string record = $"{DateTime.Now}: {treatmentType} - {notes}";
-            lbTreatment.Items.Add(record);
+            var myAppointments = AppointmentManager.Appointments
+                .Where(a => a.Date.Date == DateTime.Today && string.Equals(a.Doctor, currentDoctor, StringComparison.OrdinalIgnoreCase))
+                .OrderBy(a => a.Date)
+                .ToList();
 
-            chart1.Invalidate();
-            chart1.Update();
-            chart1.Refresh();
+            foreach (var appt in myAppointments)
+            {
+                dgvSched.Rows.Add(appt.Date.ToString("hh:mm tt"), appt.Patient, appt.Treatment, appt.Status);
+            }
 
-            LoadChartData();
+            txtTodaysAppoinment.Text = myAppointments.Count.ToString();
+        }
 
-            txtTreatmentDone.Invalidate();
-            txtTreatmentDone.Update();
-            txtTreatmentDone.Refresh();
+        private void UpdateSummaryBoxes()
+        {
+            // Today's appointments count already set in LoadMySchedule
+            // Patients seen count: number of appointments today with Status = "Completed" (best effort)
+            var seenCount = AppointmentManager.Appointments
+                .Count(a => a.Date.Date == DateTime.Today && string.Equals(a.Doctor, currentDoctor, StringComparison.OrdinalIgnoreCase) &&
+                            string.Equals(a.Status, "Completed", StringComparison.OrdinalIgnoreCase));
+            txtPatientSeen.Text = seenCount.ToString();
+
+            // Upcoming appointments (future scheduled)
+            var upcomingCount = AppointmentManager.Appointments
+                .Count(a => a.Date > DateTime.Now && string.Equals(a.Doctor, currentDoctor, StringComparison.OrdinalIgnoreCase) &&
+                            string.Equals(a.Status, "Scheduled", StringComparison.OrdinalIgnoreCase));
+            txtUpApp.Text = upcomingCount.ToString();
+
+            // Treatment done count (from in-memory treatment types)
+            txtTreatmentDone.Text = TreatmentTypes.Count.ToString();
+        }
+
+        private void PopulatePatientOverview()
+        {
+            // Simple population using last visits from Appointments grouped by patient
+            if (dataGridView1 == null)
+                return;
+
+            dataGridView1.Rows.Clear();
+
+            var grouped = AppointmentManager.Appointments
+                .GroupBy(a => a.Patient)
+                .Select(g => new
+                {
+                    Patient = g.Key,
+                    LastVisit = g.Max(x => x.Date)
+                })
+                .OrderByDescending(x => x.LastVisit)
+                .ToList();
+
+            foreach (var item in grouped)
+            {
+                dataGridView1.Rows.Add(item.Patient, item.LastVisit.ToString("yyyy-MM-dd hh:mm tt"));
+            }
         }
 
         private void LoadChartData()
         {
-            chart1.Series.Clear();
-            var series = chart1.Series.Add("Treatments");
-            series.ChartType = SeriesChartType.Pie;
-            series.IsValueShownAsLabel = true;
+            if (chart1 == null)
+                return;
 
-            Dictionary<string, int> counts = new Dictionary<string, int>();
-            foreach (string type in TreatmentTypes)
+            chart1.Series.Clear();
+            var series = new Series("Treatments") { ChartType = SeriesChartType.Column, IsValueShownAsLabel = true };
+
+            var counts = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
+            foreach (var type in TreatmentTypes)
             {
+                if (string.IsNullOrWhiteSpace(type))
+                    continue;
                 if (counts.ContainsKey(type))
                     counts[type]++;
                 else
                     counts[type] = 1;
             }
 
-            foreach (var item in counts)
+            foreach (var kvp in counts)
             {
-                series.Points.AddXY(item.Key, item.Value);
+                series.Points.AddXY(kvp.Key, kvp.Value);
             }
 
+            // if no data, add a placeholder
+            if (series.Points.Count == 0)
+            {
+                series.Points.AddXY("No Data", 0);
+            }
+
+            chart1.Series.Add(series);
+
+            // ensure treatment count display
             txtTreatmentDone.Text = TreatmentTypes.Count.ToString();
-            txtTreatmentDone.SelectAll();
-            txtTreatmentDone.SelectionAlignment = HorizontalAlignment.Center;
-            txtTreatmentDone.DeselectAll();
         }
 
-        private void LoadMySchedule()
-        {
-            var myAppointments = AppointmentManager.Appointments
-                .Where(a => a.Date.Date == DateTime.Today && string.Equals(a.Doctor, currentDoctor, StringComparison.OrdinalIgnoreCase))
-                .ToList();
+        #endregion
 
-            dgvSched.DataSource = null;
-            dgvSched.DataSource = myAppointments;
+        #region Event handlers
+
+        private void btnSave_Click(object sender, EventArgs e)
+        {
+            var treatmentType = cmbTreatmentType.SelectedItem?.ToString() ?? "Unknown";
+            var notes = txtNotes?.Text ?? string.Empty;
+
+            TreatmentTypes.Add(treatmentType);
+
+            var record = $"{DateTime.Now:yyyy-MM-dd HH:mm} - {treatmentType} - {notes}";
+            lbTreatment.Items.Add(record);
+
+            LoadChartData();
+            UpdateSummaryBoxes();
         }
 
         private void btnLogOut_Click(object sender, EventArgs e)
@@ -243,8 +313,9 @@ ORDER BY a.AppointmentDateTime;";
 
             if (result == DialogResult.Yes)
             {
+                refreshTimer?.Stop();
                 this.Hide();
-                LoginForm login = new LoginForm();
+                var login = new LoginForm();
                 login.Show();
             }
         }
@@ -260,7 +331,38 @@ ORDER BY a.AppointmentDateTime;";
             }
         }
 
-        private void btnTreatments_Click(object sender, EventArgs e) { }
-        private void cmbTreatmentType_SelectedIndexChanged(object sender, EventArgs e) { }
+        private void btnTreatments_Click(object sender, EventArgs e)
+        {
+            pnlTreatmet.Visible = !pnlTreatmet.Visible;
+        }
+
+        private void cmbTreatmentType_SelectedIndexChanged(object sender, EventArgs e)
+        {
+           
+        }
+
+                private void btnMySched_Click(object sender, EventArgs e)
+                {
+                    try
+                    {
+                        var myScheduleForm = new My_Schedule();
+                        // Show non-modal and set this form as owner so it centers relative to the dashboard
+                        myScheduleForm.StartPosition = FormStartPosition.CenterParent;
+                        myScheduleForm.Show(this);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("Error opening schedule: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+
+        #endregion
+
+        protected override void OnFormClosing(FormClosingEventArgs e)
+        {
+            refreshTimer?.Stop();
+            refreshTimer?.Dispose();
+            base.OnFormClosing(e);
+        }
     }
 }

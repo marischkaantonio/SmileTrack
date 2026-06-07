@@ -105,6 +105,12 @@
     <Compile Include="DentistDashboard.Designer.cs">
       <DependentUpon>DentistDashboard.cs</DependentUpon>
     </Compile>
+    <Compile Include="My Schedule.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="My Schedule.Designer.cs">
+      <DependentUpon>My Schedule.cs</DependentUpon>
+    </Compile>
     <Compile Include="Patient Info Appoinment.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -158,6 +164,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="DentistDashboard.resx">
       <DependentUpon>DentistDashboard.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="My Schedule.resx">
+      <DependentUpon>My Schedule.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Patient Info Appoinment.resx">
       <DependentUpon>Patient Info Appoinment.cs</DependentUpon>
