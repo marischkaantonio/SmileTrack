@@ -151,6 +151,7 @@
             this.btnBillings.TabIndex = 7;
             this.btnBillings.Text = "💰Billings";
             this.btnBillings.UseVisualStyleBackColor = false;
+            this.btnBillings.Click += new System.EventHandler(this.btnBillings_Click);
             // 
             // lblWelcome
             // 

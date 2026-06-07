@@ -69,15 +69,20 @@ namespace SmileTrack
             Patient_Info_Appoinment patientForm = new Patient_Info_Appoinment();
             patientForm.Show();
         }
+
+        private void btnBillings_Click(object sender, EventArgs e)
+        {
+
+        }
     }
-    }
-    
-   
-
-    
+}
 
 
-      
+
+
+
+
+
 
 
 

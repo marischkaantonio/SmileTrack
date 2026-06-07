@@ -3,8 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
-using System.Drawing;
-using System.Drawing.Printing;
+using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -19,12 +18,46 @@ namespace SmileTrack
 {
     public partial class FormAdminDashboard : Form
     {
+        private readonly string UsersFilePath = Path.Combine(Application.StartupPath, "users.json");
+        private readonly string AuditFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "auditlog.json");
+
         public FormAdminDashboard()
         {
-
             InitializeComponent();
 
+            // Ensure nav visible at startup
+            Panel1.Visible = true;
+
+            // Ensure click handlers are attached (idempotent)
+            btnUserMngt.Click -= btnUserMngt_Click;
+            btnUserMngt.Click += btnUserMngt_Click;
+
+            btnDashboard.Click -= btnDashboard_Click_1;
+            btnDashboard.Click += btnDashboard_Click_1;
+
+            btnAuditLogs.Click -= btnAuditLogs_Click;
+            btnAuditLogs.Click += btnAuditLogs_Click;
+            }
+
+        private void FormAdminDashboard_Load(object sender, EventArgs e)
+        {
+            try
+            {
+                DatabaseHelper.EnsureDatabaseAndTables();
+
+                panelDashboard.Visible = true;
+                Panel1.Visible = false;
+
+
+                LoadUsersFromDb();
+                LoadAuditLogs();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Failed to initialize Admin Dashboard: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
+
         private void SaveUsersToFile()
         {
             var users = new List<User>();
@@ -33,16 +66,24 @@ namespace SmileTrack
             {
                 if (row.IsNewRow) continue;
 
-                if (row.Cells["UserName"].Value != null && row.Cells["Password"].Value != null)
+                string userName = row.Cells["UserName"].Value?.ToString();
+                string password = row.Cells["Password"].Value?.ToString();
+                string role = row.Cells["Role"].Value?.ToString();
+                string status = row.Cells["Status"].Value?.ToString();
+
+                if (string.IsNullOrWhiteSpace(userName) || string.IsNullOrWhiteSpace(password))
                 {
-                    users.Add(new User
-                    {
-                        UserName = row.Cells["UserName"].Value?.ToString(),
-                        Password = row.Cells["Password"].Value?.ToString(),
-                        Role = row.Cells["Role"].Value?.ToString(),
-                        Status = row.Cells["Status"].Value?.ToString()
-                    });
+
+                    continue;
                 }
+
+                users.Add(new User
+                {
+                    UserName = userName,
+                    Password = password,
+                    Role = role,
+                    Status = status
+                });
             }
 
 
@@ -60,22 +101,44 @@ namespace SmileTrack
         private void Form1_Load(object sender, EventArgs e)
         {
             panelDashboard.Visible = true;
-      
+
             Panel1.Visible = false;
 
         }
 
         private void ShowPanel(Panel panelToShow, string headerText)
         {
-            panelDashboard.Visible = false;
-          
-            Panel1.Visible = false;
+            // Keep the left navigation visible
+            Panel1.Visible = true;
 
-            panelToShow.Visible = true;
-            panelToShow.Dock = DockStyle.Fill;
-            panelToShow.BringToFront();
+            // If the panel to show is a child of the main dashboard container, display it inside the dashboard
+            if (panelToShow != null && panelToShow.Parent == panelDashboard)
+            {
+                panelDashboard.Visible = true;
 
-            lblViewTitle.Text = headerText;
+                // Show only the requested child of panelDashboard
+                foreach (Control c in panelDashboard.Controls)
+                {
+                    c.Visible = (c == panelToShow);
+                }
+
+                panelToShow.Dock = DockStyle.Fill;
+                panelToShow.BringToFront();
+            }
+            else
+            {
+                // Otherwise, hide the dashboard container and show the requested top-level panel
+                panelDashboard.Visible = false;
+
+                if (panelToShow != null)
+                {
+                    panelToShow.Visible = true;
+                    panelToShow.Dock = DockStyle.Fill;
+                    panelToShow.BringToFront();
+                }
+            }
+
+            lblViewTitle.Text = headerText ?? string.Empty;
         }
 
 
@@ -84,7 +147,10 @@ namespace SmileTrack
             ShowPanel(panelDashboard, "Dashboard View");
         }
 
-       
+        private void btnUserMngt_Click(object sender, EventArgs e)
+        {
+            ShowPanel(panelUManagement, "User Management");
+        }
 
         private void btnAuditLogs_Click(object sender, EventArgs e)
         {
@@ -93,46 +159,54 @@ namespace SmileTrack
 
         private void btnLogOut_Click(object sender, EventArgs e)
         {
-            var result = MessageBox.Show("Are you sure you want to log out?",
-                                 "Log-out",
-                                 MessageBoxButtons.YesNo,
-                                 MessageBoxIcon.Question);
-
+            var result = MessageBox.Show("Are you sure you want to log out?", "Log-out", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (result == DialogResult.Yes)
             {
 
                 this.Hide();
-
-
-                LoginForm login = new LoginForm();
+                var login = new LoginForm();
                 login.Show();
 
 
             }
         }
 
-        private void LoadUserData()
+        private void LoadUsersFromDb()
         {
+            try
+            {
+                dgvUserMngt.Rows.Clear();
+
+                const string sql = @"
+SELECT UserId, UserName, Password, Role, Status
+FROM dbo.UsersSimple
+ORDER BY UserName;";
 
 
-            dgvUserMngt.Columns.Clear();
+                DataTable dt = DatabaseHelper.ExecuteQuery(sql);
+
+                foreach (DataRow r in dt.Rows)
+                {
+                    int userId = Convert.ToInt32(r["UserId"]);
+                    string userName = r["UserName"]?.ToString();
+                    string password = r["Password"]?.ToString();
+                    string role = r["Role"]?.ToString();
+                    string status = r["Status"]?.ToString();
+
+                    int idx = dgvUserMngt.Rows.Add(userName, role, password, status);
+                    dgvUserMngt.Rows[idx].Tag = userId;
+                }
 
 
-            dgvUserMngt.Columns.Add("Name", "Name");
-            dgvUserMngt.Columns.Add("Role", "Role");
-            dgvUserMngt.Columns.Add("Status", "Status");
-
-
-            dgvUserMngt.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+                dgvUserMngt.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Failed to load users from database: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
-        private void FormAdminDashboard_Load(object sender, EventArgs e)
-        {
-            LoadUsersFromFile();
 
-            LoadAuditLogs();
-
-        }
         private void LoadUsersFromFile()
         {
             string filePath = Path.Combine(Application.StartupPath, "users.json");
@@ -173,7 +247,7 @@ namespace SmileTrack
             }
         }
 
-     
+
         private void btnHome_Click(object sender, EventArgs e)
         {
             FormAdminDashboard dashboard = new FormAdminDashboard();
@@ -200,7 +274,7 @@ namespace SmileTrack
 
         private void btnRemove_Click(object sender, EventArgs e)
         {
-             
+
             if (dgvUserMngt.CurrentRow != null)
             {
                 dgvUserMngt.Rows.Remove(dgvUserMngt.CurrentRow);
@@ -255,20 +329,196 @@ namespace SmileTrack
 
         private void btnRefresh_Click(object sender, EventArgs e)
         {
-               
+
             LoadAuditLogs();
         }
 
-        private void btnUserMngt_Click(object sender, EventArgs e)
+
+
+        private void FormAdminDashboard_Load_1(object sender, EventArgs e)
         {
-            ShowPanel(panelUManagement, "UserManagement");
+
+            LoadUsersFromFile();
+
+            LoadAuditLogs();
+
+        }
+
+        private void label1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnReports_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                var reportsForm = new Transaction_Billing_Reports();
+                // show modal so user returns to dashboard after closing the report
+                reportsForm.ShowDialog(this);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Failed to open Reports form: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
     }
-    }
+}
 
+
+      
     
 
     
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

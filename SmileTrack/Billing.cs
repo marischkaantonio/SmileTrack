@@ -1,7 +1,8 @@
 ﻿using System;
-using System.Drawing.Printing;
-using System.Windows.Forms;
 using System.Drawing;
+using System.Drawing.Printing;
+using System.IO;
+using System.Windows.Forms;
 
 namespace SmileTrack
 {
@@ -10,38 +11,112 @@ namespace SmileTrack
         public BillingForm()
         {
             InitializeComponent();
+            this.Load += BillingForm_Load;
         }
 
-        // Calculate subtotal, discount, tax, total, and balance
+        private void BillingForm_Load(object sender, EventArgs e)
+        {
+            // Ensure treatment grid has expected columns (don't duplicate if designer already provided them)
+            if (dgvTreatmentList.Columns["Amount"] == null)
+            {
+                var amountCol = new DataGridViewTextBoxColumn
+                {
+                    Name = "Amount",
+                    HeaderText = "Amount",
+                    ReadOnly = true
+                };
+                dgvTreatmentList.Columns.Add(amountCol);
+            }
+
+            // Ensure Status is a combo column
+            if (!(dgvTreatmentList.Columns["Status"] is DataGridViewComboBoxColumn))
+            {
+                int statusIndex = dgvTreatmentList.Columns["Status"]?.Index ?? -1;
+                if (statusIndex >= 0)
+                {
+                    dgvTreatmentList.Columns.RemoveAt(statusIndex);
+                }
+
+                var statusColumn = new DataGridViewComboBoxColumn
+                {
+                    Name = "Status",
+                    HeaderText = "Status",
+                    Items = { "Unpaid", "Partial", "Fully Paid" }
+                };
+                dgvTreatmentList.Columns.Add(statusColumn);
+            }
+
+            dgvTreatmentList.AllowUserToAddRows = true;
+            dgvTreatmentList.EditMode = DataGridViewEditMode.EditOnEnter;
+            dgvTreatmentList.CellEndEdit -= dgvTreatmentList_CellEndEdit;
+            dgvTreatmentList.CellEndEdit += dgvTreatmentList_CellEndEdit;
+
+            // Wire invoice grid action button if not already present
+            if (dgvInvoices.Columns["Action"] == null)
+            {
+                var actionColumn = new DataGridViewButtonColumn
+                {
+                    Name = "Action",
+                    HeaderText = "Action",
+                    Text = "Print Receipt",
+                    UseColumnTextForButtonValue = true
+                };
+                dgvInvoices.Columns.Add(actionColumn);
+            }
+
+            // Hook text change events to recalc totals
+            txtDiscount.TextChanged -= TxtFields_TextChanged;
+            txtTax.TextChanged -= TxtFields_TextChanged;
+            txtPayment.TextChanged -= TxtFields_TextChanged;
+
+            txtDiscount.TextChanged += TxtFields_TextChanged;
+            txtTax.TextChanged += TxtFields_TextChanged;
+            txtPayment.TextChanged += TxtFields_TextChanged;
+
+            // Initialize labels
+            lblSubtotal.Text = "₱0.00";
+            lblTotalAmount.Text = "₱0.00";
+            lblBalance.Text = "₱0.00";
+        }
+
+        // Recalculate totals when discount/tax/payment change
+        private void TxtFields_TextChanged(object sender, EventArgs e) => CalculateTotals();
+
+        // Calculate subtotal, discount, tax, total and balance from dgvTreatmentList
         private void CalculateTotals()
         {
-            decimal subtotal = 0;
+            decimal subtotal = 0m;
 
             foreach (DataGridViewRow row in dgvTreatmentList.Rows)
             {
                 if (row.IsNewRow) continue;
 
-                if (row.Cells["Amount"].Value != null)
-                {
-                    string amountText = row.Cells["Amount"].Value.ToString()
-                        .Replace("₱", "")
-                        .Replace(",", "")
-                        .Trim();
+                decimal qty = 0m;
+                decimal unitPrice = 0m;
 
-                    if (decimal.TryParse(amountText, out decimal amount))
-                        subtotal += amount;
-                }
+                decimal.TryParse(row.Cells["Qty"].Value?.ToString(), out qty);
+                decimal.TryParse(row.Cells["UnitPrice"].Value?.ToString(), out unitPrice);
+
+                decimal amount = qty * unitPrice;
+
+                // Store numeric amount (formatted) in Amount cell
+                if (row.Cells["Amount"] != null)
+                    row.Cells["Amount"].Value = amount.ToString("#,##0.00");
+
+                subtotal += amount;
             }
 
-            decimal discountPercent = 0;
-            decimal taxPercent = 0;
+            // Parse discount and tax as percentages (if user enters percent) or absolute if they want — treat input as percent by default
+            decimal discountPercent = 0m;
+            decimal taxPercent = 0m;
 
             decimal.TryParse(txtDiscount.Text, out discountPercent);
             decimal.TryParse(txtTax.Text, out taxPercent);
 
-            decimal discount = subtotal * (discountPercent / 100);
-            decimal tax = subtotal * (taxPercent / 100);
-            decimal total = subtotal - discount + tax;
+            decimal discountAmount = subtotal * (discountPercent / 100m);
+            decimal taxAmount = subtotal * (taxPercent / 100m);
+
+            decimal total = subtotal - discountAmount + taxAmount;
 
             lblSubtotal.Text = $"₱{subtotal:#,##0.00}";
             lblTotalAmount.Text = $"₱{total:#,##0.00}";
@@ -55,94 +130,53 @@ namespace SmileTrack
             {
                 lblBalance.Text = $"₱{total:#,##0.00}";
             }
-        }
 
-        private void BillingForm_Load(object sender, EventArgs e)
-        {
-            dgvTreatmentList.AllowUserToAddRows = true;
-            dgvTreatmentList.EditMode = DataGridViewEditMode.EditOnEnter;
-
-            dgvTreatmentList.CellEndEdit += dgvTreatmentList_CellEndEdit;
-
-            dgvTreatmentList.Columns.Clear();
-            dgvTreatmentList.Columns.Add("Treatment", "Treatment");
-            dgvTreatmentList.Columns.Add("Description", "Description");
-            dgvTreatmentList.Columns.Add("Qty", "Qty");
-            dgvTreatmentList.Columns.Add("UnitPrice", "Unit Price");
-            dgvTreatmentList.Columns.Add("Amount", "Amount");
-
-            DataGridViewComboBoxColumn statusColumn = new DataGridViewComboBoxColumn();
-            statusColumn.Name = "Status";
-            statusColumn.HeaderText = "Status";
-            statusColumn.Items.AddRange("Unpaid", "Partial", "Fully Paid");
-            dgvTreatmentList.Columns.Add(statusColumn);
-
-            // Hook discount/tax/payment events
-            txtDiscount.TextChanged += (s, ev) => CalculateTotals();
-            txtTax.TextChanged += (s, ev) => CalculateTotals();
-            txtPayment.TextChanged += (s, ev) => CalculateTotals();
-
-            DataGridViewButtonColumn actionColumn = new DataGridViewButtonColumn();
-            actionColumn.Name = "Action";
-            actionColumn.HeaderText = "Action";
-            actionColumn.Text = "Print Receipt";
-            actionColumn.UseColumnTextForButtonValue = true;
-            dgvInvoices.Columns.Add(actionColumn);
+            // Update status label
+            if (decimal.TryParse(txtPayment.Text, out decimal paid))
+            {
+                string status = (paid == 0m) ? "Unpaid" : (paid < total) ? "Partial" : "Fully Paid";
+                lblStatus.Text = $"Status: {status}";
+            }
         }
 
         private void dgvTreatmentList_CellEndEdit(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex < 0 || dgvTreatmentList.Rows[e.RowIndex].IsNewRow) return;
 
+            // Recalculate amount for changed row and update totals
             var row = dgvTreatmentList.Rows[e.RowIndex];
 
-            int qty = 0;
-            decimal unitPrice = 0;
+            decimal qty = 0m;
+            decimal unitPrice = 0m;
 
-            if (row.Cells["Qty"].Value != null)
-                int.TryParse(row.Cells["Qty"].Value.ToString(), out qty);
-
-            if (row.Cells["UnitPrice"].Value != null)
-                decimal.TryParse(row.Cells["UnitPrice"].Value.ToString(), out unitPrice);
+            decimal.TryParse(row.Cells["Qty"].Value?.ToString(), out qty);
+            decimal.TryParse(row.Cells["UnitPrice"].Value?.ToString(), out unitPrice);
 
             decimal amount = qty * unitPrice;
-            row.Cells["Amount"].Value = amount.ToString("₱#,##0.00");
+
+            if (row.Cells["Amount"] != null)
+                row.Cells["Amount"].Value = amount.ToString("#,##0.00");
 
             CalculateTotals();
         }
 
         private void txtInvoiceNum_TextChanged(object sender, EventArgs e)
         {
-            if (txtInvoiceNum.Text.Length < 3)
-                lblStatus.Text = "Invoice number must be at least 3 characters.";
-            else
-                lblStatus.Text = "";
+            lblStatus.Text = txtInvoiceNum.Text.Length < 3 ? "Invoice number must be at least 3 characters." : string.Empty;
         }
 
         private void dtpInvoiceDate_ValueChanged(object sender, EventArgs e)
         {
+            // Keep label friendly; actual dtp value used for storage
             lblInvoiceDate.Text = $"Invoice Date: {dtpInvoiceDate.Value:MMMM dd, yyyy}";
         }
 
         private void dtpDue_ValueChanged(object sender, EventArgs e)
         {
-            if (dtpDue.Value < dtpInvoiceDate.Value)
-            {
-                lblStatus.Text = "Due date cannot be earlier than invoice date.";
-            }
-            else
-            {
-                lblStatus.Text = "";
-
-            }
+            lblStatus.Text = dtpDue.Value < dtpInvoiceDate.Value ? "Due date cannot be earlier than invoice date." : string.Empty;
         }
 
-        private void btnSaveInvoice_Click(object sender, EventArgs e)
-        {
-            MessageBox.Show("Invoice saved successfully!");
-        }
-
-        private void btnClear_Click(object sender, EventArgs e)
+        private void btnClear_Click_1(object sender, EventArgs e)
         {
             txtPname.Clear();
             txtInvoiceNum.Clear();
@@ -152,132 +186,87 @@ namespace SmileTrack
             txtTax.Clear();
             dgvTreatmentList.Rows.Clear();
 
+            dtpInvoiceDate.Value = DateTime.Now;
+            dtpDue.Value = DateTime.Now;
+
             lblSubtotal.Text = "₱0.00";
             lblTotalAmount.Text = "₱0.00";
             lblBalance.Text = "₱0.00";
+            lblStatus.Text = string.Empty;
+            lblInvoiceDate.Text = "Invoice Date:";
         }
 
         private void btnAddItem_Click(object sender, EventArgs e)
         {
-            decimal subtotal = 0;
-
-            foreach (DataGridViewRow row in dgvTreatmentList.Rows)
+            // Add an empty row so user can input a new item
+            dgvTreatmentList.Rows.Add();
+            // Optionally move focus to the new row's Treatment cell
+            int lastRow = dgvTreatmentList.Rows.Count - 1;
+            if (lastRow >= 0)
             {
-                if (row.IsNewRow) continue;
-
-                // Get Qty and Unit Price
-                int qty = 0;
-                decimal unitPrice = 0;
-
-                int.TryParse(row.Cells["Qty"].Value?.ToString(), out qty);
-                decimal.TryParse(row.Cells["UnitPrice"].Value?.ToString(), out unitPrice);
-
-                // Calculate Amount
-                decimal amount = qty * unitPrice;
-
-                // Display amount in Amount column
-                
-
-                // Add to subtotal
-                subtotal += amount;
+                dgvTreatmentList.CurrentCell = dgvTreatmentList.Rows[lastRow].Cells["Treatment"];
+                dgvTreatmentList.BeginEdit(true);
             }
-
-            // Display subtotal
-            lblSubtotal.Text = subtotal.ToString("0.00");
-
-            // Tax (example = 2%)
-            decimal tax = subtotal * 0.02m;
-            txtTax.Text = tax.ToString("0.00");
-
-            // Discount
-            decimal discount = 0;
-            decimal.TryParse(txtDiscount.Text, out discount);
-
-            // Total Amount
-            decimal total = subtotal + tax - discount;
-            lblTotalAmount.Text = total.ToString("0.00");
-
-            // Payment
-            decimal payment = 0;
-            decimal.TryParse(txtPayment.Text, out payment);
-
-            // Balance
-            decimal balance = total - payment;
-            lblBalance.Text = balance.ToString("0.00");
-
-            // Status
-            string status;
-            if (payment == 0)
-                status = "Unpaid";
-            else if (payment < total)
-                status = "Partial";
-            else
-                status = "Fully Paid";
-
-            // Optional: update a Status label or column
-            lblStatus.Text = $"Status: {status}";
         }
-
-
-
-
 
         private void txtSearchP_TextChanged(object sender, EventArgs e)
         {
-            string searchText = txtSearchP.Text.ToLower();
+            string searchText = txtSearchP.Text?.Trim().ToLower() ?? string.Empty;
 
             foreach (DataGridViewRow row in dgvInvoices.Rows)
             {
                 if (row.IsNewRow) continue;
 
-                bool match = row.Cells["PatientName"].Value.ToString().ToLower().Contains(searchText)
-                          || row.Cells["InvoiceNo"].Value.ToString().ToLower().Contains(searchText);
+                    var patientCell = row.Cells["colPatientName"];
+                var invoiceCell = row.Cells["colInvoiceNo"];
 
+                string patient = patientCell?.Value?.ToString().ToLower() ?? string.Empty;
+                string invoiceNo = invoiceCell?.Value?.ToString().ToLower() ?? string.Empty;
+
+                bool match = patient.Contains(searchText) || invoiceNo.Contains(searchText);
                 row.Visible = match;
             }
         }
 
-
         private void cmbStatus_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if (cmbStatus.SelectedItem == null) return;
             string selectedStatus = cmbStatus.SelectedItem.ToString();
 
             foreach (DataGridViewRow row in dgvInvoices.Rows)
             {
                 if (row.IsNewRow) continue;
 
-                bool match = row.Cells["Status"].Value != null &&
-                             row.Cells["Status"].Value.ToString() == selectedStatus;
-
-                row.Visible = match;
+                string status = row.Cells["colStatus"].Value?.ToString() ?? string.Empty;
+                row.Visible = string.IsNullOrEmpty(selectedStatus) ? true : status == selectedStatus;
             }
         }
 
-
         private void dtpFrom_ValueChanged(object sender, EventArgs e)
         {
-
+            // optional: implement filtering by date range
         }
 
         private void dtpTo_ValueChanged(object sender, EventArgs e)
         {
-
+            // optional: implement filtering by date range
         }
-
 
         private void dgvInvoices_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
-            if (e.RowIndex >= 0 && dgvInvoices.Columns[e.ColumnIndex].Name == "Action")
+            if (e.RowIndex < 0) return;
+
+            if (dgvInvoices.Columns[e.ColumnIndex].Name == "Action")
             {
                 var row = dgvInvoices.Rows[e.RowIndex];
 
-                string invoiceNo = row.Cells["InvoiceNo"].Value?.ToString();
-                string invoiceDate = row.Cells["InvoiceDate"].Value?.ToString();
-                string patientName = row.Cells["PatientName"].Value?.ToString();
-                string totalAmount = row.Cells["TotalAmount"].Value?.ToString();
-                string paidAmount = row.Cells["PaidAmount"].Value?.ToString();
-                string balance = row.Cells["Balance"].Value?.ToString();
-                string status = row.Cells["Status"].Value?.ToString();
+                string invoiceNo = row.Cells["colInvoiceNo"].Value?.ToString() ?? string.Empty;
+                string invoiceDate = row.Cells["colInvoiceDate"].Value?.ToString() ?? string.Empty;
+                string patientName = row.Cells["colPatientName"].Value?.ToString() ?? string.Empty;
+                string totalAmount = row.Cells["colTotal"].Value?.ToString() ?? string.Empty;
+                string paidAmount = row.Cells["colPaidAmount"].Value?.ToString() ?? string.Empty;
+                string balance = row.Cells["colBalance"].Value?.ToString() ?? string.Empty;
+                string status = row.Cells["colStatus"].Value?.ToString() ?? string.Empty;
 
                 string receiptText = $"Invoice Receipt\n\n" +
                                      $"Invoice No: {invoiceNo}\n" +
@@ -288,41 +277,51 @@ namespace SmileTrack
                                      $"Balance: {balance}\n" +
                                      $"Status: {status}";
 
-                PrintDocument printDoc = new PrintDocument();
+                var printDoc = new PrintDocument();
                 printDoc.PrintPage += (s, ev) =>
                 {
                     ev.Graphics.DrawString(receiptText, new Font("Arial", 12), Brushes.Black, new PointF(100, 100));
                 };
 
-                PrintDialog printDialog = new PrintDialog();
-                printDialog.Document = printDoc;
-
-                if (printDialog.ShowDialog() == DialogResult.OK)
+                using (var printDialog = new PrintDialog { Document = printDoc })
                 {
-                    printDoc.Print();
+                    if (printDialog.ShowDialog() == DialogResult.OK)
+                    {
+                        printDoc.Print();
+                    }
                 }
             }
         }
 
-
         private void btnSave_Click_1(object sender, EventArgs e)
         {
-            // Collect values
-            string invoiceNo = txtInvoiceNum.Text;
-            string patientName = txtPname.Text;
+            // Basic validation
+            if (string.IsNullOrWhiteSpace(txtInvoiceNum.Text))
+            {
+                MessageBox.Show("Please enter an invoice number.", "Validation", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            CalculateTotals();
+
+            string invoiceNo = txtInvoiceNum.Text.Trim();
+            string patientName = txtPname.Text.Trim();
             string invoiceDate = dtpInvoiceDate.Value.ToString("MM/dd/yyyy");
 
-            decimal totalAmount = 0;
-            decimal paidAmount = 0;
+            // Parse total and paid from labels/textboxes
+            decimal totalAmount = 0m;
+            decimal paidAmount = 0m;
+
             decimal.TryParse(lblTotalAmount.Text.Replace("₱", "").Replace(",", ""), out totalAmount);
             decimal.TryParse(txtPayment.Text, out paidAmount);
 
             decimal balance = totalAmount - paidAmount;
-            string status = (paidAmount == 0) ? "Unpaid" :
-                            (paidAmount < totalAmount) ? "Partial" : "Fully Paid";
+            string status = (paidAmount == 0m) ? "Unpaid" : (paidAmount < totalAmount) ? "Partial" : "Fully Paid";
 
-            // Add to dgvInvoices
-            dgvInvoices.Rows.Add(invoiceNo, invoiceDate, patientName,
+            // Add to dgvInvoices using designer column names
+            dgvInvoices.Rows.Add(invoiceNo,
+                                 invoiceDate,
+                                 patientName,
                                  totalAmount.ToString("#,##0.00"),
                                  paidAmount.ToString("#,##0.00"),
                                  balance.ToString("#,##0.00"),
@@ -338,113 +337,54 @@ namespace SmileTrack
                                  $"Balance: {balance:#,##0.00}\n" +
                                  $"Status: {status}";
 
-            // Print automatically
-            PrintDocument printDoc = new PrintDocument();
+            // Ask user to print
+            var printDoc = new PrintDocument();
             printDoc.PrintPage += (s, ev) =>
             {
                 ev.Graphics.DrawString(receiptText, new Font("Arial", 12), Brushes.Black, new PointF(100, 100));
             };
-            printDoc.Print();
 
-            // Save copy automatically (text file example)
-            string path = $"`{invoiceNo}.txt";
-            System.IO.File.WriteAllText(path, receiptText);
+            using (var printDialog = new PrintDialog { Document = printDoc })
+            {
+                if (printDialog.ShowDialog() == DialogResult.OK)
+                {
+                    printDoc.Print();
+                }
+            }
 
-            MessageBox.Show($"Invoice saved, printed, and copy stored as {path}");
+            // Save a copy to application folder
+            try
+            {
+                string safeFileName = string.Concat(invoiceNo.Split(Path.GetInvalidFileNameChars()));
+                string path = Path.Combine(Application.StartupPath, $"{safeFileName}.txt");
+                File.WriteAllText(path, receiptText);
+                MessageBox.Show($"Invoice saved and a copy stored as {path}", "Saved", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Invoice printed but failed to save copy: {ex.Message}", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
         }
-
 
         private void dgvTreatmentList_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
-
+            // no-op for now
         }
 
         private void txtDiscount_TextChanged(object sender, EventArgs e)
         {
-            decimal subtotal = 0;
-
-            foreach (DataGridViewRow row in dgvTreatmentList.Rows)
-            {
-                if (row.IsNewRow) continue;
-
-                decimal amount = 0;
-                decimal.TryParse(row.Cells["Amount"].Value?.ToString(), out amount);
-                subtotal += amount;
-            }
-
-            lblSubtotal.Text = subtotal.ToString("0.00");
-
-            // Tax
-            decimal tax = 0;
-            decimal.TryParse(txtTax.Text, out tax);
-
-            // Discount %
-            decimal discountPercent = 0;
-            decimal.TryParse(txtDiscount.Text, out discountPercent);
-
-            decimal discount = subtotal * (discountPercent / 100);
-
-            // Total
-            decimal total = subtotal - discount + tax;
-            lblTotalAmount.Text = total.ToString("0.00");
-
-            // Payment & Balance
-            decimal payment = 0;
-            decimal.TryParse(txtPayment.Text, out payment);
-
-            decimal balance = total - payment;
-            lblBalance.Text = balance.ToString("0.00");
-
-            // Status
-            string status;
-            if (payment == 0)
-                status = "Unpaid";
-            else if (payment < total)
-                status = "Partial";
-            else
-                status = "Fully Paid";
-
-            lblStatus.Text = $"Status: {status}";
+            // reuse centralized calculation
+            CalculateTotals();
         }
-
 
         private void txtTax_TextChanged(object sender, EventArgs e)
         {
-
+            CalculateTotals();
         }
 
         private void txtBalance_TextChanged(object sender, EventArgs e)
         {
-
+            // not used by current UI
         }
-
-        private void btnClear_Click_1(object sender, EventArgs e)
-        {
-            // Clear textboxes
-            txtPname.Clear();
-            txtInvoiceNum.Clear();
-            txtPayment.Clear();
-            txtNotes.Clear();
-            txtDiscount.Clear();
-            txtTax.Clear();
-
-            // Reset DatePickers
-            dtpInvoiceDate.Value = DateTime.Now;
-            dtpDue.Value = DateTime.Now;
-
-            // Clear DataGridView
-            dgvTreatmentList.Rows.Clear();
-
-            // Reset labels
-            lblSubtotal.Text = "₱0.00";
-            lblTotalAmount.Text = "₱0.00";
-            lblBalance.Text = "₱0.00";
-            lblStatus.Text = "";
-
-            // Optional: reset invoice date label
-            lblInvoiceDate.Text = "Invoice Date:";
-        }
-
-
     }
 }

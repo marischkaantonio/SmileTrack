@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
@@ -9,14 +11,33 @@ namespace SmileTrack
 {
     public partial class DentistDashboard : Form
     {
-        private string currentDoctor = "Dr. Margie";
-        private Label lblBell;   // 🔔 Notification bell
+       
+        private string currentDoctor;
+        private Label lblBell;  
 
         List<string> TreatmentTypes = new List<string>();
 
         public DentistDashboard()
         {
             InitializeComponent();
+        }
+
+        public DentistDashboard(string doctorName) : this()
+        {
+            SetCurrentDoctor(doctorName);
+        }
+
+       
+        public void SetCurrentDoctor(string doctorName)
+        {
+            currentDoctor = (doctorName ?? string.Empty).Trim();
+            if (string.IsNullOrEmpty(currentDoctor))
+            {
+              
+                currentDoctor = Environment.UserName ?? string.Empty;
+            }
+
+            this.Text = $"Dentist Dashboard - {currentDoctor}";
         }
 
         private void DentistDashboard_Load(object sender, EventArgs e)
@@ -26,12 +47,25 @@ namespace SmileTrack
             txtTreatmentDone.Font = new Font("Segoe UI", 18, FontStyle.Bold);
 
             InitializeBell();
-            UpdateBellNotification();   // show initial upcoming appointment
+
+            if (string.IsNullOrWhiteSpace(currentDoctor))
+            {
+            
+                var identityName = System.Threading.Thread.CurrentPrincipal?.Identity?.Name;
+                if (!string.IsNullOrWhiteSpace(identityName))
+                    currentDoctor = identityName;
+                else
+                    currentDoctor = Environment.UserName ?? "Unknown Dentist";
+            }
+
+           
+            LoadAppointmentsFromDb();
+
+            UpdateBellNotification();  
 
             LoadChartData();
         }
 
-        // 🟦 Appointment model
         public class Appointment
         {
             public DateTime Date { get; set; }
@@ -41,13 +75,13 @@ namespace SmileTrack
             public string Doctor { get; set; }
         }
 
-        // 🟩 Appointment manager (shared list)
+        // Appointment manager (shared list)
         public static class AppointmentManager
         {
             public static List<Appointment> Appointments = new List<Appointment>();
         }
 
-        // 🟦 Initialize the bell label
+        // Initialize the bell label
         private void InitializeBell()
         {
             lblBell = new Label();
@@ -61,11 +95,59 @@ namespace SmileTrack
             this.Controls.Add(lblBell);
         }
 
-        // 🟩 Update bell with next appointment
+        // Load appointments from the database for the current doctor
+        private void LoadAppointmentsFromDb()
+        {
+            try
+            {
+                DatabaseHelper.EnsureDatabaseAndTables();
+
+                const string sql = @"
+SELECT a.AppointmentDateTime AS AppointmentDateTime,
+       ISNULL(p.FirstName, '') + ' ' + ISNULL(p.LastName, '') AS PatientName,
+       a.Treatment,
+       a.Status,
+       a.Dentist
+FROM Appointments a
+LEFT JOIN Patients p ON a.PatientID = p.PatientID
+WHERE a.Dentist = @doctor
+ORDER BY a.AppointmentDateTime;";
+
+
+                var param = new SqlParameter("@doctor", currentDoctor);
+
+                DataTable dt = DatabaseHelper.ExecuteQuery(sql, param);
+
+                var list = new List<Appointment>();
+                foreach (DataRow r in dt.Rows)
+                {
+                    var appt = new Appointment
+                    {
+                        Date = Convert.ToDateTime(r["AppointmentDateTime"]),
+                        Patient = r["PatientName"]?.ToString() ?? string.Empty,
+                        Treatment = r["Treatment"]?.ToString() ?? string.Empty,
+                        Status = r["Status"]?.ToString() ?? string.Empty,
+                        Doctor = r["Dentist"]?.ToString() ?? string.Empty
+                    };
+                    list.Add(appt);
+                }
+
+                // Replace in-memory list and refresh UI
+                AppointmentManager.Appointments = list;
+                LoadMySchedule();
+                UpdateBellNotification();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error loading appointments: " + ex.Message, "Database Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        // Update bell with next appointment
         private void UpdateBellNotification()
         {
             var upcoming = AppointmentManager.Appointments
-                .Where(a => a.Date >= DateTime.Now && a.Doctor == currentDoctor)
+                .Where(a => a.Date >= DateTime.Now && string.Equals(a.Doctor, currentDoctor, StringComparison.OrdinalIgnoreCase))
                 .OrderBy(a => a.Date)
                 .FirstOrDefault();
 
@@ -79,11 +161,11 @@ namespace SmileTrack
             }
         }
 
-        // 🟦 Bell click handler
+        // Bell click handler shows today's appointments
         private void LblBell_Click(object sender, EventArgs e)
         {
             var todays = AppointmentManager.Appointments
-                .Where(a => a.Date.Date == DateTime.Today && a.Doctor == currentDoctor)
+                .Where(a => a.Date.Date == DateTime.Today && string.Equals(a.Doctor, currentDoctor, StringComparison.OrdinalIgnoreCase))
                 .Select(a => $"{a.Date:hh:mm tt} - {a.Patient}")
                 .ToList();
 
@@ -91,7 +173,7 @@ namespace SmileTrack
                 ? string.Join(Environment.NewLine, todays)
                 : "No appointments today.";
 
-            MessageBox.Show(message, "Today's Appointments");
+            MessageBox.Show(message, $"Today's Appointments — {currentDoctor}");
         }
 
         private void btnSave_Click(object sender, EventArgs e)
@@ -142,11 +224,10 @@ namespace SmileTrack
             txtTreatmentDone.DeselectAll();
         }
 
-        
         private void LoadMySchedule()
         {
             var myAppointments = AppointmentManager.Appointments
-                .Where(a => a.Date.Date == DateTime.Today && a.Doctor == currentDoctor)
+                .Where(a => a.Date.Date == DateTime.Today && string.Equals(a.Doctor, currentDoctor, StringComparison.OrdinalIgnoreCase))
                 .ToList();
 
             dgvSched.DataSource = null;
@@ -181,8 +262,5 @@ namespace SmileTrack
 
         private void btnTreatments_Click(object sender, EventArgs e) { }
         private void cmbTreatmentType_SelectedIndexChanged(object sender, EventArgs e) { }
-
-
-
     }
 }
