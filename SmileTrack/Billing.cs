@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data;
+using System.Data.SqlClient;
 using System.Drawing;
 using System.Drawing.Printing;
 using System.IO;
@@ -22,7 +23,7 @@ namespace SmileTrack
 
         private void BillingForm_Load(object sender, EventArgs e)
         {
-            // Ensure treatment grid has expected columns (don't duplicate if designer already provided them)
+            // Ensure treatment grid has expected columns
             if (dgvTreatmentList.Columns["Amount"] == null)
             {
                 var amountCol = new DataGridViewTextBoxColumn
@@ -83,9 +84,53 @@ namespace SmileTrack
             lblSubtotal.Text = "₱0.00";
             lblTotalAmount.Text = "₱0.00";
             lblBalance.Text = "₱0.00";
+
+            // Kusa nitong ikokonekta at ilo-load ang mga dating invoice mula sa database papunta sa dgvInvoices
+            LoadExistingInvoices();
         }
 
-        // When user finishes typing patient name, attempt to load recent treatments into the invoice items grid
+        // ========================================================
+        // KONEKSYON SA DATABASE: I-LOAD ANG MGA INVOICES PATUNGO SA LOWER GRID
+        // ========================================================
+        private void LoadExistingInvoices()
+        {
+            try
+            {
+                string sql = @"
+                    SELECT 
+                        i.InvoiceID, 
+                        i.InvoiceDate, 
+                        ISNULL(p.FirstName, '') + ' ' + ISNULL(p.LastName, '') AS PatientName, 
+                        i.TotalAmount, 
+                        i.PaidAmount, 
+                        i.BalanceAmount, 
+                        i.Status 
+                    FROM Invoices i
+                    LEFT JOIN Patients p ON i.PatientID = p.PatientID
+                    ORDER BY i.InvoiceDate DESC;";
+
+                DataTable dt = DatabaseHelper.ExecuteQuery(sql);
+                dgvInvoices.Rows.Clear();
+
+                foreach (DataRow row in dt.Rows)
+                {
+                    dgvInvoices.Rows.Add(
+                        row["InvoiceID"],
+                        Convert.ToDateTime(row["InvoiceDate"]).ToString("MM/dd/yyyy"),
+                        row["PatientName"],
+                        Convert.ToDecimal(row["TotalAmount"]).ToString("#,##0.00"),
+                        Convert.ToDecimal(row["PaidAmount"]).ToString("#,##0.00"),
+                        Convert.ToDecimal(row["BalanceAmount"]).ToString("#,##0.00"),
+                        row["Status"]
+                    );
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error loading invoices from database: " + ex.Message, "Database Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
         private void txtPname_Leave(object sender, EventArgs e)
         {
             var name = txtPname.Text?.Trim();
@@ -93,34 +138,27 @@ namespace SmileTrack
             PopulateTreatmentsForPatient(name);
         }
 
-        // Populate dgvTreatmentList with most recent treatments for the given patient name
         private void PopulateTreatmentsForPatient(string patientName)
         {
             try
             {
-                // Use simple name matching (FirstName + ' ' + LastName LIKE @name)
                 var sql = @"
-SELECT TOP(10)
-    a.Treatment AS Treatment,
-    ISNULL(a.Notes,'') AS Description,
-    1 AS Qty,
-    0.00 AS UnitPrice
-FROM Appointments a
-LEFT JOIN Patients p ON a.PatientID = p.PatientID
-WHERE (ISNULL(p.FirstName,'') + ' ' + ISNULL(p.LastName,'')) LIKE @name
-ORDER BY a.AppointmentDateTime DESC;";
+                    SELECT TOP(10)
+                        a.Treatment AS Treatment,
+                        ISNULL(a.Notes,'') AS Description,
+                        1 AS Qty,
+                        0.00 AS UnitPrice
+                    FROM Appointments a
+                    LEFT JOIN Patients p ON a.PatientID = p.PatientID
+                    WHERE (ISNULL(p.FirstName,'') + ' ' + ISNULL(p.LastName,'')) LIKE @name
+                    ORDER BY a.AppointmentDateTime DESC;";
 
-                var dt = DatabaseHelper.ExecuteQuery(sql, new System.Data.SqlClient.SqlParameter("@name", "%" + patientName + "%"));
+                var dt = DatabaseHelper.ExecuteQuery(sql, new SqlParameter("@name", "%" + patientName + "%"));
 
-                if (dt == null || dt.Rows.Count == 0)
-                {
-                    // no recent treatments found — do nothing
-                    return;
-                }
+                if (dt == null || dt.Rows.Count == 0) return;
 
-                // Clear existing invoice items and add treatments
                 dgvTreatmentList.Rows.Clear();
-                foreach (System.Data.DataRow r in dt.Rows)
+                foreach (DataRow r in dt.Rows)
                 {
                     var treatment = r["Treatment"]?.ToString() ?? string.Empty;
                     var desc = r["Description"]?.ToString() ?? string.Empty;
@@ -130,7 +168,6 @@ ORDER BY a.AppointmentDateTime DESC;";
                     int rowIndex = dgvTreatmentList.Rows.Add();
                     var row = dgvTreatmentList.Rows[rowIndex];
 
-                    // Ensure columns exist before assigning
                     if (dgvTreatmentList.Columns["Treatment"] != null) row.Cells["Treatment"].Value = treatment;
                     else row.Cells[0].Value = treatment;
 
@@ -138,19 +175,16 @@ ORDER BY a.AppointmentDateTime DESC;";
                     if (dgvTreatmentList.Columns["Qty"] != null) row.Cells["Qty"].Value = qty;
                     if (dgvTreatmentList.Columns["UnitPrice"] != null) row.Cells["UnitPrice"].Value = unitPrice.ToString("#,##0.00");
 
-                    // Amount will be calculated by CalculateTotals / CellEndEdit
                     if (dgvTreatmentList.Columns["Amount"] != null)
                     {
                         decimal amount = qty * unitPrice;
                         row.Cells["Amount"].Value = amount.ToString("#,##0.00");
                     }
 
-                    // Default status for invoice item
                     if (dgvTreatmentList.Columns["Status"] != null)
                         row.Cells["Status"].Value = "Unpaid";
                 }
 
-                // Recalculate totals after populating
                 CalculateTotals();
             }
             catch (Exception ex)
@@ -159,10 +193,8 @@ ORDER BY a.AppointmentDateTime DESC;";
             }
         }
 
-        // Recalculate totals when discount/tax/payment change
         private void TxtFields_TextChanged(object sender, EventArgs e) => CalculateTotals();
 
-        // Calculate subtotal, discount, tax, total and balance from dgvTreatmentList
         private void CalculateTotals()
         {
             decimal subtotal = 0m;
@@ -179,14 +211,12 @@ ORDER BY a.AppointmentDateTime DESC;";
 
                 decimal amount = qty * unitPrice;
 
-                // Store numeric amount (formatted) in Amount cell
                 if (row.Cells["Amount"] != null)
                     row.Cells["Amount"].Value = amount.ToString("#,##0.00");
 
                 subtotal += amount;
             }
 
-            // Parse discount and tax as percentages (if user enters percent) or absolute if they want — treat input as percent by default
             decimal discountPercent = 0m;
             decimal taxPercent = 0m;
 
@@ -211,7 +241,6 @@ ORDER BY a.AppointmentDateTime DESC;";
                 lblBalance.Text = $"₱{total:#,##0.00}";
             }
 
-            // Update status label
             if (decimal.TryParse(txtPayment.Text, out decimal paid))
             {
                 string status = (paid == 0m) ? "Unpaid" : (paid < total) ? "Partial" : "Fully Paid";
@@ -223,9 +252,7 @@ ORDER BY a.AppointmentDateTime DESC;";
         {
             if (e.RowIndex < 0 || dgvTreatmentList.Rows[e.RowIndex].IsNewRow) return;
 
-            // Recalculate amount for changed row and update totals
             var row = dgvTreatmentList.Rows[e.RowIndex];
-
             decimal qty = 0m;
             decimal unitPrice = 0m;
 
@@ -240,20 +267,141 @@ ORDER BY a.AppointmentDateTime DESC;";
             CalculateTotals();
         }
 
-        private void txtInvoiceNum_TextChanged(object sender, EventArgs e)
+        // ========================================================
+        // CRITICAL FIX: I-SAVE ANG INVOICE DIREKTA SA SQL DATABASE
+        // ========================================================
+        private void btnSave_Click_1(object sender, EventArgs e)
         {
-            lblStatus.Text = txtInvoiceNum.Text.Length < 3 ? "Invoice number must be at least 3 characters." : string.Empty;
+            if (string.IsNullOrWhiteSpace(txtInvoiceNum.Text))
+            {
+                MessageBox.Show("Please enter an invoice number.", "Validation", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(txtPname.Text))
+            {
+                MessageBox.Show("Please provide a patient name.", "Validation", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            CalculateTotals();
+
+            string invoiceNo = txtInvoiceNum.Text.Trim();
+            string patientName = txtPname.Text.Trim();
+            DateTime invoiceDate = dtpInvoiceDate.Value;
+
+            decimal totalAmount = 0m;
+            decimal paidAmount = 0m;
+
+            decimal.TryParse(lblTotalAmount.Text.Replace("₱", "").Replace(",", ""), out totalAmount);
+            decimal.TryParse(txtPayment.Text, out paidAmount);
+            decimal balance = totalAmount - paidAmount;
+            string status = (paidAmount == 0m) ? "Unpaid" : (paidAmount < totalAmount) ? "Partial" : "Fully Paid";
+
+            try
+            {
+                DatabaseHelper.EnsureDatabaseAndTables();
+
+                // 1. Kuhanin muna natin ang tamang PatientID mula sa pangalan
+                string patientSql = "SELECT TOP(1) PatientID FROM Patients WHERE (FirstName + ' ' + LastName) LIKE @pname";
+                DataTable pdt = DatabaseHelper.ExecuteQuery(patientSql, new SqlParameter("@pname", "%" + patientName + "%"));
+
+                int? patientID = null;
+                if (pdt != null && pdt.Rows.Count > 0)
+                {
+                    patientID = Convert.ToInt32(pdt.Rows[0]["PatientID"]);
+                }
+
+                // 2. I-insert ang record sa database gamit ang structure na binabasa ng system ni admin
+                string insertSql = @"
+                    INSERT INTO Invoices (InvoiceID, PatientID, TotalAmount, PaidAmount, BalanceAmount, Status, InvoiceDate)
+                    VALUES (@InvoiceID, @PatientID, @TotalAmount, @PaidAmount, @BalanceAmount, @Status, @InvoiceDate);";
+
+                // Gagamit tayo ng ExecuteNonQuery sa helper para sa inserts kung meron, 
+                // o kaya gagamit ng standard connection pool routine:
+                using (SqlConnection conn = new SqlConnection(DatabaseHelper.ConnectionString))
+                {
+                    conn.Open();
+                    using (SqlCommand cmd = new SqlCommand(insertSql, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@InvoiceID", invoiceNo);
+                        cmd.Parameters.AddWithValue("@PatientID", (object)patientID ?? DBNull.Value);
+                        cmd.Parameters.AddWithValue("@TotalAmount", totalAmount);
+                        cmd.Parameters.AddWithValue("@PaidAmount", paidAmount);
+                        cmd.Parameters.AddWithValue("@BalanceAmount", balance);
+                        cmd.Parameters.AddWithValue("@Status", status);
+                        cmd.Parameters.AddWithValue("@InvoiceDate", invoiceDate);
+
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+
+                MessageBox.Show("Invoice successfully synchronized and saved to data server!", "Database Up-to-Date", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                // I-refresh ang local lower table sheet grid view control
+                LoadExistingInvoices();
+
+                // 3. Pagkatapos, ituloy ang Printing routine ng Receipt gaya ng dati
+                string receiptText = $"Invoice Receipt\n\n" +
+                                     $"Invoice No: {invoiceNo}\n" +
+                                     $"Date: {invoiceDate:MM/dd/yyyy}\n" +
+                                     $"Patient: {patientName}\n" +
+                                     $"Total: ₱{totalAmount:#,##0.00}\n" +
+                                     $"Paid: ₱{paidAmount:#,##0.00}\n" +
+                                     $"Balance: ₱{balance:#,##0.00}\n" +
+                                     $"Status: {status}";
+
+                var printDoc = new PrintDocument();
+                printDoc.PrintPage += (s, ev) =>
+                {
+                    ev.Graphics.DrawString(receiptText, new Font("Arial", 12), Brushes.Black, new PointF(100, 100));
+                };
+
+                using (var printDialog = new PrintDialog { Document = printDoc })
+                {
+                    if (printDialog.ShowDialog() == DialogResult.OK)
+                    {
+                        printDoc.Print();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Failed to save and sync report to admin database: " + ex.Message, "Sync Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
-        private void dtpInvoiceDate_ValueChanged(object sender, EventArgs e)
+        private void txtSearchP_TextChanged(object sender, EventArgs e)
         {
-            // Keep label friendly; actual dtp value used for storage
-            lblInvoiceDate.Text = $"Invoice Date: {dtpInvoiceDate.Value:MMMM dd, yyyy}";
+            string searchText = txtSearchP.Text?.Trim().ToLower() ?? string.Empty;
+
+            foreach (DataGridViewRow row in dgvInvoices.Rows)
+            {
+                if (row.IsNewRow) continue;
+
+                var patientCell = row.Cells[2]; // Index mapping to avoid crash if naming mismatch
+                var invoiceCell = row.Cells[0];
+
+                string patient = patientCell?.Value?.ToString().ToLower() ?? string.Empty;
+                string invoiceNo = invoiceCell?.Value?.ToString().ToLower() ?? string.Empty;
+
+                bool match = patient.Contains(searchText) || invoiceNo.Contains(searchText);
+                row.Visible = match;
+            }
         }
 
-        private void dtpDue_ValueChanged(object sender, EventArgs e)
+        private void cmbStatus_SelectedIndexChanged(object sender, EventArgs e)
         {
-            lblStatus.Text = dtpDue.Value < dtpInvoiceDate.Value ? "Due date cannot be earlier than invoice date." : string.Empty;
+            if (cmbStatus.SelectedItem == null) return;
+            string selectedStatus = cmbStatus.SelectedItem.ToString();
+
+            foreach (DataGridViewRow row in dgvInvoices.Rows)
+            {
+                if (row.IsNewRow) continue;
+
+                string status = row.Cells[6].Value?.ToString() ?? string.Empty;
+                row.Visible = string.IsNullOrEmpty(selectedStatus) ? true : status == selectedStatus;
+            }
         }
 
         private void btnClear_Click_1(object sender, EventArgs e)
@@ -278,9 +426,7 @@ ORDER BY a.AppointmentDateTime DESC;";
 
         private void btnAddItem_Click(object sender, EventArgs e)
         {
-            // Add an empty row so user can input a new item
             dgvTreatmentList.Rows.Add();
-            // Optionally move focus to the new row's Treatment cell
             int lastRow = dgvTreatmentList.Rows.Count - 1;
             if (lastRow >= 0)
             {
@@ -289,187 +435,16 @@ ORDER BY a.AppointmentDateTime DESC;";
             }
         }
 
-        private void txtSearchP_TextChanged(object sender, EventArgs e)
-        {
-            string searchText = txtSearchP.Text?.Trim().ToLower() ?? string.Empty;
-
-            foreach (DataGridViewRow row in dgvInvoices.Rows)
-            {
-                if (row.IsNewRow) continue;
-
-                var patientCell = row.Cells["colPatientName"];
-                var invoiceCell = row.Cells["colInvoiceNo"];
-
-                string patient = patientCell?.Value?.ToString().ToLower() ?? string.Empty;
-                string invoiceNo = invoiceCell?.Value?.ToString().ToLower() ?? string.Empty;
-
-                bool match = patient.Contains(searchText) || invoiceNo.Contains(searchText);
-                row.Visible = match;
-            }
-        }
-
-        private void cmbStatus_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (cmbStatus.SelectedItem == null) return;
-            string selectedStatus = cmbStatus.SelectedItem.ToString();
-
-            foreach (DataGridViewRow row in dgvInvoices.Rows)
-            {
-                if (row.IsNewRow) continue;
-
-                string status = row.Cells["colStatus"].Value?.ToString() ?? string.Empty;
-                row.Visible = string.IsNullOrEmpty(selectedStatus) ? true : status == selectedStatus;
-            }
-        }
-
-        private void dtpFrom_ValueChanged(object sender, EventArgs e)
-        {
-            // optional: implement filtering by date range
-        }
-
-        private void dtpTo_ValueChanged(object sender, EventArgs e)
-        {
-            // optional: implement filtering by date range
-        }
-
-        private void dgvInvoices_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-            if (e.RowIndex < 0) return;
-
-            if (dgvInvoices.Columns[e.ColumnIndex].Name == "Action")
-            {
-                var row = dgvInvoices.Rows[e.RowIndex];
-
-                string invoiceNo = row.Cells["colInvoiceNo"].Value?.ToString() ?? string.Empty;
-                string invoiceDate = row.Cells["colInvoiceDate"].Value?.ToString() ?? string.Empty;
-                string patientName = row.Cells["colPatientName"].Value?.ToString() ?? string.Empty;
-                string totalAmount = row.Cells["colTotal"].Value?.ToString() ?? string.Empty;
-                string paidAmount = row.Cells["colPaidAmount"].Value?.ToString() ?? string.Empty;
-                string balance = row.Cells["colBalance"].Value?.ToString() ?? string.Empty;
-                string status = row.Cells["colStatus"].Value?.ToString() ?? string.Empty;
-
-                string receiptText = $"Invoice Receipt\n\n" +
-                                     $"Invoice No: {invoiceNo}\n" +
-                                     $"Date: {invoiceDate}\n" +
-                                     $"Patient: {patientName}\n" +
-                                     $"Total: {totalAmount}\n" +
-                                     $"Paid: {paidAmount}\n" +
-                                     $"Balance: {balance}\n" +
-                                     $"Status: {status}";
-
-                var printDoc = new PrintDocument();
-                printDoc.PrintPage += (s, ev) =>
-                {
-                    ev.Graphics.DrawString(receiptText, new Font("Arial", 12), Brushes.Black, new PointF(100, 100));
-                };
-
-                using (var printDialog = new PrintDialog { Document = printDoc })
-                {
-                    if (printDialog.ShowDialog() == DialogResult.OK)
-                    {
-                        printDoc.Print();
-                    }
-                }
-            }
-        }
-
-        private void btnSave_Click_1(object sender, EventArgs e)
-        {
-            // Basic validation
-            if (string.IsNullOrWhiteSpace(txtInvoiceNum.Text))
-            {
-                MessageBox.Show("Please enter an invoice number.", "Validation", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
-            CalculateTotals();
-
-            string invoiceNo = txtInvoiceNum.Text.Trim();
-            string patientName = txtPname.Text.Trim();
-            string invoiceDate = dtpInvoiceDate.Value.ToString("MM/dd/yyyy");
-
-            // Parse total and paid from labels/textboxes
-            decimal totalAmount = 0m;
-            decimal paidAmount = 0m;
-
-            decimal.TryParse(lblTotalAmount.Text.Replace("₱", "").Replace(",", ""), out totalAmount);
-            decimal.TryParse(txtPayment.Text, out paidAmount);
-
-            decimal balance = totalAmount - paidAmount;
-            string status = (paidAmount == 0m) ? "Unpaid" : (paidAmount < totalAmount) ? "Partial" : "Fully Paid";
-
-            // Add to dgvInvoices using designer column names
-            dgvInvoices.Rows.Add(invoiceNo,
-                                 invoiceDate,
-                                 patientName,
-                                 totalAmount.ToString("#,##0.00"),
-                                 paidAmount.ToString("#,##0.00"),
-                                 balance.ToString("#,##0.00"),
-                                 status);
-
-            // Prepare receipt text
-            string receiptText = $"Invoice Receipt\n\n" +
-                                 $"Invoice No: {invoiceNo}\n" +
-                                 $"Date: {invoiceDate}\n" +
-                                 $"Patient: {patientName}\n" +
-                                 $"Total: {totalAmount:#,##0.00}\n" +
-                                 $"Paid: {paidAmount:#,##0.00}\n" +
-                                 $"Balance: {balance:#,##0.00}\n" +
-                                 $"Status: {status}";
-
-            // Ask user to print
-            var printDoc = new PrintDocument();
-            printDoc.PrintPage += (s, ev) =>
-            {
-                ev.Graphics.DrawString(receiptText, new Font("Arial", 12), Brushes.Black, new PointF(100, 100));
-            };
-
-            using (var printDialog = new PrintDialog { Document = printDoc })
-            {
-                if (printDialog.ShowDialog() == DialogResult.OK)
-                {
-                    printDoc.Print();
-                }
-            }
-
-            // Save a copy to application folder
-            try
-            {
-                string safeFileName = string.Concat(invoiceNo.Split(Path.GetInvalidFileNameChars()));
-                string path = Path.Combine(Application.StartupPath, $"{safeFileName}.txt");
-                File.WriteAllText(path, receiptText);
-                MessageBox.Show($"Invoice saved and a copy stored as {path}", "Saved", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Invoice printed but failed to save copy: {ex.Message}", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            }
-        }
-
-        private void dgvTreatmentList_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-            // no-op for now
-        }
-
-        private void txtDiscount_TextChanged(object sender, EventArgs e)
-        {
-            // reuse centralized calculation
-            CalculateTotals();
-        }
-
-        private void txtTax_TextChanged(object sender, EventArgs e)
-        {
-            CalculateTotals();
-        }
-
-        private void txtBalance_TextChanged(object sender, EventArgs e)
-        {
-            // not used by current UI
-        }
-
-        private void BillingForm_Load_1(object sender, EventArgs e)
-        {
-
-        }
+        private void dgvInvoices_CellContentClick(object sender, DataGridViewCellEventArgs e) { }
+        private void txtInvoiceNum_TextChanged(object sender, EventArgs e) { }
+        private void dtpInvoiceDate_ValueChanged(object sender, EventArgs e) { }
+        private void dtpDue_ValueChanged(object sender, EventArgs e) { }
+        private void txtDiscount_TextChanged(object sender, EventArgs e) => CalculateTotals();
+        private void txtTax_TextChanged(object sender, EventArgs e) => CalculateTotals();
+        private void dgvTreatmentList_CellContentClick(object sender, DataGridViewCellEventArgs e) { }
+        private void txtBalance_TextChanged(object sender, EventArgs e) { }
+        private void dtpFrom_ValueChanged(object sender, EventArgs e) { }
+        private void dtpTo_ValueChanged(object sender, EventArgs e) { }
+        private void BillingForm_Load_1(object sender, EventArgs e) { }
     }
 }

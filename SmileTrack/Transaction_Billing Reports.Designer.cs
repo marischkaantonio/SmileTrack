@@ -170,7 +170,6 @@
             this.btnPrint.TabIndex = 5;
             this.btnPrint.Text = "🖨️ Print";
             this.btnPrint.UseVisualStyleBackColor = false;
-            this.btnPrint.Click += new System.EventHandler(this.btnPrint_Click_1);
             // 
             // btnGenReport
             // 
@@ -455,7 +454,6 @@
             this.Controls.Add(this.panel1);
             this.Name = "Transaction_Billing_Reports";
             this.Text = "Transaction_Billing_Reports";
-            this.Load += new System.EventHandler(this.Transaction_Billing_Reports_Load);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();

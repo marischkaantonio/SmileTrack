@@ -52,8 +52,10 @@ public class AuditLog
 
 public class Appointment
 {
-    public string Time { get; set; }
-    public string PatientName { get; set; }
+    public int AppointmentID { get; set; }
+    public DateTime Date { get; set; }     
+    public string Patient { get; set; }
+    public string Status { get; set; }     
     public string Dentist { get; set; }
     public string Treatment { get; set; }
 }
@@ -121,3 +123,8 @@ namespace SmileTrack
     }
 }
 
+ 
+public static class AppointmentManager
+    {
+        public static List<Appointment> Appointments = new List<Appointment>();
+    }

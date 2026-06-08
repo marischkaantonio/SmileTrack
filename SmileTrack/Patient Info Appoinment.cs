@@ -18,7 +18,7 @@ namespace SmileTrack
 
             // initialize runtime UI state once
             rbWalkin.Checked = false;
-            rbAppointment.Checked = false; rbAppointment.Checked = false;       
+            rbAppointment.Checked = false;
             rbMale.Checked = false;
             rbFemale.Checked = false;
 
@@ -297,93 +297,80 @@ namespace SmileTrack
         {
             try
             {
-                int patientId;
-
-                // EXISTING PATIENT
-                if (!string.IsNullOrWhiteSpace(txtPatientID.Text) &&
-                    int.TryParse(txtPatientID.Text, out patientId))
+                // If PatientID contains an existing numeric id → update.
+                var idText = txtPatientID.Text?.Trim();
+                if (!string.IsNullOrEmpty(idText) && int.TryParse(idText, out int existingId) && existingId > 0)
                 {
-                    bool updated = DatabaseHelper.UpdatePatient(
-                        patientId,
-                        txtFname.Text.Trim(),
-                        txtLname.Text.Trim(),
-                        dtpBirthdate.Value,
-                        (int)nudAge.Value,
-                        rbMale.Checked ? "Male" :
-                        rbFemale.Checked ? "Female" : "",
-                        txtContact.Text.Trim(),
-                        txtEmail.Text.Trim(),
-                        txtAddress.Text.Trim());
+                    // verify existence before attempting update
+                    var existsDt = DatabaseHelper.ExecuteQuery(
+                        "SELECT COUNT(1) AS C FROM Patients WHERE PatientID = @id",
+                        new SqlParameter("@id", existingId));
 
-                    // Use DatabaseHelper.AddAppointment to ensure consistent data
-                    var status = string.IsNullOrWhiteSpace(cmbStatus.Text) ? "Scheduled" : cmbStatus.Text;
-                    var visitType = rbWalkin.Checked ? "Walk-in" : "Appointment";
-                    int appointmentId = DatabaseHelper.AddAppointment(
-                        patientId,
-                        dtAppoinment.Value,
-                        cmbDentist.Text,
-                        cmbTreatmentType.Text,
-                        status,
-                        visitType,
-                        richtxtNotes.Text ?? string.Empty);
+                    var exists = existsDt.Rows.Count > 0 && Convert.ToInt32(existsDt.Rows[0]["C"]) > 0;
+                    if (exists)
+                    {
+                        bool updated = DatabaseHelper.UpdatePatient(
+                            existingId,
+                            txtFname.Text.Trim(),
+                            txtLname.Text.Trim(),
+                            dtpBirthdate.Value,
+                            (int)nudAge.Value,
+                            rbMale.Checked ? "Male" : rbFemale.Checked ? "Female" : string.Empty,
+                            txtContact.Text.Trim(),
+                            txtEmail.Text.Trim(),
+                            txtAddress.Text.Trim());
 
-                    txtAppointmentID.Text = appointmentId.ToString();
+                        if (updated)
+                            MessageBox.Show($"Patient updated successfully! Patient ID: {existingId}", "Update", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        else
+                            MessageBox.Show("No patient was updated. The ID may not exist.", "Update", MessageBoxButtons.OK, MessageBoxIcon.Warning);
 
-                    MessageBox.Show(
-                        "Patient updated and new appointment saved!",
-                        "Success",
-                        MessageBoxButtons.OK,
-                        MessageBoxIcon.Information);
+                        // refresh any open records window
+                        foreach (Form f in Application.OpenForms)
+                            if (f is frmPatientRecords fr) try { fr.LoadPatients(); } catch { }
 
-                    // Refresh any open patient records views and dashboards so the new appointment shows in the dgv
-                    RefreshOpenPatientRecords(patientId);
+                        return;
+                    }
 
-                    return;
+                    // ID present but not found in DB — offer to create new instead
+                    if (MessageBox.Show($"Patient ID {existingId} was not found. Create a new patient instead?", "Not found", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
+                        return;
+                    // fall through to create new
                 }
 
-                // NEW PATIENT
-                patientId = DatabaseHelper.AddPatient(
+                // Create new patient
+                int newId = DatabaseHelper.AddPatient(
                     txtFname.Text.Trim(),
                     txtLname.Text.Trim(),
                     dtpBirthdate.Value,
                     (int)nudAge.Value,
-                    rbMale.Checked ? "Male" :
-                    rbFemale.Checked ? "Female" : "",
+                    rbMale.Checked ? "Male" : rbFemale.Checked ? "Female" : string.Empty,
                     txtContact.Text.Trim(),
                     txtEmail.Text.Trim(),
                     txtAddress.Text.Trim());
 
-                txtPatientID.Text = patientId.ToString();
+                MessageBox.Show($"Patient saved successfully! Patient ID: {newId}", "Save", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-                var statusNew = string.IsNullOrWhiteSpace(cmbStatus.Text) ? "Scheduled" : cmbStatus.Text;
-                var visitTypeNew = rbWalkin.Checked ? "Walk-in" : "Appointment";
-                int appointmentIdNew = DatabaseHelper.AddAppointment(
-                    patientId,
-                    dtAppoinment.Value,
-                    cmbDentist.Text,
-                    cmbTreatmentType.Text,
-                    statusNew,
-                    visitTypeNew,
-                    richtxtNotes.Text ?? string.Empty);
+                // set the generated id so user sees the saved record
+                txtPatientID.Text = newId.ToString();
 
-                txtAppointmentID.Text = appointmentIdNew.ToString();
+                // Refresh or open patient records window
+                frmPatientRecords existing = null;
+                foreach (Form f in Application.OpenForms)
+                {
+                    if (f is frmPatientRecords fr) { existing = fr; break; }
+                }
 
-                MessageBox.Show(
-                    "Patient and appointment saved successfully!",
-                    "Success",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Information);
-
-                // Refresh any open patient records views and dashboards so the new patient/appointment shows in the dgv
-                RefreshOpenPatientRecords(patientId);
+                if (existing != null) { try { existing.LoadPatients(); existing.BringToFront(); existing.Focus(); } catch { } }
+                else
+                {
+                    try { var recordForm = new frmPatientRecords(); recordForm.LoadPatients(); recordForm.StartPosition = FormStartPosition.CenterParent; recordForm.Show(this); }
+                    catch { /* ignore UI refresh errors */ }
+                }
             }
             catch (Exception ex)
             {
-                MessageBox.Show(
-                    ex.Message,
-                    "Database Error",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Error);
+                MessageBox.Show("Error saving patient: " + ex.Message, "Database Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -505,10 +492,9 @@ namespace SmileTrack
                 }
                 catch
                 {
-                    // ignore
+                    
                 }
 
-                // Finally ensure patient records is refreshed and selected and brought to front/activated
                 try
                 {
                     targetPatientRecords.RefreshAndSelectPatient(patientId);
@@ -521,7 +507,7 @@ namespace SmileTrack
                     targetPatientRecords.Activate();
                     targetPatientRecords.Focus();
                 }
-                catch
+                catch   
                 {
                     // ignore individual refresh failures
                 }

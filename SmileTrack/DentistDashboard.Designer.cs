@@ -28,9 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea5 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend5 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series5 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.Panel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.btnDashboard = new System.Windows.Forms.Button();
@@ -39,13 +39,6 @@
             this.panel2 = new System.Windows.Forms.Panel();
             this.btnLogOut = new System.Windows.Forms.Button();
             this.panelDentistDashboard = new System.Windows.Forms.Panel();
-            this.pnlTreatmet = new System.Windows.Forms.Panel();
-            this.label9 = new System.Windows.Forms.Label();
-            this.TreatmentDone = new System.Windows.Forms.Panel();
-            this.lbTreatment = new System.Windows.Forms.ListBox();
-            this.txtNotes = new System.Windows.Forms.RichTextBox();
-            this.cmbTreatmentType = new System.Windows.Forms.ComboBox();
-            this.btnSave = new System.Windows.Forms.Button();
             this.lbbell = new System.Windows.Forms.Label();
             this.textBox2 = new System.Windows.Forms.TextBox();
             this.label10 = new System.Windows.Forms.Label();
@@ -54,7 +47,7 @@
             this.label7 = new System.Windows.Forms.Label();
             this.chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.label6 = new System.Windows.Forms.Label();
-            this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.dgvOverview = new System.Windows.Forms.DataGridView();
             this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.LastVisit = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.label5 = new System.Windows.Forms.Label();
@@ -77,11 +70,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.panelDentistDashboard.SuspendLayout();
-            this.pnlTreatmet.SuspendLayout();
-            this.TreatmentDone.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox6)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvOverview)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvSched)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).BeginInit();
@@ -103,7 +94,6 @@
             this.Panel1.Name = "Panel1";
             this.Panel1.Size = new System.Drawing.Size(139, 629);
             this.Panel1.TabIndex = 0;
-            this.Panel1.Paint += new System.Windows.Forms.PaintEventHandler(this.Panel1_Paint);
             // 
             // pictureBox2
             // 
@@ -115,7 +105,6 @@
             this.pictureBox2.Size = new System.Drawing.Size(135, 104);
             this.pictureBox2.TabIndex = 8;
             this.pictureBox2.TabStop = false;
-            this.pictureBox2.Click += new System.EventHandler(this.pictureBox2_Click);
             // 
             // btnDashboard
             // 
@@ -129,7 +118,6 @@
             this.btnDashboard.TabIndex = 1;
             this.btnDashboard.Text = "🏠Dashboard";
             this.btnDashboard.UseVisualStyleBackColor = false;
-            this.btnDashboard.Click += new System.EventHandler(this.btnDashboard_Click);
             // 
             // btnMySched
             // 
@@ -143,7 +131,6 @@
             this.btnMySched.TabIndex = 2;
             this.btnMySched.Text = "MySchedule";
             this.btnMySched.UseVisualStyleBackColor = false;
-            this.btnMySched.Click += new System.EventHandler(this.btnMySched_Click);
             // 
             // pictureBox1
             // 
@@ -157,7 +144,6 @@
             this.pictureBox1.Size = new System.Drawing.Size(94, 98);
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
-            this.pictureBox1.Click += new System.EventHandler(this.pictureBox1_Click);
             // 
             // panel2
             // 
@@ -166,7 +152,6 @@
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(150, 81);
             this.panel2.TabIndex = 10;
-            this.panel2.Paint += new System.Windows.Forms.PaintEventHandler(this.panel2_Paint);
             // 
             // btnLogOut
             // 
@@ -182,12 +167,10 @@
             this.btnLogOut.TabIndex = 9;
             this.btnLogOut.Text = "Log-out";
             this.btnLogOut.UseVisualStyleBackColor = false;
-            this.btnLogOut.Click += new System.EventHandler(this.btnLogOut_Click);
             // 
             // panelDentistDashboard
             // 
             this.panelDentistDashboard.BackColor = System.Drawing.Color.White;
-            this.panelDentistDashboard.Controls.Add(this.pnlTreatmet);
             this.panelDentistDashboard.Controls.Add(this.lbbell);
             this.panelDentistDashboard.Controls.Add(this.textBox2);
             this.panelDentistDashboard.Controls.Add(this.label10);
@@ -196,7 +179,7 @@
             this.panelDentistDashboard.Controls.Add(this.label7);
             this.panelDentistDashboard.Controls.Add(this.chart1);
             this.panelDentistDashboard.Controls.Add(this.label6);
-            this.panelDentistDashboard.Controls.Add(this.dataGridView1);
+            this.panelDentistDashboard.Controls.Add(this.dgvOverview);
             this.panelDentistDashboard.Controls.Add(this.label5);
             this.panelDentistDashboard.Controls.Add(this.dgvSched);
             this.panelDentistDashboard.Controls.Add(this.label4);
@@ -215,91 +198,6 @@
             this.panelDentistDashboard.Name = "panelDentistDashboard";
             this.panelDentistDashboard.Size = new System.Drawing.Size(907, 629);
             this.panelDentistDashboard.TabIndex = 1;
-            this.panelDentistDashboard.Paint += new System.Windows.Forms.PaintEventHandler(this.panelDentistDashboard_Paint);
-            // 
-            // pnlTreatmet
-            // 
-            this.pnlTreatmet.Controls.Add(this.label9);
-            this.pnlTreatmet.Controls.Add(this.TreatmentDone);
-            this.pnlTreatmet.Location = new System.Drawing.Point(362, 375);
-            this.pnlTreatmet.Name = "pnlTreatmet";
-            this.pnlTreatmet.Size = new System.Drawing.Size(298, 211);
-            this.pnlTreatmet.TabIndex = 30;
-            this.pnlTreatmet.Paint += new System.Windows.Forms.PaintEventHandler(this.pnlTreatmet_Paint);
-            // 
-            // label9
-            // 
-            this.label9.AutoSize = true;
-            this.label9.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label9.Location = new System.Drawing.Point(34, 9);
-            this.label9.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(98, 13);
-            this.label9.TabIndex = 20;
-            this.label9.Text = "Treatment Done";
-            this.label9.Click += new System.EventHandler(this.label9_Click);
-            // 
-            // TreatmentDone
-            // 
-            this.TreatmentDone.Controls.Add(this.lbTreatment);
-            this.TreatmentDone.Controls.Add(this.txtNotes);
-            this.TreatmentDone.Controls.Add(this.cmbTreatmentType);
-            this.TreatmentDone.Controls.Add(this.btnSave);
-            this.TreatmentDone.Location = new System.Drawing.Point(37, 32);
-            this.TreatmentDone.Margin = new System.Windows.Forms.Padding(2);
-            this.TreatmentDone.Name = "TreatmentDone";
-            this.TreatmentDone.Size = new System.Drawing.Size(224, 157);
-            this.TreatmentDone.TabIndex = 19;
-            this.TreatmentDone.Paint += new System.Windows.Forms.PaintEventHandler(this.TreatmentDone_Paint);
-            // 
-            // lbTreatment
-            // 
-            this.lbTreatment.FormattingEnabled = true;
-            this.lbTreatment.Location = new System.Drawing.Point(16, 109);
-            this.lbTreatment.Margin = new System.Windows.Forms.Padding(2);
-            this.lbTreatment.Name = "lbTreatment";
-            this.lbTreatment.Size = new System.Drawing.Size(189, 30);
-            this.lbTreatment.TabIndex = 13;
-            this.lbTreatment.SelectedIndexChanged += new System.EventHandler(this.lbTreatment_SelectedIndexChanged);
-            // 
-            // txtNotes
-            // 
-            this.txtNotes.Location = new System.Drawing.Point(16, 41);
-            this.txtNotes.Margin = new System.Windows.Forms.Padding(2);
-            this.txtNotes.Name = "txtNotes";
-            this.txtNotes.Size = new System.Drawing.Size(189, 28);
-            this.txtNotes.TabIndex = 12;
-            this.txtNotes.Text = "";
-            this.txtNotes.TextChanged += new System.EventHandler(this.txtNotes_TextChanged);
-            // 
-            // cmbTreatmentType
-            // 
-            this.cmbTreatmentType.FormattingEnabled = true;
-            this.cmbTreatmentType.Items.AddRange(new object[] {
-            "Cleaning",
-            "Crown/Denture",
-            "DentalExtraction",
-            "Brace"});
-            this.cmbTreatmentType.Location = new System.Drawing.Point(16, 16);
-            this.cmbTreatmentType.Margin = new System.Windows.Forms.Padding(2);
-            this.cmbTreatmentType.Name = "cmbTreatmentType";
-            this.cmbTreatmentType.Size = new System.Drawing.Size(118, 21);
-            this.cmbTreatmentType.TabIndex = 0;
-            this.cmbTreatmentType.SelectedIndexChanged += new System.EventHandler(this.cmbTreatmentType_SelectedIndexChanged);
-            // 
-            // btnSave
-            // 
-            this.btnSave.BackColor = System.Drawing.Color.Aquamarine;
-            this.btnSave.Font = new System.Drawing.Font("Gill Sans Ultra Bold", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnSave.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.btnSave.Location = new System.Drawing.Point(16, 73);
-            this.btnSave.Margin = new System.Windows.Forms.Padding(2);
-            this.btnSave.Name = "btnSave";
-            this.btnSave.Size = new System.Drawing.Size(117, 31);
-            this.btnSave.TabIndex = 11;
-            this.btnSave.Text = "Save Treatment";
-            this.btnSave.UseVisualStyleBackColor = false;
-            this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
             // 
             // lbbell
             // 
@@ -311,7 +209,6 @@
             this.lbbell.Size = new System.Drawing.Size(23, 15);
             this.lbbell.TabIndex = 29;
             this.lbbell.Text = "🔔";
-            this.lbbell.Click += new System.EventHandler(this.lbbell_Click_1);
             // 
             // textBox2
             // 
@@ -321,7 +218,6 @@
             this.textBox2.Size = new System.Drawing.Size(144, 20);
             this.textBox2.TabIndex = 28;
             this.textBox2.Text = " 🔍Search patient";
-            this.textBox2.TextChanged += new System.EventHandler(this.textBox2_TextChanged);
             // 
             // label10
             // 
@@ -331,19 +227,17 @@
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(0, 13);
             this.label10.TabIndex = 25;
-            this.label10.Click += new System.EventHandler(this.label10_Click);
             // 
             // pictureBox6
             // 
             this.pictureBox6.BackgroundImage = global::SmileTrack.Properties.Resources.pngtree_this_is_a_cute_cartoon_tooth_icon_vector_png_image_12285812;
             this.pictureBox6.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.pictureBox6.Location = new System.Drawing.Point(399, 101);
+            this.pictureBox6.Location = new System.Drawing.Point(401, 101);
             this.pictureBox6.Margin = new System.Windows.Forms.Padding(2);
             this.pictureBox6.Name = "pictureBox6";
             this.pictureBox6.Size = new System.Drawing.Size(29, 31);
             this.pictureBox6.TabIndex = 18;
             this.pictureBox6.TabStop = false;
-            this.pictureBox6.Click += new System.EventHandler(this.pictureBox6_Click);
             // 
             // label8
             // 
@@ -355,39 +249,36 @@
             this.label8.Size = new System.Drawing.Size(98, 13);
             this.label8.TabIndex = 17;
             this.label8.Text = "Treatment Done";
-            this.label8.Click += new System.EventHandler(this.label8_Click);
             // 
             // label7
             // 
             this.label7.AutoSize = true;
             this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label7.Location = new System.Drawing.Point(19, 384);
+            this.label7.Location = new System.Drawing.Point(209, 375);
             this.label7.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(118, 13);
             this.label7.TabIndex = 15;
             this.label7.Text = "Treatment Summary";
-            this.label7.Click += new System.EventHandler(this.label7_Click);
             // 
             // chart1
             // 
-            chartArea1.Name = "ChartArea1";
-            this.chart1.ChartAreas.Add(chartArea1);
-            legend1.Name = "Legend1";
-            legend1.TableStyle = System.Windows.Forms.DataVisualization.Charting.LegendTableStyle.Wide;
-            this.chart1.Legends.Add(legend1);
-            this.chart1.Location = new System.Drawing.Point(56, 407);
+            chartArea5.Name = "ChartArea1";
+            this.chart1.ChartAreas.Add(chartArea5);
+            legend5.Name = "Legend1";
+            legend5.TableStyle = System.Windows.Forms.DataVisualization.Charting.LegendTableStyle.Wide;
+            this.chart1.Legends.Add(legend5);
+            this.chart1.Location = new System.Drawing.Point(270, 413);
             this.chart1.Margin = new System.Windows.Forms.Padding(2);
             this.chart1.Name = "chart1";
             this.chart1.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.Pastel;
-            series1.ChartArea = "ChartArea1";
-            series1.Legend = "Legend1";
-            series1.Name = "Series1";
-            this.chart1.Series.Add(series1);
+            series5.ChartArea = "ChartArea1";
+            series5.Legend = "Legend1";
+            series5.Name = "Series1";
+            this.chart1.Series.Add(series5);
             this.chart1.Size = new System.Drawing.Size(228, 180);
             this.chart1.TabIndex = 14;
             this.chart1.Text = "chart1";
-            this.chart1.Click += new System.EventHandler(this.chart1_Click);
             // 
             // label6
             // 
@@ -399,22 +290,20 @@
             this.label6.Size = new System.Drawing.Size(104, 13);
             this.label6.TabIndex = 13;
             this.label6.Text = "Patient Overview";
-            this.label6.Click += new System.EventHandler(this.label6_Click);
             // 
-            // dataGridView1
+            // dgvOverview
             // 
-            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.dgvOverview.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvOverview.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.dataGridViewTextBoxColumn2,
             this.LastVisit});
-            this.dataGridView1.Location = new System.Drawing.Point(581, 241);
-            this.dataGridView1.Margin = new System.Windows.Forms.Padding(2);
-            this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.RowHeadersWidth = 51;
-            this.dataGridView1.RowTemplate.Height = 24;
-            this.dataGridView1.Size = new System.Drawing.Size(299, 122);
-            this.dataGridView1.TabIndex = 12;
-            this.dataGridView1.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellContentClick);
+            this.dgvOverview.Location = new System.Drawing.Point(581, 241);
+            this.dgvOverview.Margin = new System.Windows.Forms.Padding(2);
+            this.dgvOverview.Name = "dgvOverview";
+            this.dgvOverview.RowHeadersWidth = 51;
+            this.dgvOverview.RowTemplate.Height = 24;
+            this.dgvOverview.Size = new System.Drawing.Size(299, 122);
+            this.dgvOverview.TabIndex = 12;
             // 
             // dataGridViewTextBoxColumn2
             // 
@@ -440,7 +329,6 @@
             this.label5.Size = new System.Drawing.Size(92, 13);
             this.label5.TabIndex = 11;
             this.label5.Text = "Schedule table";
-            this.label5.Click += new System.EventHandler(this.label5_Click);
             // 
             // dgvSched
             // 
@@ -457,7 +345,6 @@
             this.dgvSched.RowTemplate.Height = 24;
             this.dgvSched.Size = new System.Drawing.Size(511, 122);
             this.dgvSched.TabIndex = 10;
-            this.dgvSched.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvSched_CellContentClick);
             // 
             // Time
             // 
@@ -497,7 +384,6 @@
             this.label4.Size = new System.Drawing.Size(133, 13);
             this.label4.TabIndex = 9;
             this.label4.Text = "Upcoming Appoinment";
-            this.label4.Click += new System.EventHandler(this.label4_Click);
             // 
             // label3
             // 
@@ -509,7 +395,6 @@
             this.label3.Size = new System.Drawing.Size(89, 13);
             this.label3.TabIndex = 8;
             this.label3.Text = "Patient\'s Seen";
-            this.label3.Click += new System.EventHandler(this.label3_Click);
             // 
             // label2
             // 
@@ -521,7 +406,6 @@
             this.label2.Size = new System.Drawing.Size(125, 13);
             this.label2.TabIndex = 7;
             this.label2.Text = "Today\'s Appointment";
-            this.label2.Click += new System.EventHandler(this.label2_Click);
             // 
             // pictureBox3
             // 
@@ -533,7 +417,6 @@
             this.pictureBox3.Size = new System.Drawing.Size(28, 31);
             this.pictureBox3.TabIndex = 0;
             this.pictureBox3.TabStop = false;
-            this.pictureBox3.Click += new System.EventHandler(this.pictureBox3_Click);
             // 
             // pictureBox4
             // 
@@ -545,19 +428,17 @@
             this.pictureBox4.Size = new System.Drawing.Size(28, 31);
             this.pictureBox4.TabIndex = 0;
             this.pictureBox4.TabStop = false;
-            this.pictureBox4.Click += new System.EventHandler(this.pictureBox4_Click);
             // 
             // pictureBox5
             // 
             this.pictureBox5.BackgroundImage = global::SmileTrack.Properties.Resources._3d_realistic_clock_icon_illustration_vector;
             this.pictureBox5.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.pictureBox5.Location = new System.Drawing.Point(539, 101);
+            this.pictureBox5.Location = new System.Drawing.Point(557, 101);
             this.pictureBox5.Margin = new System.Windows.Forms.Padding(2);
             this.pictureBox5.Name = "pictureBox5";
             this.pictureBox5.Size = new System.Drawing.Size(31, 31);
             this.pictureBox5.TabIndex = 0;
             this.pictureBox5.TabStop = false;
-            this.pictureBox5.Click += new System.EventHandler(this.pictureBox5_Click);
             // 
             // txtTreatmentDone
             // 
@@ -567,7 +448,6 @@
             this.txtTreatmentDone.Size = new System.Drawing.Size(122, 83);
             this.txtTreatmentDone.TabIndex = 21;
             this.txtTreatmentDone.Text = "";
-            this.txtTreatmentDone.TextChanged += new System.EventHandler(this.txtTreatmentDone_TextChanged);
             // 
             // txtPatientSeen
             // 
@@ -577,7 +457,6 @@
             this.txtPatientSeen.Size = new System.Drawing.Size(114, 83);
             this.txtPatientSeen.TabIndex = 22;
             this.txtPatientSeen.Text = "";
-            this.txtPatientSeen.TextChanged += new System.EventHandler(this.txtPatientSeen_TextChanged);
             // 
             // txtTodaysAppoinment
             // 
@@ -587,7 +466,6 @@
             this.txtTodaysAppoinment.Size = new System.Drawing.Size(114, 83);
             this.txtTodaysAppoinment.TabIndex = 23;
             this.txtTodaysAppoinment.Text = "";
-            this.txtTodaysAppoinment.TextChanged += new System.EventHandler(this.txtTodaysAppoinment_TextChanged);
             // 
             // txtUpApp
             // 
@@ -597,7 +475,6 @@
             this.txtUpApp.Size = new System.Drawing.Size(136, 83);
             this.txtUpApp.TabIndex = 24;
             this.txtUpApp.Text = "";
-            this.txtUpApp.TextChanged += new System.EventHandler(this.txtUpApp_TextChanged);
             // 
             // DentistDashboard
             // 
@@ -610,18 +487,14 @@
             this.Name = "DentistDashboard";
             this.Padding = new System.Windows.Forms.Padding(8);
             this.Text = "DentistDashboard";
-            this.Load += new System.EventHandler(this.DentistDashboard_Load);
             this.Panel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.panelDentistDashboard.ResumeLayout(false);
             this.panelDentistDashboard.PerformLayout();
-            this.pnlTreatmet.ResumeLayout(false);
-            this.pnlTreatmet.PerformLayout();
-            this.TreatmentDone.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox6)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvOverview)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvSched)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).EndInit();
@@ -649,19 +522,13 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.DataGridView dataGridView1;
+        private System.Windows.Forms.DataGridView dgvOverview;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn2;
         private System.Windows.Forms.DataGridViewTextBoxColumn LastVisit;
         private System.Windows.Forms.DataVisualization.Charting.Chart chart1;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.PictureBox pictureBox6;
         private System.Windows.Forms.Label label8;
-        private System.Windows.Forms.Panel TreatmentDone;
-        private System.Windows.Forms.Label label9;
-        private System.Windows.Forms.ComboBox cmbTreatmentType;
-        private System.Windows.Forms.Button btnSave;
-        private System.Windows.Forms.ListBox lbTreatment;
-        private System.Windows.Forms.RichTextBox txtNotes;
         private System.Windows.Forms.RichTextBox txtTreatmentDone;
         private System.Windows.Forms.RichTextBox txtPatientSeen;
         private System.Windows.Forms.RichTextBox txtUpApp;
@@ -675,6 +542,5 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn Patient;
         private System.Windows.Forms.DataGridViewTextBoxColumn Treatment;
         private System.Windows.Forms.DataGridViewTextBoxColumn Status;
-        private System.Windows.Forms.Panel pnlTreatmet;
     }
 }
