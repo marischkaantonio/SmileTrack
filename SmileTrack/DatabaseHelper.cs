@@ -6,6 +6,13 @@ namespace SmileTrack
 {
     public static class DatabaseHelper
     {
+        // Event raised when appointments change so UIs can refresh
+        public static event Action AppointmentsChanged;
+
+        public static void RaiseAppointmentsChanged()
+        {
+            try { AppointmentsChanged?.Invoke(); } catch { }
+        }
         public static readonly string ConnectionString =
             @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=SmileTrackDB;Integrated Security=True;Encrypt=False";
 

@@ -397,7 +397,8 @@ namespace SmileTrack
                         MessageBox.Show($"Appointment created (ID: {apptId}).", "Appointment", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                         // Refresh other open dashboards and patient records so they show the new appointment immediately
-                        RefreshOpenPatientRecords(patientId);
+                        try { RefreshOpenPatientRecords(patientId); } catch { }
+                        try { DatabaseHelper.RaiseAppointmentsChanged(); } catch { }
                     }
                 }
                 catch (Exception ex)

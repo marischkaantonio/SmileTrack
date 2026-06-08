@@ -16,6 +16,8 @@ namespace SmileTrack
         {
             InitializeComponent();
             WireGridEvents();
+            try { DatabaseHelper.AppointmentsChanged -= DatabaseHelper_AppointmentsChanged; } catch { }
+            DatabaseHelper.AppointmentsChanged += DatabaseHelper_AppointmentsChanged;
         }
 
         // Nangyayari ito kapag bumukas na ang form sa screen
@@ -44,6 +46,16 @@ namespace SmileTrack
             }
         }
 
+        private void DatabaseHelper_AppointmentsChanged()
+        {
+            try
+            {
+                if (this.InvokeRequired) { this.Invoke(new Action(LoadDashboard)); }
+                else LoadDashboard();
+            }
+            catch { }
+        }
+
         public void LoadDashboard()
         {
             try
@@ -54,6 +66,8 @@ namespace SmileTrack
                 // -------------------------------------------------------------------------
                 // 1. APPOINTMENTS SUMMARY (Top-Left Grid: Regular Appointments TODAY)
                 // -------------------------------------------------------------------------
+
+                // Include Completed in today's list; only exclude Cancelled
                 var dtAppointments = DatabaseHelper.ExecuteQuery(
                     @"SELECT a.AppointmentID,
                              a.PatientID,
@@ -65,7 +79,7 @@ namespace SmileTrack
                       FROM Appointments a
                       LEFT JOIN Patients p ON a.PatientID = p.PatientID
                       WHERE CAST(a.AppointmentDateTime AS DATE) = CAST(GETDATE() AS DATE)
-                        AND ISNULL(a.Status,'') NOT IN ('Cancelled','Completed')
+                        AND ISNULL(a.Status,'') NOT IN ('Cancelled')
                         AND ISNULL(a.VisitType,'') <> 'Walk-in' 
                       ORDER BY a.AppointmentDateTime");
 
@@ -75,6 +89,18 @@ namespace SmileTrack
                     HideIdColumns(this.dgvAppointments);
                     AddViewColumn(this.dgvAppointments);
                     ApplyStatusRowStyles(this.dgvAppointments);
+
+                    // Ensure column order and format: Time, Patient Name, Dentist, Treatment, Status, View
+                    try
+                    {
+                        if (dgvAppointments.Columns.Contains("Time")) dgvAppointments.Columns["Time"].DisplayIndex = 0;
+                        if (dgvAppointments.Columns.Contains("Patient Name")) dgvAppointments.Columns["Patient Name"].DisplayIndex = 1;
+                        if (dgvAppointments.Columns.Contains("Dentist")) dgvAppointments.Columns["Dentist"].DisplayIndex = 2;
+                        if (dgvAppointments.Columns.Contains("Treatment")) dgvAppointments.Columns["Treatment"].DisplayIndex = 3;
+                        if (dgvAppointments.Columns.Contains("Status")) dgvAppointments.Columns["Status"].DisplayIndex = 4;
+                        if (dgvAppointments.Columns.Contains("View")) dgvAppointments.Columns["View"].DisplayIndex = 5;
+                    }
+                    catch { }
                 }
 
                 // -------------------------------------------------------------------------
@@ -100,6 +126,15 @@ namespace SmileTrack
                     HideIdColumns(this.dgvWalkIn);
                     AddViewColumn(this.dgvWalkIn);
                     ApplyStatusRowStyles(this.dgvWalkIn);
+                    try
+                    {
+                        if (dgvWalkIn.Columns.Contains("No.")) dgvWalkIn.Columns["No."].DisplayIndex = 0;
+                        if (dgvWalkIn.Columns.Contains("Patient Name")) dgvWalkIn.Columns["Patient Name"].DisplayIndex = 1;
+                        if (dgvWalkIn.Columns.Contains("Time-in")) dgvWalkIn.Columns["Time-in"].DisplayIndex = 2;
+                        if (dgvWalkIn.Columns.Contains("Status")) dgvWalkIn.Columns["Status"].DisplayIndex = 3;
+                        if (dgvWalkIn.Columns.Contains("View")) dgvWalkIn.Columns["View"].DisplayIndex = 4;
+                    }
+                    catch { }
                 }
 
                 // -------------------------------------------------------------------------
