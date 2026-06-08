@@ -17,9 +17,13 @@ namespace SmileTrack
             InitializeComponent();
         }
 
-        private void DentistDashboard_Load(object sender, EventArgs e)
+                private void DentistDashboard_Load(object sender, EventArgs e)
         {
-            // Tawagin lahat ng loaders
+            // Ensure DB and tables exist
+    
+            try { DatabaseHelper.EnsureDatabaseAndTables(); } catch { }
+
+            // Call all loaders
             RefreshDashboard();
 
             // Setup timer para auto-refresh kada 1 minuto
@@ -40,16 +44,18 @@ namespace SmileTrack
             LoadAppointmentsFromDb();
             LoadPatientOverview();
             LoadDashboardSummary();
+            LoadTreatmentSummaryChart();
         }
 
         private void LoadAppointmentsFromDb()
         {
             try
             {
-                // Only show today's appointments (exclude cancelled)
-                string sql = @"SELECT FORMAT(a.AppointmentDateTime,'hh:mm tt') AS [Time], 
-                                      ISNULL(p.FirstName,'') + ' ' + ISNULL(p.LastName,'') AS [Patient], 
-                                      a.Treatment, ISNULL(a.Status,'') AS [Status]
+                // Only show today's appointments (exclude cancelled). Include IDs so UI actions can open the appointment.
+                string sql = @"SELECT a.AppointmentID, a.PatientID,
+                                      FORMAT(a.AppointmentDateTime,'hh:mm tt') AS [Time],
+                                      ISNULL(p.FirstName,'') + ' ' + ISNULL(p.LastName,'') AS [Patient],
+                                      ISNULL(a.Dentist,'') AS Dentist, ISNULL(a.Treatment,'') AS Treatment, ISNULL(a.Status,'') AS [Status]
                                FROM Appointments a
                                LEFT JOIN Patients p ON a.PatientID = p.PatientID
                                WHERE CAST(a.AppointmentDateTime AS DATE) = CAST(GETDATE() AS DATE)
@@ -107,6 +113,33 @@ namespace SmileTrack
             }
         }
 
+        private void LoadTreatmentSummaryChart()
+        {
+            try
+            {
+                // Build treatment summary (completed) - similar to receptionist chart
+                string sql = @"SELECT ISNULL(Treatment,'<unspecified>') AS Treatment, COUNT(*) AS C
+                               FROM Appointments
+                               WHERE ISNULL(Status,'') = 'Completed'
+                               GROUP BY ISNULL(Treatment,'<unspecified>')";
+
+                var dt = DatabaseHelper.ExecuteQuery(sql);
+                chart1.Series.Clear();
+                chart1.Legends.Clear();
+                var s = chart1.Series.Add("Treatment");
+                s.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Pie;
+                s.IsValueShownAsLabel = true;
+
+                foreach (DataRow r in dt.Rows)
+                {
+                    string t = r["Treatment"]?.ToString() ?? "<unspecified>";
+                    int c = Convert.ToInt32(r["C"]);
+                    s.Points.AddXY(t, c);
+                }
+            }
+            catch { }
+        }
+
         private void LoadDashboardSummary()
         {
             try
@@ -159,6 +192,45 @@ namespace SmileTrack
             }
         }
 
+        private void BtnDashboard_Click(object sender, EventArgs e)
+        {
+            RefreshDashboard();
+        }
+
+        private void DgvSched_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex < 0) return;
+            try
+            {
+                var row = dgvSched.Rows[e.RowIndex];
+                int apptId = -1;
+                int patientId = -1;
+
+                if (dgvSched.Columns.Contains("AppointmentID") && row.Cells["AppointmentID"].Value != null)
+                    int.TryParse(row.Cells["AppointmentID"].Value.ToString(), out apptId);
+
+                if (dgvSched.Columns.Contains("PatientID") && row.Cells["PatientID"].Value != null)
+                    int.TryParse(row.Cells["PatientID"].Value.ToString(), out patientId);
+
+                var pi = new Patient_Info_Appoinment();
+                if (patientId > 0 && apptId > 0)
+                {
+                    pi.LoadPatientAndAppointment(patientId, apptId);
+                }
+                else if (patientId > 0)
+                {
+                    pi.PopulatePatientById(patientId);
+                }
+
+                pi.StartPosition = FormStartPosition.CenterParent;
+                pi.ShowDialog(this);
+
+                // After editing, refresh dashboard
+                RefreshDashboard();
+            }
+            catch { /* ignore */ }
+        }
+
        
 
         private void btnMySched_Click_1(object sender, EventArgs e)
@@ -166,7 +238,7 @@ namespace SmileTrack
             new My_Schedule().Show(this);
         }
 
-        // Public method so other forms can request the dentist dashboard to refresh appointments
+        // Public method so other forms can request the dentist dashboard to refresh appointmentsd
         public void RefreshAppointments()
         {
             try
@@ -184,6 +256,16 @@ namespace SmileTrack
             {
                 // swallow exceptions to avoid disrupting caller
             }
+        }
+
+        private void DatabaseHelper_AppointmentsChanged()
+        {
+            try
+            {
+                if (this.InvokeRequired) { this.Invoke(new Action(RefreshAppointments)); }
+                else RefreshAppointments();
+            }
+            catch { }
         }
 
         private void DentistDashboard_Load_1(object sender, EventArgs e)
