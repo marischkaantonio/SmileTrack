@@ -8,6 +8,7 @@ namespace SmileTrack
 {
     public partial class DentistDashboard : Form
     {
+        public string DentistName { get; private set; }
         // Palitan ang connection string kung iba ang settings ng SQL mo
         private readonly string connectionString = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=SmileTrackDB;Integrated Security=True;Encrypt=False";
         private Timer refreshTimer;
@@ -23,6 +24,11 @@ namespace SmileTrack
             dgvSched.CellDoubleClick += DgvSched_CellDoubleClick;
             try { DatabaseHelper.AppointmentsChanged -= DatabaseHelper_AppointmentsChanged; } catch { }
             DatabaseHelper.AppointmentsChanged += DatabaseHelper_AppointmentsChanged;
+        }
+
+        public DentistDashboard(string dentistName) : this()
+        {
+            this.DentistName = dentistName ?? string.Empty;
         }
 
         private void DentistDashboard_Load(object sender, EventArgs e)

@@ -18,6 +18,8 @@ namespace SmileTrack
             WireGridEvents();
             try { DatabaseHelper.AppointmentsChanged -= DatabaseHelper_AppointmentsChanged; } catch { }
             DatabaseHelper.AppointmentsChanged += DatabaseHelper_AppointmentsChanged;
+            try { btnAddWalkIn.Click -= btnAddWalkIn_Click; } catch { }
+            btnAddWalkIn.Click += btnAddWalkIn_Click;
         }
 
         // Nangyayari ito kapag bumukas na ang form sa screen
@@ -329,6 +331,53 @@ namespace SmileTrack
             var addForm = new Patient_Info_Appoinment();
             addForm.ShowDialog();
             LoadDashboard();
+        }
+
+        private void btnAddWalkIn_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                // Ask for patient id
+                string input = Prompt("Add Walk-in", "Enter Patient ID for Walk-in:");
+                if (!int.TryParse(input, out int patientId) || patientId <= 0)
+                {
+                    MessageBox.Show("Invalid Patient ID.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                // Create a walk-in appointment for now with default dentist empty
+                // signature: AddAppointment(int patientId, DateTime appointmentDateTime, string dentist, string treatment, string status, string visitType, string notes)
+                int apptId = DatabaseHelper.AddAppointment(patientId, DateTime.Now, string.Empty, string.Empty, "Waiting", "Walk-in", "Walk-in created from receptionist dashboard");
+                MessageBox.Show($"Walk-in created (Appointment ID: {apptId}).", "Walk-in", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                try { DatabaseHelper.RaiseAppointmentsChanged(); } catch { }
+                LoadDashboard();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error creating walk-in: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private string Prompt(string title, string promptText)
+        {
+            using (var prompt = new Form())
+            {
+                prompt.Width = 400;
+                prompt.Height = 150;
+                prompt.FormBorderStyle = FormBorderStyle.FixedDialog;
+                prompt.Text = title;
+                prompt.StartPosition = FormStartPosition.CenterParent;
+
+                var textLabel = new Label() { Left = 20, Top = 20, Width = 340, Text = promptText };
+                var textBox = new TextBox() { Left = 20, Top = 50, Width = 340 };
+                var confirmation = new Button() { Text = "OK", Left = 260, Width = 100, Top = 80, DialogResult = DialogResult.OK };
+                confirmation.Click += (s, e) => { prompt.Close(); };
+                prompt.Controls.Add(textBox);
+                prompt.Controls.Add(textLabel);
+                prompt.Controls.Add(confirmation);
+                prompt.AcceptButton = confirmation;
+                return prompt.ShowDialog(this) == DialogResult.OK ? textBox.Text.Trim() : string.Empty;
+            }
         }
 
         private void btnBillings_Click_1(object sender, EventArgs e)
