@@ -526,42 +526,60 @@ LEFT JOIN Appointments a ON p.PatientID = a.PatientID AND a.AppointmentDateTime 
 
                 if (result == DialogResult.Yes)
                 {
-                    // 3. Direct SQL Execution without using DatabaseHelper.ExecuteNonQuery
-                    string query = idColumnName.Contains("Appointment")
-                        ? "DELETE FROM Appointments WHERE AppointmentID = @ID"
-                        : "DELETE FROM Appointments WHERE PatientID = @ID";
+                    // If both AppointmentID and PatientID exist, ask what to delete
+                    bool hasAppt = patientGrid.Columns.Contains("AppointmentID") && selectedRow.Cells["AppointmentID"].Value != null;
+                    bool hasPatient = (patientGrid.Columns.Contains("PatientID") || patientGrid.Columns.Contains("Patient ID")) && (selectedRow.Cells[ "PatientID" ].Value != null || (patientGrid.Columns.Contains("Patient ID") && selectedRow.Cells["Patient ID"].Value != null));
 
-                    using (SqlConnection conn = new SqlConnection(connectionString))
+                    if (hasAppt && hasPatient)
                     {
-                        using (SqlCommand cmd = new SqlCommand(query, conn))
+                        var choice = MessageBox.Show("This row contains both an appointment and a patient.\nYes = delete PATIENT and all related records.\nNo = delete only the appointment.\nCancel = do nothing.", "Delete Choice", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+                        if (choice == DialogResult.Cancel) return;
+                        if (choice == DialogResult.No)
                         {
-                            cmd.Parameters.AddWithValue("@ID", targetId);
-                            conn.Open();
-                            cmd.ExecuteNonQuery();
+                            using (SqlConnection conn = new SqlConnection(connectionString))
+                            using (SqlCommand cmd = new SqlCommand("DELETE FROM Appointments WHERE AppointmentID = @ID", conn))
+                            {
+                                cmd.Parameters.AddWithValue("@ID", targetId);
+                                conn.Open(); cmd.ExecuteNonQuery();
+                            }
+                            MessageBox.Show("Appointment deleted.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            try { DatabaseHelper.RaiseAppointmentsChanged(); } catch { }
+                        }
+                        else
+                        {
+                            // delete patient
+                            bool deleted = DatabaseHelper.DeletePatient(targetId);
+                            if (deleted) { MessageBox.Show("Patient deleted.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information); try { DatabaseHelper.RaiseAppointmentsChanged(); } catch { } }
+                            else MessageBox.Show("Patient not deleted.", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         }
                     }
-
-                    MessageBox.Show("The selected entry has been successfully deleted.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-                    // 4. Force UI clean-up manually to avoid 'does not exist in current context' errors
-                    // This re-runs the search/load logic by mimicking a click on your existing refresh/search button
-                    // Replace 'btnRefresh' or 'btnSearch' with your actual button name if you have one
-                    if (this.Controls.Find("btnRefresh", true).FirstOrDefault() is Button refBtn)
+                    else if (idColumnName.Contains("Appointment"))
                     {
-                        refBtn.PerformClick();
-                    }
-                    else if (this.Controls.Find("btnSearch", true).FirstOrDefault() is Button srcBtn)
-                    {
-                        srcBtn.PerformClick();
+                        using (SqlConnection conn = new SqlConnection(connectionString))
+                        using (SqlCommand cmd = new SqlCommand("DELETE FROM Appointments WHERE AppointmentID = @ID", conn))
+                        {
+                            cmd.Parameters.AddWithValue("@ID", targetId);
+                            conn.Open(); cmd.ExecuteNonQuery();
+                        }
+                        MessageBox.Show("Appointment deleted.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        try { DatabaseHelper.RaiseAppointmentsChanged(); } catch { }
                     }
                     else
                     {
-                        // Fallback: Manually remove the row visually from the screen right away
-                        if (!patientGrid.AllowUserToAddRows && patientGrid.DataSource == null)
+                        bool deleted = DatabaseHelper.DeletePatient(targetId);
+                        if (deleted)
                         {
-                            patientGrid.Rows.Remove(selectedRow);
+                            MessageBox.Show("Patient deleted.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            try { DatabaseHelper.RaiseAppointmentsChanged(); } catch { }
+                        }
+                        else
+                        {
+                            MessageBox.Show("Patient not deleted.", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         }
                     }
+
+                    // Refresh UI
+                    try { LoadPatientRecords(); } catch { LoadPatients(); }
                 }
             }
             catch (Exception ex)

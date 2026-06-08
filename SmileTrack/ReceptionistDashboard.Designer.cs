@@ -359,6 +359,7 @@
             this.dgvWalkIn.RowTemplate.Height = 24;
             this.dgvWalkIn.Size = new System.Drawing.Size(396, 123);
             this.dgvWalkIn.TabIndex = 2;
+            this.dgvWalkIn.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvWalkIn_CellContentClick);
             // 
             // txtNo
             // 

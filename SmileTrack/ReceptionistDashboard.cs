@@ -385,6 +385,11 @@ namespace SmileTrack
         
             new BillingForm().Show();
         }
+
+        private void dgvWalkIn_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
     }
     }
     
