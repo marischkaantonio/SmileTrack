@@ -245,7 +245,7 @@ namespace SmileTrack
             new My_Schedule().Show(this);
         }
 
-        // Public method so other forms can request the dentist dashboard to refresh appointmentsd
+        // Public method so other forms can request the dentist dashboard to refresh appointmentsdqwe
         public void RefreshAppointments()
         {
             try
