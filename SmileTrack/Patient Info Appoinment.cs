@@ -3,6 +3,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Drawing;
 using System.Globalization;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace SmileTrack
@@ -17,7 +18,7 @@ namespace SmileTrack
 
             // initialize runtime UI state once
             rbWalkin.Checked = false;
-            rbAppointment.Checked = false;
+            rbAppointment.Checked = false; rbAppointment.Checked = false;       
             rbMale.Checked = false;
             rbFemale.Checked = false;
 
@@ -34,15 +35,10 @@ namespace SmileTrack
             txtPatientID.KeyDown += txtPatientID_KeyDown;
         }
 
-         
-
         private void Patient_Info_Appoinment_Load(object sender, EventArgs e)
-        {
-            // No automatic DB lookup on load
+        {   
         }
 
-        // Keep TextChanged lightweight: only clear fields when PatientID cleared.
-        // Designer wires this event, keep the handler name.
         private void txtPatientID_TextChanged(object sender, EventArgs e)
         {
             if (string.IsNullOrWhiteSpace(txtPatientID.Text))
@@ -115,7 +111,7 @@ namespace SmileTrack
         }
 
         // Populate patient fields and (optionally) load last appointment summary
-        private void PopulatePatientById(int patientId)
+        public void PopulatePatientById(int patientId)
         {
             try
             {
@@ -155,7 +151,7 @@ namespace SmileTrack
                 txtEmail.Text = row["Email"]?.ToString() ?? string.Empty;
                 txtAddress.Text = row["Address"]?.ToString() ?? string.Empty;
 
-                // Optionally load last appointment for display in appointment fields
+                // Attempt to load last appointment
                 var apptDt = DatabaseHelper.ExecuteQuery(
                     @"SELECT TOP(1) * FROM Appointments WHERE PatientID = @id ORDER BY AppointmentDateTime DESC",
                     new SqlParameter("@id", patientId));
@@ -181,7 +177,6 @@ namespace SmileTrack
                 }
                 else
                 {
-                    // clear appointment fields when none found
                     txtAppointmentID.Clear();
                     cmbDentist.SelectedIndex = -1;
                     cmbTreatmentType.SelectedIndex = -1;
@@ -298,85 +293,97 @@ namespace SmileTrack
             txtAppointmentID.Clear();
         }
 
-
         private void btnSave_Click_1(object sender, EventArgs e)
         {
             try
             {
-                // If PatientID contains an existing numeric id → update.
-                var idText = txtPatientID.Text?.Trim();
-                if (!string.IsNullOrEmpty(idText) && int.TryParse(idText, out int existingId) && existingId > 0)
+                int patientId;
+
+                // EXISTING PATIENT
+                if (!string.IsNullOrWhiteSpace(txtPatientID.Text) &&
+                    int.TryParse(txtPatientID.Text, out patientId))
                 {
-                    // verify existence before attempting update
-                    var existsDt = DatabaseHelper.ExecuteQuery(
-                        "SELECT COUNT(1) AS C FROM Patients WHERE PatientID = @id",
-                        new SqlParameter("@id", existingId));
+                    bool updated = DatabaseHelper.UpdatePatient(
+                        patientId,
+                        txtFname.Text.Trim(),
+                        txtLname.Text.Trim(),
+                        dtpBirthdate.Value,
+                        (int)nudAge.Value,
+                        rbMale.Checked ? "Male" :
+                        rbFemale.Checked ? "Female" : "",
+                        txtContact.Text.Trim(),
+                        txtEmail.Text.Trim(),
+                        txtAddress.Text.Trim());
 
-                    var exists = existsDt.Rows.Count > 0 && Convert.ToInt32(existsDt.Rows[0]["C"]) > 0;
-                    if (exists)
-                    {
-                        bool updated = DatabaseHelper.UpdatePatient(
-                            existingId,
-                            txtFname.Text.Trim(),
-                            txtLname.Text.Trim(),
-                            dtpBirthdate.Value,
-                            (int)nudAge.Value,
-                            rbMale.Checked ? "Male" : rbFemale.Checked ? "Female" : string.Empty,
-                            txtContact.Text.Trim(),
-                            txtEmail.Text.Trim(),
-                            txtAddress.Text.Trim());
+                    // Use DatabaseHelper.AddAppointment to ensure consistent data
+                    var status = string.IsNullOrWhiteSpace(cmbStatus.Text) ? "Scheduled" : cmbStatus.Text;
+                    var visitType = rbWalkin.Checked ? "Walk-in" : "Appointment";
+                    int appointmentId = DatabaseHelper.AddAppointment(
+                        patientId,
+                        dtAppoinment.Value,
+                        cmbDentist.Text,
+                        cmbTreatmentType.Text,
+                        status,
+                        visitType,
+                        richtxtNotes.Text ?? string.Empty);
 
-                        if (updated)
-                            MessageBox.Show($"Patient updated successfully! Patient ID: {existingId}", "Update", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        else
-                            MessageBox.Show("No patient was updated. The ID may not exist.", "Update", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    txtAppointmentID.Text = appointmentId.ToString();
 
-                        // refresh any open records window
-                        foreach (Form f in Application.OpenForms)
-                            if (f is frmPatientRecords fr) try { fr.LoadPatients(); } catch { }
+                    MessageBox.Show(
+                        "Patient updated and new appointment saved!",
+                        "Success",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Information);
 
-                        return;
-                    }
+                    // Refresh any open patient records views and dashboards so the new appointment shows in the dgv
+                    RefreshOpenPatientRecords(patientId);
 
-                    // ID present but not found in DB — offer to create new instead
-                    if (MessageBox.Show($"Patient ID {existingId} was not found. Create a new patient instead?", "Not found", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
-                        return;
-                    // fall through to create new
+                    return;
                 }
 
-                // Create new patient
-                int newId = DatabaseHelper.AddPatient(
+                // NEW PATIENT
+                patientId = DatabaseHelper.AddPatient(
                     txtFname.Text.Trim(),
                     txtLname.Text.Trim(),
                     dtpBirthdate.Value,
                     (int)nudAge.Value,
-                    rbMale.Checked ? "Male" : rbFemale.Checked ? "Female" : string.Empty,
+                    rbMale.Checked ? "Male" :
+                    rbFemale.Checked ? "Female" : "",
                     txtContact.Text.Trim(),
                     txtEmail.Text.Trim(),
                     txtAddress.Text.Trim());
 
-                MessageBox.Show($"Patient saved successfully! Patient ID: {newId}", "Save", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                txtPatientID.Text = patientId.ToString();
 
-                // set the generated id so user sees the saved record
-                txtPatientID.Text = newId.ToString();
+                var statusNew = string.IsNullOrWhiteSpace(cmbStatus.Text) ? "Scheduled" : cmbStatus.Text;
+                var visitTypeNew = rbWalkin.Checked ? "Walk-in" : "Appointment";
+                int appointmentIdNew = DatabaseHelper.AddAppointment(
+                    patientId,
+                    dtAppoinment.Value,
+                    cmbDentist.Text,
+                    cmbTreatmentType.Text,
+                    statusNew,
+                    visitTypeNew,
+                    richtxtNotes.Text ?? string.Empty);
 
-                // Refresh or open patient records window
-                frmPatientRecords existing = null;
-                foreach (Form f in Application.OpenForms)
-                {
-                    if (f is frmPatientRecords fr) { existing = fr; break; }
-                }
+                txtAppointmentID.Text = appointmentIdNew.ToString();
 
-                if (existing != null) { try { existing.LoadPatients(); existing.BringToFront(); existing.Focus(); } catch { } }
-                else
-                {
-                    try { var recordForm = new frmPatientRecords(); recordForm.LoadPatients(); recordForm.StartPosition = FormStartPosition.CenterParent; recordForm.Show(this); }
-                    catch { /* ignore UI refresh errors */ }
-                }
+                MessageBox.Show(
+                    "Patient and appointment saved successfully!",
+                    "Success",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
+
+                // Refresh any open patient records views and dashboards so the new patient/appointment shows in the dgv
+                RefreshOpenPatientRecords(patientId);
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error saving patient: " + ex.Message, "Database Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(
+                    ex.Message,
+                    "Database Error",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
             }
         }
 
@@ -434,6 +441,97 @@ namespace SmileTrack
             ClearFields();
         }
 
+        // Refresh any open frmPatientRecords instances and select the saved patient.
+        // Also refresh receptionist dashboard and dentist dashboard if they are open.
+        private void RefreshOpenPatientRecords(int patientId)
+        {
+            if (InvokeRequired)
+            {
+                Invoke(new Action<int>(RefreshOpenPatientRecords), patientId);
+                return;
+            }
+
+            try
+            {
+                frmPatientRecords targetPatientRecords = null;
+                frmReceptionistDashboard targetReception = null;
+                DentistDashboard targetDentist = null;
+
+                // Find open instances
+                foreach (Form open in Application.OpenForms)
+                {
+                    if (open is frmPatientRecords frm)
+                    {
+                        targetPatientRecords = frm;
+                    }
+                    else if (open is frmReceptionistDashboard r)
+                    {
+                        targetReception = r;
+                    }
+                    else if (open is DentistDashboard d)
+                    {
+                        targetDentist = d;
+                    }
+                }
+
+                // If patient records not open, create and show it (but don't bring other dashboards to front)
+                if (targetPatientRecords == null)
+                {
+                    targetPatientRecords = new frmPatientRecords();
+                    targetPatientRecords.Show();
+                }
+
+                // Refresh receptionist dashboard if open (do not change its window order)
+                try
+                {
+                    if (targetReception != null)
+                    {
+                        // refresh data but do not BringToFront / Activate
+                        targetReception.RefreshDashboard();
+                    }
+                }
+                catch
+                {
+                    // ignore refresh failures
+                }
+
+                // Refresh dentist dashboard if open (reload appointments) but do not change its window order
+                try
+                {
+                    if (targetDentist != null)
+                    {
+                        targetDentist.RefreshAppointments();
+                    }
+                }
+                catch
+                {
+                    // ignore
+                }
+
+                // Finally ensure patient records is refreshed and selected and brought to front/activated
+                try
+                {
+                    targetPatientRecords.RefreshAndSelectPatient(patientId);
+
+                    if (targetPatientRecords.WindowState == FormWindowState.Minimized)
+                        targetPatientRecords.WindowState = FormWindowState.Normal;
+
+                    // Bring patient records to front and activate it so user sees it first
+                    targetPatientRecords.BringToFront();
+                    targetPatientRecords.Activate();
+                    targetPatientRecords.Focus();
+                }
+                catch
+                {
+                    // ignore individual refresh failures
+                }
+            }
+            catch
+            {
+                // ignore top-level errors to avoid blocking save flow
+            }
+        }
+
         // Add public notifier so other forms can call into this form when a patient was deleted
         public void NotifyPatientDeleted(int patientId)
         {
@@ -456,7 +554,90 @@ namespace SmileTrack
                 // ignore notification errors
             }
         }
+
+        // New public helper that allows other forms (dashboard) to open this editor pre-loaded
+        public void LoadPatientAndAppointment(int patientId, int appointmentId)
+        {
+            try
+            {
+                // Load patient basic info
+                var dt = DatabaseHelper.ExecuteQuery(
+                    "SELECT * FROM Patients WHERE PatientID = @id",
+                    new SqlParameter("@id", patientId));
+
+                if (dt.Rows.Count == 0)
+                {
+                    MessageBox.Show("No patient found with that ID.", "Load", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                }
+
+                var row = dt.Rows[0];
+                txtPatientID.Text = patientId.ToString();
+                txtFname.Text = row["FirstName"]?.ToString() ?? string.Empty;
+                txtLname.Text = row["LastName"]?.ToString() ?? string.Empty;
+
+                DateTime bdate;
+                if (DateTime.TryParse(row["BirthDate"]?.ToString(), out bdate))
+                    dtpBirthdate.Value = bdate;
+                else
+                    dtpBirthdate.Value = DateTime.Today;
+
+                int age;
+                if (int.TryParse(row["Age"]?.ToString(), out age))
+                    nudAge.Value = Math.Max(nudAge.Minimum, Math.Min(nudAge.Maximum, age));
+                else
+                    nudAge.Value = 0;
+
+                var gender = (row["Gender"] ?? string.Empty).ToString();
+                rbMale.Checked = gender.Equals("Male", StringComparison.OrdinalIgnoreCase);
+                rbFemale.Checked = gender.Equals("Female", StringComparison.OrdinalIgnoreCase);
+
+                txtContact.Text = row["ContactNo"]?.ToString() ?? string.Empty;
+                txtEmail.Text = row["Email"]?.ToString() ?? string.Empty;
+                txtAddress.Text = row["Address"]?.ToString() ?? string.Empty;
+
+                // Load the specific appointment
+                var apptDt = DatabaseHelper.ExecuteQuery(
+                    @"SELECT * FROM Appointments WHERE AppointmentID = @apptId",
+                    new SqlParameter("@apptId", appointmentId));
+
+                if (apptDt.Rows.Count > 0)
+                {
+                    var appt = apptDt.Rows[0];
+                    txtAppointmentID.Text = appt["AppointmentID"]?.ToString() ?? string.Empty;
+                    cmbDentist.Text = appt["Dentist"]?.ToString() ?? string.Empty;
+                    cmbTreatmentType.Text = appt["Treatment"]?.ToString() ?? string.Empty;
+                    cmbStatus.Text = appt["Status"]?.ToString() ?? string.Empty;
+
+                    DateTime apptDate;
+                    if (DateTime.TryParse(appt["AppointmentDateTime"]?.ToString(), out apptDate))
+                        dtAppoinment.Value = apptDate;
+                    else
+                        dtAppoinment.Value = DateTime.Now;
+
+                    richtxtNotes.Text = appt["Notes"]?.ToString() ?? string.Empty;
+
+                    var visitType = (appt["VisitType"] ?? string.Empty).ToString();
+                    rbWalkin.Checked = visitType.Equals("Walk-in", StringComparison.OrdinalIgnoreCase);
+                    rbAppointment.Checked = visitType.Equals("Appointment", StringComparison.OrdinalIgnoreCase);
+                }
+                else
+                {
+                    // Fallback to last appointment behavior if appointmentId not found
+                    txtAppointmentID.Clear();
+                    cmbDentist.SelectedIndex = -1;
+                    cmbTreatmentType.SelectedIndex = -1;
+                    cmbStatus.SelectedIndex = -1;
+                    dtAppoinment.Value = DateTime.Now;
+                    richtxtNotes.Clear();
+                    rbWalkin.Checked = false;
+                    rbAppointment.Checked = false;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error loading patient and appointment: " + ex.Message, "Database Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
     }
 }
-
-        // Delete a patient and related records safely

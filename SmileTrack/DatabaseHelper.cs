@@ -9,10 +9,10 @@ namespace SmileTrack
         public static readonly string ConnectionString =
             @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=SmileTrackDB;Integrated Security=True;Encrypt=False";
 
-       
+
         public static void EnsureDatabaseAndTables()
         {
-           
+
             var builder = new SqlConnectionStringBuilder(ConnectionString) { InitialCatalog = "master" };
             using (var con = new SqlConnection(builder.ToString()))
             using (var cmd = con.CreateCommand())
@@ -22,7 +22,7 @@ namespace SmileTrack
                 cmd.ExecuteNonQuery();
             }
 
-            
+
             using (var con = new SqlConnection(ConnectionString))
             using (var cmd = con.CreateCommand())
             {
@@ -48,7 +48,7 @@ END
 ";
                 cmd.ExecuteNonQuery();
 
-               
+
                 cmd.CommandText = @"
 IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Appointments]') AND type in (N'U'))
 BEGIN
@@ -124,7 +124,7 @@ END
             return dt;
         }
 
-        
+
         public static DataTable GetAppointmentsToday()
         {
             string sql = @"
@@ -260,6 +260,56 @@ WHERE ii.InvoiceID IN (SELECT InvoiceID FROM Invoices WHERE PatientID = @pid);";
 
                 con.Open();
                 return cmd.ExecuteNonQuery() > 0;
+            }
+        }
+
+        public static int AddAppointment(
+            int patientId,
+            DateTime appointmentDateTime,
+            string dentist,
+            string treatment,
+            string status,
+            string visitType,
+            string notes)
+        {
+            const string sql = @"
+    INSERT INTO Appointments
+    (
+        PatientID,
+        AppointmentDateTime,
+        Dentist,
+        Treatment,
+        Status,
+        VisitType,
+        Notes
+    )
+    VALUES
+    (
+        @patientId,
+        @appointmentDateTime,
+        @dentist,
+        @treatment,
+        @status,
+        @visitType,
+        @notes
+    );
+
+    SELECT SCOPE_IDENTITY();";
+
+            using (var con = new SqlConnection(ConnectionString))
+            using (var cmd = new SqlCommand(sql, con))
+            {
+                cmd.Parameters.AddWithValue("@patientId", patientId);
+                cmd.Parameters.AddWithValue("@appointmentDateTime", appointmentDateTime);
+                cmd.Parameters.AddWithValue("@dentist", dentist ?? string.Empty);
+                cmd.Parameters.AddWithValue("@treatment", treatment ?? string.Empty);
+                cmd.Parameters.AddWithValue("@status", status ?? string.Empty);
+                cmd.Parameters.AddWithValue("@visitType", visitType ?? string.Empty);
+                cmd.Parameters.AddWithValue("@notes", notes ?? string.Empty);
+
+                con.Open();
+
+                return Convert.ToInt32(cmd.ExecuteScalar());
             }
         }
     }

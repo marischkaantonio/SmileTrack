@@ -57,6 +57,10 @@ namespace SmileTrack
 
             dgvPatientRecord.CellDoubleClick -= dgvPatientRecord_CellDoubleClick;
             dgvPatientRecord.CellDoubleClick += dgvPatientRecord_CellDoubleClick;
+
+            // Ensure keyboard / row navigation updates the detail panel as well
+            dgvPatientRecord.SelectionChanged -= dgvPatientRecord_SelectionChanged;
+            dgvPatientRecord.SelectionChanged += dgvPatientRecord_SelectionChanged;
         }
 
         // Public so other forms can call after saving a patient
@@ -67,6 +71,12 @@ namespace SmileTrack
                 var dt = DatabaseHelper.ExecuteQuery("SELECT PatientID, FirstName, LastName, BirthDate, Age, Gender, ContactNo, Email, Address FROM Patients ORDER BY PatientID DESC");
                 dgvPatientRecord.AutoGenerateColumns = true;
                 dgvPatientRecord.DataSource = dt;
+
+                // If rows exist, show first row details immediately
+                if (dgvPatientRecord.Rows.Count > 0)
+                    ShowRowSummary(dgvPatientRecord.Rows[0]);
+                else
+                    ClearDetails();
             }
             catch (Exception ex)
             {
@@ -107,6 +117,12 @@ LEFT JOIN Appointments a ON p.PatientID = a.PatientID AND a.AppointmentDateTime 
                     var dt = DatabaseHelper.ExecuteQuery(baseSql);
                     dgvPatientRecord.AutoGenerateColumns = true;
                     dgvPatientRecord.DataSource = dt;
+
+                    if (dgvPatientRecord.Rows.Count > 0)
+                        ShowRowSummary(dgvPatientRecord.Rows[0]);
+                    else
+                        ClearDetails();
+
                     return;
                 }
 
@@ -114,6 +130,11 @@ LEFT JOIN Appointments a ON p.PatientID = a.PatientID AND a.AppointmentDateTime 
                 var dt2 = DatabaseHelper.ExecuteQuery(sql, new SqlParameter("@search", "%" + searchQuery + "%"));
                 dgvPatientRecord.AutoGenerateColumns = true;
                 dgvPatientRecord.DataSource = dt2;
+
+                if (dgvPatientRecord.Rows.Count > 0)
+                    ShowRowSummary(dgvPatientRecord.Rows[0]);
+                else
+                    ClearDetails();
             }
             catch (Exception ex)
             {
@@ -137,6 +158,11 @@ LEFT JOIN Appointments a ON p.PatientID = a.PatientID AND a.AppointmentDateTime 
                     new SqlParameter("@keyword", "%" + keyword + "%"));
                 dgvPatientRecord.AutoGenerateColumns = true;
                 dgvPatientRecord.DataSource = dt;
+
+                if (dgvPatientRecord.Rows.Count > 0)
+                    ShowRowSummary(dgvPatientRecord.Rows[0]);
+                else
+                    ClearDetails();
             }
             catch (Exception ex)
             {
@@ -155,6 +181,11 @@ LEFT JOIN Appointments a ON p.PatientID = a.PatientID AND a.AppointmentDateTime 
                 var dt = DatabaseHelper.ExecuteQuery("SELECT a.AppointmentID, a.AppointmentDateTime, ISNULL(p.FirstName,'')+' '+ISNULL(p.LastName,'') AS PatientName, a.Treatment, a.Status, a.Dentist FROM Appointments a INNER JOIN Patients p ON a.PatientID=p.PatientID WHERE a.Dentist=@dentist ORDER BY a.AppointmentDateTime", new SqlParameter("@dentist", dentist));
                 dgvPatientRecord.AutoGenerateColumns = true;
                 dgvPatientRecord.DataSource = dt;
+
+                if (dgvPatientRecord.Rows.Count > 0)
+                    ShowRowSummary(dgvPatientRecord.Rows[0]);
+                else
+                    ClearDetails();
             }
             catch (Exception ex)
             {
@@ -171,6 +202,11 @@ LEFT JOIN Appointments a ON p.PatientID = a.PatientID AND a.AppointmentDateTime 
                 var dt = DatabaseHelper.ExecuteQuery("SELECT a.AppointmentID, a.AppointmentDateTime, ISNULL(p.FirstName,'')+' '+ISNULL(p.LastName,'') AS PatientName, a.Treatment, a.Status, a.Dentist FROM Appointments a INNER JOIN Patients p ON a.PatientID=p.PatientID WHERE a.Status=@status ORDER BY a.AppointmentDateTime", new SqlParameter("@status", status));
                 dgvPatientRecord.AutoGenerateColumns = true;
                 dgvPatientRecord.DataSource = dt;
+
+                if (dgvPatientRecord.Rows.Count > 0)
+                    ShowRowSummary(dgvPatientRecord.Rows[0]);
+                else
+                    ClearDetails();
             }
             catch (Exception ex)
             {
@@ -236,7 +272,7 @@ LEFT JOIN Appointments a ON p.PatientID = a.PatientID AND a.AppointmentDateTime 
             }
         }
 
-        // Show selected row summary on right panel
+        // Show selected row summary on right panel (wired to CellClick)
         private void dgvPatientRecord_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex < 0) return;
@@ -255,8 +291,23 @@ LEFT JOIN Appointments a ON p.PatientID = a.PatientID AND a.AppointmentDateTime 
             }
         }
 
+        // Also update details when selection changes (keyboard navigation, programmatic selection)
+        private void dgvPatientRecord_SelectionChanged(object sender, EventArgs e)
+        {
+            if (dgvPatientRecord.CurrentRow != null && dgvPatientRecord.CurrentRow.Index >= 0)
+                ShowRowSummary(dgvPatientRecord.CurrentRow);
+            else
+                ClearDetails();
+        }
+
         private void ShowRowSummary(DataGridViewRow row)
         {
+            if (row == null)
+            {
+                ClearDetails();
+                return;
+            }
+
             try
             {
                 // Determine patient id from the row (do not fall back to first cell for other fields)
@@ -361,73 +412,72 @@ LEFT JOIN Appointments a ON p.PatientID = a.PatientID AND a.AppointmentDateTime 
             return null;
         }
 
-        private void btnDelete_Click(object sender, EventArgs e)
-        {
-            var id = GetSelectedPatientId();
-            if (!id.HasValue)
-            {
-                MessageBox.Show("Please select a patient to delete.", "Delete", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
-            var confirm = MessageBox.Show(
-                "This will permanently delete the patient and related records (appointments, invoices). Proceed?",
-                "Confirm delete",
-                MessageBoxButtons.YesNo,
-                MessageBoxIcon.Warning);
-
-            if (confirm != DialogResult.Yes) return;
-
-            try
-            {
-                bool deleted = DatabaseHelper.DeletePatient(id.Value);
-                if (deleted)
-                {
-                    MessageBox.Show("Patient deleted successfully.", "Deleted", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    LoadPatients();
-
-                    // notify any open Patient Info form to clear the deleted patient if it is showing
-                    foreach (Form f in Application.OpenForms)
-                    {
-                        if (f is Patient_Info_Appoinment info)
-                        {
-                            try { info.NotifyPatientDeleted(id.Value); } catch { /* ignore if not available */ }
-                        }
-                    }
-                }
-                else
-                {
-                    MessageBox.Show("No patient found with that ID.", "Delete", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Error deleting patient: " + ex.Message, "Database Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-
+        // Helper to read selected patient id from current row
         private int? GetSelectedPatientId()
         {
-            if (dgvPatientRecord.CurrentRow == null) return null;
+            var row = dgvPatientRecord.CurrentRow;
+            if (row == null) return null;
 
-            var candidates = new[] { "PatientID", "Patient ID", "PatientId", "Patient" };
-            foreach (var name in candidates)
-            {
-                if (dgvPatientRecord.Columns.Contains(name))
-                {
-                    var v = dgvPatientRecord.CurrentRow.Cells[name].Value;
-                    if (v != null && v != DBNull.Value && int.TryParse(v.ToString(), out int id))
-                        return id;
-                }
-            }
+            var val = GetCellValueIfColumnExists(row, "PatientID", "Patient ID", "PatientId");
+            if (val == null) return null;
 
-            var first = dgvPatientRecord.CurrentRow.Cells[0].Value;
-            if (first != null && first != DBNull.Value && int.TryParse(first.ToString(), out int fid))
-                return fid;
-
+            if (int.TryParse(val.ToString(), out int id)) return id;
             return null;
         }
 
+        // Clears the details panel labels
+        private void ClearDetails()
+        {
+            lblPatientID.Text = string.Empty;
+            lblFname.Text = string.Empty;
+            lblLName.Text = string.Empty;
+            lblContact.Text = string.Empty;
+            lblEmail.Text = string.Empty;
+            lblBdate.Text = string.Empty;
+            lblGender.Text = string.Empty;
+            lblLastAppointment.Text = string.Empty;
+            lblTreatment.Text = string.Empty;
+            lblDentist.Text = string.Empty;
+            lblStatus.Text = string.Empty;
+        }
+
+        // Public helper so other forms can ask this view to refresh and select a patient
+        public void RefreshAndSelectPatient(int patientId)
+        {
+            try
+            {
+                // Prefer using LoadPatientRecords so appointment info is present
+                try { LoadPatientRecords(); }
+                catch { LoadPatients(); }
+
+                // Find row that contains the patientId
+                for (int i = 0; i < dgvPatientRecord.Rows.Count; i++)
+                {
+                    var row = dgvPatientRecord.Rows[i];
+                    var val = GetCellValueIfColumnExists(row, "PatientID", "Patient ID", "PatientId");
+                    if (val != null && int.TryParse(val.ToString(), out int id) && id == patientId)
+                    {
+                        // Select row and ensure current cell is valid so SelectionChanged fires
+                        dgvPatientRecord.ClearSelection();
+                        if (row.Cells.Count > 0)
+                        {
+                            dgvPatientRecord.CurrentCell = row.Cells[0];
+                            row.Selected = true;
+                        }
+                        ShowRowSummary(row);
+                        return;
+                    }
+                }
+            }
+            catch
+            {
+                // ignore refresh errors
+            }
+        }
+
+        
+        
+        // Quote helper - if missing elsewhere in project, replace with simple CSV escaping here.
         private static string Quote(string s)
         {
             if (s == null) return "\"\"";
@@ -435,9 +485,94 @@ LEFT JOIN Appointments a ON p.PatientID = a.PatientID AND a.AppointmentDateTime 
             return $"\"{escaped}\"";
         }
 
-        private void cmbFilterbyDentist_SelectedIndexChanged_1(object sender, EventArgs e)
+        private void btnDelete_Click(object sender, EventArgs e)
         {
-                    
+
+            try
+            {
+                DataGridView patientGrid = this.dgvPatientRecord;
+
+                if (patientGrid == null || patientGrid.SelectedRows.Count == 0)
+                {
+                    MessageBox.Show("Please select a row from the table first.", "System Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                }
+
+                var selectedRow = patientGrid.SelectedRows[0];
+                string idColumnName = "";
+
+
+                if (patientGrid.Columns.Contains("AppointmentID")) idColumnName = "AppointmentID";
+                else if (patientGrid.Columns.Contains("Appointment ID")) idColumnName = "Appointment ID";
+                else if (patientGrid.Columns.Contains("PatientID")) idColumnName = "PatientID";
+                else if (patientGrid.Columns.Contains("Patient ID")) idColumnName = "Patient ID";
+
+                if (string.IsNullOrEmpty(idColumnName) || selectedRow.Cells[idColumnName].Value == null)
+                {
+                    MessageBox.Show("System Error: Could not find a valid ID column (AppointmentID or PatientID) in your table design.", "Missing Column Identifier", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                int targetId = Convert.ToInt32(selectedRow.Cells[idColumnName].Value);
+
+                // Safe name retrieval fix
+                string firstName = patientGrid.Columns.Contains("FirstName") && selectedRow.Cells["FirstName"].Value != null ? selectedRow.Cells["FirstName"].Value.ToString() : "";
+                string lastName = patientGrid.Columns.Contains("LastName") && selectedRow.Cells["LastName"].Value != null ? selectedRow.Cells["LastName"].Value.ToString() : "";
+                string patientName = (firstName + " " + lastName).Trim();
+                if (string.IsNullOrEmpty(patientName)) patientName = "this selected row";
+
+                // 2. Ask user for confirmation
+                DialogResult result = MessageBox.Show($"Are you sure you want to delete the record for {patientName}?", "Confirm Delete", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+
+                if (result == DialogResult.Yes)
+                {
+                    // 3. Direct SQL Execution without using DatabaseHelper.ExecuteNonQuery
+                    string query = idColumnName.Contains("Appointment")
+                        ? "DELETE FROM Appointments WHERE AppointmentID = @ID"
+                        : "DELETE FROM Appointments WHERE PatientID = @ID";
+
+                    using (SqlConnection conn = new SqlConnection(connectionString))
+                    {
+                        using (SqlCommand cmd = new SqlCommand(query, conn))
+                        {
+                            cmd.Parameters.AddWithValue("@ID", targetId);
+                            conn.Open();
+                            cmd.ExecuteNonQuery();
+                        }
+                    }
+
+                    MessageBox.Show("The selected entry has been successfully deleted.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                    // 4. Force UI clean-up manually to avoid 'does not exist in current context' errors
+                    // This re-runs the search/load logic by mimicking a click on your existing refresh/search button
+                    // Replace 'btnRefresh' or 'btnSearch' with your actual button name if you have one
+                    if (this.Controls.Find("btnRefresh", true).FirstOrDefault() is Button refBtn)
+                    {
+                        refBtn.PerformClick();
+                    }
+                    else if (this.Controls.Find("btnSearch", true).FirstOrDefault() is Button srcBtn)
+                    {
+                        srcBtn.PerformClick();
+                    }
+                    else
+                    {
+                        // Fallback: Manually remove the row visually from the screen right away
+                        if (!patientGrid.AllowUserToAddRows && patientGrid.DataSource == null)
+                        {
+                            patientGrid.Rows.Remove(selectedRow);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("An error occurred while deleting the row:\n\n" + ex.Message, "SQL/Runtime Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void btnClose_Click_1(object sender, EventArgs e)
+        {
+
         }
     }
 }

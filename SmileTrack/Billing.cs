@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Data;
 using System.Drawing;
 using System.Drawing.Printing;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace SmileTrack
@@ -12,6 +14,10 @@ namespace SmileTrack
         {
             InitializeComponent();
             this.Load += BillingForm_Load;
+
+            // wire patient name leave to auto-populate treatments
+            this.txtPname.Leave -= txtPname_Leave;
+            this.txtPname.Leave += txtPname_Leave;
         }
 
         private void BillingForm_Load(object sender, EventArgs e)
@@ -77,6 +83,80 @@ namespace SmileTrack
             lblSubtotal.Text = "₱0.00";
             lblTotalAmount.Text = "₱0.00";
             lblBalance.Text = "₱0.00";
+        }
+
+        // When user finishes typing patient name, attempt to load recent treatments into the invoice items grid
+        private void txtPname_Leave(object sender, EventArgs e)
+        {
+            var name = txtPname.Text?.Trim();
+            if (string.IsNullOrWhiteSpace(name)) return;
+            PopulateTreatmentsForPatient(name);
+        }
+
+        // Populate dgvTreatmentList with most recent treatments for the given patient name
+        private void PopulateTreatmentsForPatient(string patientName)
+        {
+            try
+            {
+                // Use simple name matching (FirstName + ' ' + LastName LIKE @name)
+                var sql = @"
+SELECT TOP(10)
+    a.Treatment AS Treatment,
+    ISNULL(a.Notes,'') AS Description,
+    1 AS Qty,
+    0.00 AS UnitPrice
+FROM Appointments a
+LEFT JOIN Patients p ON a.PatientID = p.PatientID
+WHERE (ISNULL(p.FirstName,'') + ' ' + ISNULL(p.LastName,'')) LIKE @name
+ORDER BY a.AppointmentDateTime DESC;";
+
+                var dt = DatabaseHelper.ExecuteQuery(sql, new System.Data.SqlClient.SqlParameter("@name", "%" + patientName + "%"));
+
+                if (dt == null || dt.Rows.Count == 0)
+                {
+                    // no recent treatments found — do nothing
+                    return;
+                }
+
+                // Clear existing invoice items and add treatments
+                dgvTreatmentList.Rows.Clear();
+                foreach (System.Data.DataRow r in dt.Rows)
+                {
+                    var treatment = r["Treatment"]?.ToString() ?? string.Empty;
+                    var desc = r["Description"]?.ToString() ?? string.Empty;
+                    var qty = Convert.ToInt32(r["Qty"]);
+                    var unitPrice = Convert.ToDecimal(r["UnitPrice"]);
+
+                    int rowIndex = dgvTreatmentList.Rows.Add();
+                    var row = dgvTreatmentList.Rows[rowIndex];
+
+                    // Ensure columns exist before assigning
+                    if (dgvTreatmentList.Columns["Treatment"] != null) row.Cells["Treatment"].Value = treatment;
+                    else row.Cells[0].Value = treatment;
+
+                    if (dgvTreatmentList.Columns["Description"] != null) row.Cells["Description"].Value = desc;
+                    if (dgvTreatmentList.Columns["Qty"] != null) row.Cells["Qty"].Value = qty;
+                    if (dgvTreatmentList.Columns["UnitPrice"] != null) row.Cells["UnitPrice"].Value = unitPrice.ToString("#,##0.00");
+
+                    // Amount will be calculated by CalculateTotals / CellEndEdit
+                    if (dgvTreatmentList.Columns["Amount"] != null)
+                    {
+                        decimal amount = qty * unitPrice;
+                        row.Cells["Amount"].Value = amount.ToString("#,##0.00");
+                    }
+
+                    // Default status for invoice item
+                    if (dgvTreatmentList.Columns["Status"] != null)
+                        row.Cells["Status"].Value = "Unpaid";
+                }
+
+                // Recalculate totals after populating
+                CalculateTotals();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Failed to load treatments for patient: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         // Recalculate totals when discount/tax/payment change
@@ -217,7 +297,7 @@ namespace SmileTrack
             {
                 if (row.IsNewRow) continue;
 
-                    var patientCell = row.Cells["colPatientName"];
+                var patientCell = row.Cells["colPatientName"];
                 var invoiceCell = row.Cells["colInvoiceNo"];
 
                 string patient = patientCell?.Value?.ToString().ToLower() ?? string.Empty;

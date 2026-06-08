@@ -80,9 +80,9 @@
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.Location = new System.Drawing.Point(3, 14);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(84, 13);
+            this.label1.Size = new System.Drawing.Size(91, 13);
             this.label1.TabIndex = 0;
-            this.label1.Text = "Searh Patient";
+            this.label1.Text = "Search Patient";
             // 
             // txtSearch
             // 
@@ -152,7 +152,6 @@
             this.cmbFilterbyDentist.Name = "cmbFilterbyDentist";
             this.cmbFilterbyDentist.Size = new System.Drawing.Size(153, 21);
             this.cmbFilterbyDentist.TabIndex = 5;
-            this.cmbFilterbyDentist.SelectedIndexChanged += new System.EventHandler(this.cmbFilterbyDentist_SelectedIndexChanged_1);
             // 
             // label2
             // 
@@ -216,7 +215,6 @@
             this.btnDelete.TabIndex = 32;
             this.btnDelete.Text = "Delete";
             this.btnDelete.UseVisualStyleBackColor = false;
-            this.btnDelete.Click += new System.EventHandler(this.btnDelete_Click);
             // 
             // btnClear
             // 
@@ -243,6 +241,7 @@
             this.btnClose.TabIndex = 30;
             this.btnClose.Text = "Close";
             this.btnClose.UseVisualStyleBackColor = false;
+            this.btnClose.Click += new System.EventHandler(this.btnClose_Click_1);
             // 
             // panel4
             // 
@@ -280,36 +279,32 @@
             this.lblStatus.AutoSize = true;
             this.lblStatus.Location = new System.Drawing.Point(149, 295);
             this.lblStatus.Name = "lblStatus";
-            this.lblStatus.Size = new System.Drawing.Size(9, 13);
+            this.lblStatus.Size = new System.Drawing.Size(0, 13);
             this.lblStatus.TabIndex = 53;
-            this.lblStatus.Text = "l";
             // 
             // lblDentist
             // 
             this.lblDentist.AutoSize = true;
             this.lblDentist.Location = new System.Drawing.Point(149, 267);
             this.lblDentist.Name = "lblDentist";
-            this.lblDentist.Size = new System.Drawing.Size(9, 13);
+            this.lblDentist.Size = new System.Drawing.Size(0, 13);
             this.lblDentist.TabIndex = 52;
-            this.lblDentist.Text = "l";
             // 
             // lblTreatment
             // 
             this.lblTreatment.AutoSize = true;
             this.lblTreatment.Location = new System.Drawing.Point(149, 238);
             this.lblTreatment.Name = "lblTreatment";
-            this.lblTreatment.Size = new System.Drawing.Size(9, 13);
+            this.lblTreatment.Size = new System.Drawing.Size(0, 13);
             this.lblTreatment.TabIndex = 51;
-            this.lblTreatment.Text = "l";
             // 
             // lblLastAppointment
             // 
             this.lblLastAppointment.AutoSize = true;
             this.lblLastAppointment.Location = new System.Drawing.Point(149, 214);
             this.lblLastAppointment.Name = "lblLastAppointment";
-            this.lblLastAppointment.Size = new System.Drawing.Size(9, 13);
+            this.lblLastAppointment.Size = new System.Drawing.Size(0, 13);
             this.lblLastAppointment.TabIndex = 50;
-            this.lblLastAppointment.Text = "l";
             // 
             // lblGender
             // 

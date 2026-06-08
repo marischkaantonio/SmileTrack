@@ -28,9 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.Panel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.btnDashboard = new System.Windows.Forms.Button();
@@ -103,6 +103,7 @@
             this.Panel1.Name = "Panel1";
             this.Panel1.Size = new System.Drawing.Size(139, 629);
             this.Panel1.TabIndex = 0;
+            this.Panel1.Paint += new System.Windows.Forms.PaintEventHandler(this.Panel1_Paint);
             // 
             // pictureBox2
             // 
@@ -114,6 +115,7 @@
             this.pictureBox2.Size = new System.Drawing.Size(135, 104);
             this.pictureBox2.TabIndex = 8;
             this.pictureBox2.TabStop = false;
+            this.pictureBox2.Click += new System.EventHandler(this.pictureBox2_Click);
             // 
             // btnDashboard
             // 
@@ -127,6 +129,7 @@
             this.btnDashboard.TabIndex = 1;
             this.btnDashboard.Text = "🏠Dashboard";
             this.btnDashboard.UseVisualStyleBackColor = false;
+            this.btnDashboard.Click += new System.EventHandler(this.btnDashboard_Click);
             // 
             // btnMySched
             // 
@@ -154,6 +157,7 @@
             this.pictureBox1.Size = new System.Drawing.Size(94, 98);
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
+            this.pictureBox1.Click += new System.EventHandler(this.pictureBox1_Click);
             // 
             // panel2
             // 
@@ -162,6 +166,7 @@
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(150, 81);
             this.panel2.TabIndex = 10;
+            this.panel2.Paint += new System.Windows.Forms.PaintEventHandler(this.panel2_Paint);
             // 
             // btnLogOut
             // 
@@ -210,6 +215,7 @@
             this.panelDentistDashboard.Name = "panelDentistDashboard";
             this.panelDentistDashboard.Size = new System.Drawing.Size(907, 629);
             this.panelDentistDashboard.TabIndex = 1;
+            this.panelDentistDashboard.Paint += new System.Windows.Forms.PaintEventHandler(this.panelDentistDashboard_Paint);
             // 
             // pnlTreatmet
             // 
@@ -219,6 +225,7 @@
             this.pnlTreatmet.Name = "pnlTreatmet";
             this.pnlTreatmet.Size = new System.Drawing.Size(298, 211);
             this.pnlTreatmet.TabIndex = 30;
+            this.pnlTreatmet.Paint += new System.Windows.Forms.PaintEventHandler(this.pnlTreatmet_Paint);
             // 
             // label9
             // 
@@ -230,6 +237,7 @@
             this.label9.Size = new System.Drawing.Size(98, 13);
             this.label9.TabIndex = 20;
             this.label9.Text = "Treatment Done";
+            this.label9.Click += new System.EventHandler(this.label9_Click);
             // 
             // TreatmentDone
             // 
@@ -242,6 +250,7 @@
             this.TreatmentDone.Name = "TreatmentDone";
             this.TreatmentDone.Size = new System.Drawing.Size(224, 157);
             this.TreatmentDone.TabIndex = 19;
+            this.TreatmentDone.Paint += new System.Windows.Forms.PaintEventHandler(this.TreatmentDone_Paint);
             // 
             // lbTreatment
             // 
@@ -251,6 +260,7 @@
             this.lbTreatment.Name = "lbTreatment";
             this.lbTreatment.Size = new System.Drawing.Size(189, 30);
             this.lbTreatment.TabIndex = 13;
+            this.lbTreatment.SelectedIndexChanged += new System.EventHandler(this.lbTreatment_SelectedIndexChanged);
             // 
             // txtNotes
             // 
@@ -260,6 +270,7 @@
             this.txtNotes.Size = new System.Drawing.Size(189, 28);
             this.txtNotes.TabIndex = 12;
             this.txtNotes.Text = "";
+            this.txtNotes.TextChanged += new System.EventHandler(this.txtNotes_TextChanged);
             // 
             // cmbTreatmentType
             // 
@@ -300,6 +311,7 @@
             this.lbbell.Size = new System.Drawing.Size(23, 15);
             this.lbbell.TabIndex = 29;
             this.lbbell.Text = "🔔";
+            this.lbbell.Click += new System.EventHandler(this.lbbell_Click_1);
             // 
             // textBox2
             // 
@@ -309,6 +321,7 @@
             this.textBox2.Size = new System.Drawing.Size(144, 20);
             this.textBox2.TabIndex = 28;
             this.textBox2.Text = " 🔍Search patient";
+            this.textBox2.TextChanged += new System.EventHandler(this.textBox2_TextChanged);
             // 
             // label10
             // 
@@ -318,6 +331,7 @@
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(0, 13);
             this.label10.TabIndex = 25;
+            this.label10.Click += new System.EventHandler(this.label10_Click);
             // 
             // pictureBox6
             // 
@@ -329,6 +343,7 @@
             this.pictureBox6.Size = new System.Drawing.Size(29, 31);
             this.pictureBox6.TabIndex = 18;
             this.pictureBox6.TabStop = false;
+            this.pictureBox6.Click += new System.EventHandler(this.pictureBox6_Click);
             // 
             // label8
             // 
@@ -340,6 +355,7 @@
             this.label8.Size = new System.Drawing.Size(98, 13);
             this.label8.TabIndex = 17;
             this.label8.Text = "Treatment Done";
+            this.label8.Click += new System.EventHandler(this.label8_Click);
             // 
             // label7
             // 
@@ -351,25 +367,27 @@
             this.label7.Size = new System.Drawing.Size(118, 13);
             this.label7.TabIndex = 15;
             this.label7.Text = "Treatment Summary";
+            this.label7.Click += new System.EventHandler(this.label7_Click);
             // 
             // chart1
             // 
-            chartArea2.Name = "ChartArea1";
-            this.chart1.ChartAreas.Add(chartArea2);
-            legend2.Name = "Legend1";
-            legend2.TableStyle = System.Windows.Forms.DataVisualization.Charting.LegendTableStyle.Wide;
-            this.chart1.Legends.Add(legend2);
+            chartArea1.Name = "ChartArea1";
+            this.chart1.ChartAreas.Add(chartArea1);
+            legend1.Name = "Legend1";
+            legend1.TableStyle = System.Windows.Forms.DataVisualization.Charting.LegendTableStyle.Wide;
+            this.chart1.Legends.Add(legend1);
             this.chart1.Location = new System.Drawing.Point(56, 407);
             this.chart1.Margin = new System.Windows.Forms.Padding(2);
             this.chart1.Name = "chart1";
             this.chart1.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.Pastel;
-            series2.ChartArea = "ChartArea1";
-            series2.Legend = "Legend1";
-            series2.Name = "Series1";
-            this.chart1.Series.Add(series2);
+            series1.ChartArea = "ChartArea1";
+            series1.Legend = "Legend1";
+            series1.Name = "Series1";
+            this.chart1.Series.Add(series1);
             this.chart1.Size = new System.Drawing.Size(228, 180);
             this.chart1.TabIndex = 14;
             this.chart1.Text = "chart1";
+            this.chart1.Click += new System.EventHandler(this.chart1_Click);
             // 
             // label6
             // 
@@ -381,6 +399,7 @@
             this.label6.Size = new System.Drawing.Size(104, 13);
             this.label6.TabIndex = 13;
             this.label6.Text = "Patient Overview";
+            this.label6.Click += new System.EventHandler(this.label6_Click);
             // 
             // dataGridView1
             // 
@@ -395,6 +414,7 @@
             this.dataGridView1.RowTemplate.Height = 24;
             this.dataGridView1.Size = new System.Drawing.Size(299, 122);
             this.dataGridView1.TabIndex = 12;
+            this.dataGridView1.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellContentClick);
             // 
             // dataGridViewTextBoxColumn2
             // 
@@ -420,6 +440,7 @@
             this.label5.Size = new System.Drawing.Size(92, 13);
             this.label5.TabIndex = 11;
             this.label5.Text = "Schedule table";
+            this.label5.Click += new System.EventHandler(this.label5_Click);
             // 
             // dgvSched
             // 
@@ -436,6 +457,7 @@
             this.dgvSched.RowTemplate.Height = 24;
             this.dgvSched.Size = new System.Drawing.Size(511, 122);
             this.dgvSched.TabIndex = 10;
+            this.dgvSched.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvSched_CellContentClick);
             // 
             // Time
             // 
@@ -475,6 +497,7 @@
             this.label4.Size = new System.Drawing.Size(133, 13);
             this.label4.TabIndex = 9;
             this.label4.Text = "Upcoming Appoinment";
+            this.label4.Click += new System.EventHandler(this.label4_Click);
             // 
             // label3
             // 
@@ -486,6 +509,7 @@
             this.label3.Size = new System.Drawing.Size(89, 13);
             this.label3.TabIndex = 8;
             this.label3.Text = "Patient\'s Seen";
+            this.label3.Click += new System.EventHandler(this.label3_Click);
             // 
             // label2
             // 
@@ -497,6 +521,7 @@
             this.label2.Size = new System.Drawing.Size(125, 13);
             this.label2.TabIndex = 7;
             this.label2.Text = "Today\'s Appointment";
+            this.label2.Click += new System.EventHandler(this.label2_Click);
             // 
             // pictureBox3
             // 
@@ -508,6 +533,7 @@
             this.pictureBox3.Size = new System.Drawing.Size(28, 31);
             this.pictureBox3.TabIndex = 0;
             this.pictureBox3.TabStop = false;
+            this.pictureBox3.Click += new System.EventHandler(this.pictureBox3_Click);
             // 
             // pictureBox4
             // 
@@ -519,6 +545,7 @@
             this.pictureBox4.Size = new System.Drawing.Size(28, 31);
             this.pictureBox4.TabIndex = 0;
             this.pictureBox4.TabStop = false;
+            this.pictureBox4.Click += new System.EventHandler(this.pictureBox4_Click);
             // 
             // pictureBox5
             // 
@@ -530,6 +557,7 @@
             this.pictureBox5.Size = new System.Drawing.Size(31, 31);
             this.pictureBox5.TabIndex = 0;
             this.pictureBox5.TabStop = false;
+            this.pictureBox5.Click += new System.EventHandler(this.pictureBox5_Click);
             // 
             // txtTreatmentDone
             // 
@@ -539,6 +567,7 @@
             this.txtTreatmentDone.Size = new System.Drawing.Size(122, 83);
             this.txtTreatmentDone.TabIndex = 21;
             this.txtTreatmentDone.Text = "";
+            this.txtTreatmentDone.TextChanged += new System.EventHandler(this.txtTreatmentDone_TextChanged);
             // 
             // txtPatientSeen
             // 
@@ -548,6 +577,7 @@
             this.txtPatientSeen.Size = new System.Drawing.Size(114, 83);
             this.txtPatientSeen.TabIndex = 22;
             this.txtPatientSeen.Text = "";
+            this.txtPatientSeen.TextChanged += new System.EventHandler(this.txtPatientSeen_TextChanged);
             // 
             // txtTodaysAppoinment
             // 
@@ -567,6 +597,7 @@
             this.txtUpApp.Size = new System.Drawing.Size(136, 83);
             this.txtUpApp.TabIndex = 24;
             this.txtUpApp.Text = "";
+            this.txtUpApp.TextChanged += new System.EventHandler(this.txtUpApp_TextChanged);
             // 
             // DentistDashboard
             // 
