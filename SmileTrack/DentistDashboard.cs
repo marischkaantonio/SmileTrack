@@ -185,5 +185,10 @@ namespace SmileTrack
                 // swallow exceptions to avoid disrupting caller
             }
         }
+
+        private void DentistDashboard_Load_1(object sender, EventArgs e)
+        {
+
+        }
     }
 }
