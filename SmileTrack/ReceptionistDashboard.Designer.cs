@@ -171,6 +171,7 @@
             this.btnLogout.TabIndex = 5;
             this.btnLogout.Text = "Log-out";
             this.btnLogout.UseVisualStyleBackColor = false;
+            this.btnLogout.Click += new System.EventHandler(this.btnLogout_Click);
             // 
             // pictureBox2
             // 

@@ -34,6 +34,16 @@ namespace SmileTrack
             LoadDashboard();
         }
 
+        private void btnLogout_Click(object sender, EventArgs e)
+        {
+            if (MessageBox.Show("Are you sure you want to log out?", "Logout", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            {
+                try { AuditLogger.SaveAuditLog(Environment.UserName, "Logout", "User logged out from receptionist dashboard"); } catch { }
+                this.Hide();
+                new LoginForm().Show();
+            }
+        }
+
         public void LoadDashboard()
         {
             try

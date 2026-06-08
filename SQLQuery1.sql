@@ -1,10 +1,4 @@
-﻿SELECT AppointmentID,
-       PatientID,
-       VisitType,
-       Status,
-       AppointmentDateTime
-FROM Appointments
-ORDER BY AppointmentDateTime DESC;
+﻿use SmileTrackDB
 
-SELECT DISTINCT VisitType
-FROM Appointments;
+
+
