@@ -7,10 +7,8 @@ using System.Windows.Forms;
 namespace SmileTrack
 {
     public partial class DentistDashboard : Form
-
-    {        public string DentistName { get; private set; }
-
-       
+    {
+        // Palitan ang connection string kung iba ang settings ng SQL mo
         private readonly string connectionString = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=SmileTrackDB;Integrated Security=True;Encrypt=False";
         private Timer refreshTimer;
             
@@ -36,33 +34,11 @@ namespace SmileTrack
         public DentistDashboard()
         {
             InitializeComponent();
-
-            try { btnDashboard.Click -= BtnDashboard_Click; } catch { }
-            btnDashboard.Click += BtnDashboard_Click;
-
-            try { dgvSched.CellDoubleClick -= DgvSched_CellDoubleClick; } catch { }
-            dgvSched.CellDoubleClick += DgvSched_CellDoubleClick;
-            try { DatabaseHelper.AppointmentsChanged -= DatabaseHelper_AppointmentsChanged; } catch { }
-            DatabaseHelper.AppointmentsChanged += DatabaseHelper_AppointmentsChanged;
-
-
         }
 
-        public DentistDashboard(string dentistName) : this()
+        private void DentistDashboard_Load(object sender, EventArgs e)
         {
-            this.DentistName = dentistName ?? string.Empty;
-
-        }
-
-       
-
-                private void DentistDashboard_Load(object sender, EventArgs e)
-        {
-            
-
-            try { DatabaseHelper.EnsureDatabaseAndTables(); } catch { }
-
-            // Call all loaders
+            // Tawagin lahat ng loaders
             RefreshDashboard();
 
            
@@ -277,6 +253,7 @@ namespace SmileTrack
             new My_Schedule().Show(this);
         }
 
+        // Public method so other forms can request the dentist dashboard to refresh appointments
         public void RefreshAppointments()
         {
             try

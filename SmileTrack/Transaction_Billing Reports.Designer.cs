@@ -30,11 +30,6 @@
         {
             this.panel1 = new System.Windows.Forms.Panel();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
-            this.TransactionID = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.PatientName = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Amount = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.DateAndTime = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ProcessedBy = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dtpTo = new System.Windows.Forms.DateTimePicker();
             this.dtpFrom = new System.Windows.Forms.DateTimePicker();
             this.btnExportCSV = new System.Windows.Forms.Button();
@@ -51,13 +46,6 @@
             this.lblTotalCollected = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
             this.dataGridView2 = new System.Windows.Forms.DataGridView();
-            this.BillID = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.TotalBill = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridViewTextBoxColumn4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Balance = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Status = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.BillingDate = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dtpDateTo = new System.Windows.Forms.DateTimePicker();
             this.dtpDateFrom = new System.Windows.Forms.DateTimePicker();
             this.btnCSV = new System.Windows.Forms.Button();
@@ -94,43 +82,10 @@
             // dataGridView1
             // 
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.TransactionID,
-            this.PatientName,
-            this.Amount,
-            this.DateAndTime,
-            this.ProcessedBy});
             this.dataGridView1.Location = new System.Drawing.Point(17, 84);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.Size = new System.Drawing.Size(541, 112);
             this.dataGridView1.TabIndex = 9;
-            // 
-            // TransactionID
-            // 
-            this.TransactionID.HeaderText = "Transaction ID";
-            this.TransactionID.MaxInputLength = 200;
-            this.TransactionID.Name = "TransactionID";
-            // 
-            // PatientName
-            // 
-            this.PatientName.HeaderText = "Patient Name";
-            this.PatientName.Name = "PatientName";
-            // 
-            // Amount
-            // 
-            this.Amount.HeaderText = "Amount";
-            this.Amount.MaxInputLength = 200;
-            this.Amount.Name = "Amount";
-            // 
-            // DateAndTime
-            // 
-            this.DateAndTime.HeaderText = "Date and Time";
-            this.DateAndTime.Name = "DateAndTime";
-            // 
-            // ProcessedBy
-            // 
-            this.ProcessedBy.HeaderText = "Processed by";
-            this.ProcessedBy.Name = "ProcessedBy";
             // 
             // dtpTo
             // 
@@ -303,55 +258,10 @@
             // dataGridView2
             // 
             this.dataGridView2.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView2.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.BillID,
-            this.dataGridViewTextBoxColumn2,
-            this.TotalBill,
-            this.dataGridViewTextBoxColumn4,
-            this.Balance,
-            this.Status,
-            this.BillingDate});
             this.dataGridView2.Location = new System.Drawing.Point(17, 88);
             this.dataGridView2.Name = "dataGridView2";
             this.dataGridView2.Size = new System.Drawing.Size(745, 114);
             this.dataGridView2.TabIndex = 10;
-            // 
-            // BillID
-            // 
-            this.BillID.HeaderText = "Bill ID";
-            this.BillID.MaxInputLength = 500;
-            this.BillID.Name = "BillID";
-            // 
-            // dataGridViewTextBoxColumn2
-            // 
-            this.dataGridViewTextBoxColumn2.HeaderText = "Patient Name";
-            this.dataGridViewTextBoxColumn2.Name = "dataGridViewTextBoxColumn2";
-            // 
-            // TotalBill
-            // 
-            this.TotalBill.HeaderText = "Total Bill  (₱)";
-            this.TotalBill.MaxInputLength = 500;
-            this.TotalBill.Name = "TotalBill";
-            // 
-            // dataGridViewTextBoxColumn4
-            // 
-            this.dataGridViewTextBoxColumn4.HeaderText = "Amount Paid  (₱)";
-            this.dataGridViewTextBoxColumn4.Name = "dataGridViewTextBoxColumn4";
-            // 
-            // Balance
-            // 
-            this.Balance.HeaderText = "Balance";
-            this.Balance.Name = "Balance";
-            // 
-            // Status
-            // 
-            this.Status.HeaderText = "Status";
-            this.Status.Name = "Status";
-            // 
-            // BillingDate
-            // 
-            this.BillingDate.HeaderText = "Billing Date";
-            this.BillingDate.Name = "BillingDate";
             // 
             // dtpDateTo
             // 
@@ -490,19 +400,7 @@
         private System.Windows.Forms.DateTimePicker dtpFrom;
         private System.Windows.Forms.DateTimePicker dtpDateTo;
         private System.Windows.Forms.DateTimePicker dtpDateFrom;
-        private System.Windows.Forms.DataGridViewTextBoxColumn TransactionID;
-        private System.Windows.Forms.DataGridViewTextBoxColumn PatientName;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Amount;
-        private System.Windows.Forms.DataGridViewTextBoxColumn DateAndTime;
-        private System.Windows.Forms.DataGridViewTextBoxColumn ProcessedBy;
         private System.Windows.Forms.DataGridView dataGridView2;
-        private System.Windows.Forms.DataGridViewTextBoxColumn BillID;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn2;
-        private System.Windows.Forms.DataGridViewTextBoxColumn TotalBill;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn4;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Balance;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Status;
-        private System.Windows.Forms.DataGridViewTextBoxColumn BillingDate;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.GroupBox groupBox2;

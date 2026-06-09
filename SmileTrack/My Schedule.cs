@@ -147,6 +147,7 @@ namespace SmileTrack
                     con.Open(); cmd.ExecuteNonQuery();
                 }
                 LoadSchedule();
+                try { DatabaseHelper.RaiseAppointmentsChanged(); } catch { }
             }
             catch (Exception ex) { MessageBox.Show("Error: " + ex.Message); }
         }

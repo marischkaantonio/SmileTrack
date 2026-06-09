@@ -377,11 +377,16 @@ namespace SmileTrack
                     catch { /* ignore UI refresh errors */ }
 
                 // If there is no appointment id yet, and appointment fields are filled, create a new appointment
+
                 try
                 {
+                    // Create appointment if no appointment exists AND either the visit type is chosen
+                    // (Walk-in or Appointment) OR dentist/treatment fields are provided.
+                    string visitTypePreview = rbWalkin.Checked ? "Walk-in" : rbAppointment.Checked ? "Appointment" : string.Empty;
+                    bool visitTypeChosen = !string.IsNullOrWhiteSpace(visitTypePreview);
+
                     bool shouldCreateAppointment = string.IsNullOrWhiteSpace(txtAppointmentID.Text)
-                        && (cmbDentist.SelectedItem != null || !string.IsNullOrWhiteSpace(cmbDentist.Text))
-                        && (cmbTreatmentType.SelectedItem != null || !string.IsNullOrWhiteSpace(cmbTreatmentType.Text));
+                        && (visitTypeChosen || (cmbDentist.SelectedItem != null || !string.IsNullOrWhiteSpace(cmbDentist.Text)) || (cmbTreatmentType.SelectedItem != null || !string.IsNullOrWhiteSpace(cmbTreatmentType.Text)));
 
                     if (shouldCreateAppointment)
                     {
@@ -397,7 +402,8 @@ namespace SmileTrack
                         MessageBox.Show($"Appointment created (ID: {apptId}).", "Appointment", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                         // Refresh other open dashboards and patient records so they show the new appointment immediately
-                        RefreshOpenPatientRecords(patientId);
+                        try { RefreshOpenPatientRecords(patientId); } catch { }
+                        try { DatabaseHelper.RaiseAppointmentsChanged(); } catch { }
                     }
                 }
                 catch (Exception ex)

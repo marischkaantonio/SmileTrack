@@ -63,14 +63,6 @@
             this.panel11 = new System.Windows.Forms.Panel();
             this.panel12 = new System.Windows.Forms.Panel();
             this.dgvInvoices = new System.Windows.Forms.DataGridView();
-            this.colInvoiceNo = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colInvoiceDate = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colPatientName = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colTotal = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colPaidAmount = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colBalance = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colStatus = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Action = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.label20 = new System.Windows.Forms.Label();
             this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.label24 = new System.Windows.Forms.Label();
@@ -126,7 +118,6 @@
             this.btnClear.TabIndex = 5;
             this.btnClear.Text = "Clear";
             this.btnClear.UseVisualStyleBackColor = false;
-            this.btnClear.Click += new System.EventHandler(this.btnClear_Click_1);
             // 
             // btnSave
             // 
@@ -225,7 +216,6 @@
             this.txtTax.Name = "txtTax";
             this.txtTax.Size = new System.Drawing.Size(76, 20);
             this.txtTax.TabIndex = 17;
-            this.txtTax.TextChanged += new System.EventHandler(this.txtTax_TextChanged);
             // 
             // label3
             // 
@@ -245,7 +235,6 @@
             this.txtDiscount.Name = "txtDiscount";
             this.txtDiscount.Size = new System.Drawing.Size(76, 20);
             this.txtDiscount.TabIndex = 15;
-            this.txtDiscount.TextChanged += new System.EventHandler(this.txtDiscount_TextChanged);
             // 
             // label2
             // 
@@ -327,7 +316,6 @@
             this.btnAddItem.TabIndex = 1;
             this.btnAddItem.Text = "+ Add Item";
             this.btnAddItem.UseVisualStyleBackColor = false;
-            this.btnAddItem.Click += new System.EventHandler(this.btnAddItem_Click);
             // 
             // dgvTreatmentList
             // 
@@ -345,7 +333,6 @@
             this.dgvTreatmentList.RowTemplate.Height = 24;
             this.dgvTreatmentList.Size = new System.Drawing.Size(713, 122);
             this.dgvTreatmentList.TabIndex = 0;
-            this.dgvTreatmentList.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvTreatmentList_CellContentClick);
             // 
             // Treatment
             // 
@@ -412,7 +399,6 @@
             this.dtpDue.Name = "dtpDue";
             this.dtpDue.Size = new System.Drawing.Size(131, 20);
             this.dtpDue.TabIndex = 11;
-            this.dtpDue.ValueChanged += new System.EventHandler(this.dtpDue_ValueChanged);
             // 
             // dtpInvoiceDate
             // 
@@ -421,7 +407,6 @@
             this.dtpInvoiceDate.Name = "dtpInvoiceDate";
             this.dtpInvoiceDate.Size = new System.Drawing.Size(131, 20);
             this.dtpInvoiceDate.TabIndex = 10;
-            this.dtpInvoiceDate.ValueChanged += new System.EventHandler(this.dtpInvoiceDate_ValueChanged);
             // 
             // txtNotes
             // 
@@ -439,7 +424,6 @@
             this.txtInvoiceNum.Name = "txtInvoiceNum";
             this.txtInvoiceNum.Size = new System.Drawing.Size(124, 20);
             this.txtInvoiceNum.TabIndex = 8;
-            this.txtInvoiceNum.TextChanged += new System.EventHandler(this.txtInvoiceNum_TextChanged);
             // 
             // txtPayment
             // 
@@ -571,15 +555,6 @@
             // dgvInvoices
             // 
             this.dgvInvoices.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvInvoices.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.colInvoiceNo,
-            this.colInvoiceDate,
-            this.colPatientName,
-            this.colTotal,
-            this.colPaidAmount,
-            this.colBalance,
-            this.colStatus,
-            this.Action});
             this.dgvInvoices.Location = new System.Drawing.Point(22, 57);
             this.dgvInvoices.Margin = new System.Windows.Forms.Padding(2);
             this.dgvInvoices.Name = "dgvInvoices";
@@ -587,67 +562,6 @@
             this.dgvInvoices.RowTemplate.Height = 24;
             this.dgvInvoices.Size = new System.Drawing.Size(1027, 122);
             this.dgvInvoices.TabIndex = 2;
-            this.dgvInvoices.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvInvoices_CellContentClick);
-            // 
-            // colInvoiceNo
-            // 
-            this.colInvoiceNo.HeaderText = "Invoice No.";
-            this.colInvoiceNo.MaxInputLength = 300;
-            this.colInvoiceNo.MinimumWidth = 6;
-            this.colInvoiceNo.Name = "colInvoiceNo";
-            this.colInvoiceNo.Width = 125;
-            // 
-            // colInvoiceDate
-            // 
-            this.colInvoiceDate.HeaderText = "Invoice Date";
-            this.colInvoiceDate.MaxInputLength = 300;
-            this.colInvoiceDate.MinimumWidth = 6;
-            this.colInvoiceDate.Name = "colInvoiceDate";
-            this.colInvoiceDate.Width = 125;
-            // 
-            // colPatientName
-            // 
-            this.colPatientName.HeaderText = "Patient Name";
-            this.colPatientName.MaxInputLength = 5;
-            this.colPatientName.MinimumWidth = 6;
-            this.colPatientName.Name = "colPatientName";
-            this.colPatientName.Width = 125;
-            // 
-            // colTotal
-            // 
-            this.colTotal.HeaderText = "Total Amount";
-            this.colTotal.MaxInputLength = 100;
-            this.colTotal.MinimumWidth = 6;
-            this.colTotal.Name = "colTotal";
-            this.colTotal.Width = 125;
-            // 
-            // colPaidAmount
-            // 
-            this.colPaidAmount.HeaderText = "Paid Amount";
-            this.colPaidAmount.MaxInputLength = 100;
-            this.colPaidAmount.MinimumWidth = 6;
-            this.colPaidAmount.Name = "colPaidAmount";
-            this.colPaidAmount.Width = 125;
-            // 
-            // colBalance
-            // 
-            this.colBalance.HeaderText = "Balance";
-            this.colBalance.MaxInputLength = 100;
-            this.colBalance.MinimumWidth = 6;
-            this.colBalance.Name = "colBalance";
-            this.colBalance.Width = 125;
-            // 
-            // colStatus
-            // 
-            this.colStatus.HeaderText = "Status";
-            this.colStatus.MinimumWidth = 6;
-            this.colStatus.Name = "colStatus";
-            this.colStatus.Width = 125;
-            // 
-            // Action
-            // 
-            this.Action.HeaderText = "Action";
-            this.Action.Name = "Action";
             // 
             // label20
             // 
@@ -669,6 +583,7 @@
             this.comboBox1.Name = "comboBox1";
             this.comboBox1.Size = new System.Drawing.Size(92, 21);
             this.comboBox1.TabIndex = 15;
+            this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
             // 
             // label24
             // 
@@ -684,6 +599,10 @@
             // cmbStatus
             // 
             this.cmbStatus.FormattingEnabled = true;
+            this.cmbStatus.Items.AddRange(new object[] {
+            "Partial",
+            "Unpaid",
+            "Fully Paid"});
             this.cmbStatus.Location = new System.Drawing.Point(162, 29);
             this.cmbStatus.Margin = new System.Windows.Forms.Padding(2);
             this.cmbStatus.Name = "cmbStatus";
@@ -709,7 +628,6 @@
             this.dtpTo.Name = "dtpTo";
             this.dtpTo.Size = new System.Drawing.Size(131, 20);
             this.dtpTo.TabIndex = 11;
-            this.dtpTo.ValueChanged += new System.EventHandler(this.dtpTo_ValueChanged);
             // 
             // dtpFrom
             // 
@@ -718,7 +636,6 @@
             this.dtpFrom.Name = "dtpFrom";
             this.dtpFrom.Size = new System.Drawing.Size(131, 20);
             this.dtpFrom.TabIndex = 10;
-            this.dtpFrom.ValueChanged += new System.EventHandler(this.dtpFrom_ValueChanged);
             // 
             // textBox8
             // 
@@ -852,7 +769,6 @@
             this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "BillingForm";
             this.Text = "Billing";
-            this.Load += new System.EventHandler(this.BillingForm_Load_1);
             this.dgvInvoiceItems.ResumeLayout(false);
             this.dgvInvoiceItems.PerformLayout();
             this.panel3.ResumeLayout(false);
@@ -936,13 +852,5 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn UnitPrice;
         private System.Windows.Forms.DataGridViewTextBoxColumn Status;
         private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.DataGridViewTextBoxColumn colInvoiceNo;
-        private System.Windows.Forms.DataGridViewTextBoxColumn colInvoiceDate;
-        private System.Windows.Forms.DataGridViewTextBoxColumn colPatientName;
-        private System.Windows.Forms.DataGridViewTextBoxColumn colTotal;
-        private System.Windows.Forms.DataGridViewTextBoxColumn colPaidAmount;
-        private System.Windows.Forms.DataGridViewTextBoxColumn colBalance;
-        private System.Windows.Forms.DataGridViewTextBoxColumn colStatus;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Action;
     }
 }

@@ -16,6 +16,10 @@ namespace SmileTrack
         {
             InitializeComponent();
             WireGridEvents();
+            try { DatabaseHelper.AppointmentsChanged -= DatabaseHelper_AppointmentsChanged; } catch { }
+            DatabaseHelper.AppointmentsChanged += DatabaseHelper_AppointmentsChanged;
+            try { btnAddWalkIn.Click -= btnAddWalkIn_Click; } catch { }
+            btnAddWalkIn.Click += btnAddWalkIn_Click;
         }
 
         // Nangyayari ito kapag bumukas na ang form sa screen
@@ -34,6 +38,26 @@ namespace SmileTrack
             LoadDashboard();
         }
 
+        private void btnLogout_Click(object sender, EventArgs e)
+        {
+            if (MessageBox.Show("Are you sure you want to log out?", "Logout", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            {
+                try { AuditLogger.SaveAuditLog(Environment.UserName, "Logout", "User logged out from receptionist dashboard"); } catch { }
+                this.Hide();
+                new LoginForm().Show();
+            }
+        }
+
+        private void DatabaseHelper_AppointmentsChanged()
+        {
+            try
+            {
+                if (this.InvokeRequired) { this.Invoke(new Action(LoadDashboard)); }
+                else LoadDashboard();
+            }
+            catch { }
+        }
+
         public void LoadDashboard()
         {
             try
@@ -44,6 +68,8 @@ namespace SmileTrack
                 // -------------------------------------------------------------------------
                 // 1. APPOINTMENTS SUMMARY (Top-Left Grid: Regular Appointments TODAY)
                 // -------------------------------------------------------------------------
+
+                // Include Completed in today's list; only exclude Cancelled
                 var dtAppointments = DatabaseHelper.ExecuteQuery(
                     @"SELECT a.AppointmentID,
                              a.PatientID,
@@ -55,7 +81,7 @@ namespace SmileTrack
                       FROM Appointments a
                       LEFT JOIN Patients p ON a.PatientID = p.PatientID
                       WHERE CAST(a.AppointmentDateTime AS DATE) = CAST(GETDATE() AS DATE)
-                        AND ISNULL(a.Status,'') NOT IN ('Cancelled','Completed')
+                        AND ISNULL(a.Status,'') NOT IN ('Cancelled')
                         AND ISNULL(a.VisitType,'') <> 'Walk-in' 
                       ORDER BY a.AppointmentDateTime");
 
@@ -65,6 +91,18 @@ namespace SmileTrack
                     HideIdColumns(this.dgvAppointments);
                     AddViewColumn(this.dgvAppointments);
                     ApplyStatusRowStyles(this.dgvAppointments);
+
+                    // Ensure column order and format: Time, Patient Name, Dentist, Treatment, Status, View
+                    try
+                    {
+                        if (dgvAppointments.Columns.Contains("Time")) dgvAppointments.Columns["Time"].DisplayIndex = 0;
+                        if (dgvAppointments.Columns.Contains("Patient Name")) dgvAppointments.Columns["Patient Name"].DisplayIndex = 1;
+                        if (dgvAppointments.Columns.Contains("Dentist")) dgvAppointments.Columns["Dentist"].DisplayIndex = 2;
+                        if (dgvAppointments.Columns.Contains("Treatment")) dgvAppointments.Columns["Treatment"].DisplayIndex = 3;
+                        if (dgvAppointments.Columns.Contains("Status")) dgvAppointments.Columns["Status"].DisplayIndex = 4;
+                        if (dgvAppointments.Columns.Contains("View")) dgvAppointments.Columns["View"].DisplayIndex = 5;
+                    }
+                    catch { }
                 }
 
                 // -------------------------------------------------------------------------
@@ -90,6 +128,15 @@ namespace SmileTrack
                     HideIdColumns(this.dgvWalkIn);
                     AddViewColumn(this.dgvWalkIn);
                     ApplyStatusRowStyles(this.dgvWalkIn);
+                    try
+                    {
+                        if (dgvWalkIn.Columns.Contains("No.")) dgvWalkIn.Columns["No."].DisplayIndex = 0;
+                        if (dgvWalkIn.Columns.Contains("Patient Name")) dgvWalkIn.Columns["Patient Name"].DisplayIndex = 1;
+                        if (dgvWalkIn.Columns.Contains("Time-in")) dgvWalkIn.Columns["Time-in"].DisplayIndex = 2;
+                        if (dgvWalkIn.Columns.Contains("Status")) dgvWalkIn.Columns["Status"].DisplayIndex = 3;
+                        if (dgvWalkIn.Columns.Contains("View")) dgvWalkIn.Columns["View"].DisplayIndex = 4;
+                    }
+                    catch { }
                 }
 
                 // -------------------------------------------------------------------------
@@ -286,10 +333,62 @@ namespace SmileTrack
             LoadDashboard();
         }
 
+        private void btnAddWalkIn_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                // Ask for patient id
+                string input = Prompt("Add Walk-in", "Enter Patient ID for Walk-in:");
+                if (!int.TryParse(input, out int patientId) || patientId <= 0)
+                {
+                    MessageBox.Show("Invalid Patient ID.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                // Create a walk-in appointment for now with default dentist empty
+                // signature: AddAppointment(int patientId, DateTime appointmentDateTime, string dentist, string treatment, string status, string visitType, string notes)
+                int apptId = DatabaseHelper.AddAppointment(patientId, DateTime.Now, string.Empty, string.Empty, "Waiting", "Walk-in", "Walk-in created from receptionist dashboard");
+                MessageBox.Show($"Walk-in created (Appointment ID: {apptId}).", "Walk-in", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                try { DatabaseHelper.RaiseAppointmentsChanged(); } catch { }
+                LoadDashboard();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error creating walk-in: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private string Prompt(string title, string promptText)
+        {
+            using (var prompt = new Form())
+            {
+                prompt.Width = 400;
+                prompt.Height = 150;
+                prompt.FormBorderStyle = FormBorderStyle.FixedDialog;
+                prompt.Text = title;
+                prompt.StartPosition = FormStartPosition.CenterParent;
+
+                var textLabel = new Label() { Left = 20, Top = 20, Width = 340, Text = promptText };
+                var textBox = new TextBox() { Left = 20, Top = 50, Width = 340 };
+                var confirmation = new Button() { Text = "OK", Left = 260, Width = 100, Top = 80, DialogResult = DialogResult.OK };
+                confirmation.Click += (s, e) => { prompt.Close(); };
+                prompt.Controls.Add(textBox);
+                prompt.Controls.Add(textLabel);
+                prompt.Controls.Add(confirmation);
+                prompt.AcceptButton = confirmation;
+                return prompt.ShowDialog(this) == DialogResult.OK ? textBox.Text.Trim() : string.Empty;
+            }
+        }
+
         private void btnBillings_Click_1(object sender, EventArgs e)
         {
         
             new BillingForm().Show();
+        }
+
+        private void dgvWalkIn_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
         }
     }
     }

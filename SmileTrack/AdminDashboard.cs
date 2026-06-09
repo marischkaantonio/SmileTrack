@@ -328,7 +328,15 @@ namespace SmileTrack
         private void btnUserMngt_Click(object sender, EventArgs e) { ForceLoadUsersFromDatabase(); }
         private void btnAuditLogs_Click(object sender, EventArgs e) { ForceLoadAuditLogs(); }
         private void btnRefresh_Click(object sender, EventArgs e) { RefreshAllDashboardData(); }
-        private void btnLogOut_Click(object sender, EventArgs e) { this.Hide(); new LoginForm().Show(); }
+        private void btnLogOut_Click(object sender, EventArgs e)
+        {
+            if (MessageBox.Show("Are you sure you want to log out?", "Logout", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            {
+                try { AuditLogger.SaveAuditLog(Environment.UserName, "Logout", "User logged out from admin dashboard"); } catch { }
+                this.Hide();
+                new LoginForm().Show();
+            }
+        }
         private void btnClear_Click(object sender, EventArgs e) { if (File.Exists(AuditFilePath)) File.Delete(AuditFilePath); ForceLoadAuditLogs(); }
         private void btnEdit_Click(object sender, EventArgs e) { if (dgvUserMngt.CurrentRow != null) dgvUserMngt.BeginEdit(true); }
         private void btnRemove_Click(object sender, EventArgs e) { if (dgvUserMngt.CurrentRow != null) dgvUserMngt.Rows.Remove(dgvUserMngt.CurrentRow); }
