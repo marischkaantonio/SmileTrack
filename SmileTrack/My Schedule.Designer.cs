@@ -161,6 +161,7 @@
             this.btnDone.TabIndex = 8;
             this.btnDone.Text = "✔️Done";
             this.btnDone.UseVisualStyleBackColor = false;
+            this.btnDone.Click += new System.EventHandler(this.btnDone_Click_1);
             // 
             // btnResched
             // 

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SmileTrack;
+using System;
 using System.Data;
 using System.Data.SqlClient;
 using System.Drawing;
@@ -15,6 +16,9 @@ namespace SmileTrack
         public frmReceptionistDashboard()
         {
             InitializeComponent();
+
+            DatabaseHelper.NotificationTriggered += DatabaseHelper_NotificationTriggered;
+
             WireGridEvents();
             try { DatabaseHelper.AppointmentsChanged -= DatabaseHelper_AppointmentsChanged; } catch { }
             DatabaseHelper.AppointmentsChanged += DatabaseHelper_AppointmentsChanged;
@@ -319,7 +323,7 @@ namespace SmileTrack
                 pi.StartPosition = FormStartPosition.CenterParent;
                 pi.ShowDialog(this);
 
-               
+
                 LoadDashboard();
             }
         }
@@ -382,7 +386,7 @@ namespace SmileTrack
 
         private void btnBillings_Click_1(object sender, EventArgs e)
         {
-        
+
             new BillingForm().Show();
         }
 
@@ -390,6 +394,49 @@ namespace SmileTrack
         {
 
         }
+
+       
+
+
+    private void DatabaseHelper_NotificationTriggered(string message)
+        {
+            // Siguraduhing safe sa Multi-threading (tulad ng ginawa mo sa RefreshDashboard)
+            if (this.InvokeRequired)
+            {
+                this.Invoke(new Action(() => DatabaseHelper_NotificationTriggered(message)));
+                return;
+            }
+
+            // 1. Baguhin ang anyo o text ng labelBell para mapansin ng receptionist
+            labelBell.Text = "🔔 New Alert!";
+            labelBell.ForeColor = System.Drawing.Color.Red; // Gawing pula para agaw-pansin
+
+            // 2. Opsyonal: Magpakita ng Tooltip o notification text sa tabi ng bell
+            // lblNotificationText.Text = message;
+
+            // 3. Auto-refresh din ang Records grid ni receptionist para makita agad ang bago
+            LoadReceptionistRecords();
+        }
+
+        // Kapag clinick ni Receptionist ang Bell para basahin ang update, ibalik sa normal ang kulay
+        private void labelBell_Click(object sender, EventArgs e)
+        {
+            labelBell.Text = "🔔";
+            labelBell.ForeColor = System.Drawing.Color.Black; // Ibalik sa dati
+
+            // Dito mo rin pwedeng buksan ang Logs o Message box para ipakita kung ano ang nabago
+        }
+
+        private void LoadReceptionistRecords()
+        {
+            // Code mo dito para mag re-query sa database at mag-update ang Patient Records Grid ni receptionist
+        }
+
+        // IWAS MEMORY LEAK: Alisin ang pagka-subscribe kapag sinara ang form
+        protected override void OnFormClosing(FormClosingEventArgs e)
+        {
+            DatabaseHelper.NotificationTriggered -= DatabaseHelper_NotificationTriggered;
+            base.OnFormClosing(e);
+        }
     }
-    }
-    
+}

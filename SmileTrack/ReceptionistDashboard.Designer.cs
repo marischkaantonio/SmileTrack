@@ -81,6 +81,7 @@
             this.pictureBox4 = new System.Windows.Forms.PictureBox();
             this.pictureBox3 = new System.Windows.Forms.PictureBox();
             this.panelReceptDashboard = new System.Windows.Forms.Panel();
+            this.labelBell = new System.Windows.Forms.Label();
             this.panel4 = new System.Windows.Forms.Panel();
             this.dgvAppointments = new System.Windows.Forms.DataGridView();
             this.colTime = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -89,7 +90,6 @@
             this.txtTreatment = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colStatus = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.label1 = new System.Windows.Forms.Label();
-            this.label14 = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -680,7 +680,7 @@
             // 
             // panelReceptDashboard
             // 
-            this.panelReceptDashboard.Controls.Add(this.label14);
+            this.panelReceptDashboard.Controls.Add(this.labelBell);
             this.panelReceptDashboard.Controls.Add(this.panel7);
             this.panelReceptDashboard.Controls.Add(this.dgvWalkInQueue);
             this.panelReceptDashboard.Controls.Add(this.panel4);
@@ -688,6 +688,18 @@
             this.panelReceptDashboard.Name = "panelReceptDashboard";
             this.panelReceptDashboard.Size = new System.Drawing.Size(948, 630);
             this.panelReceptDashboard.TabIndex = 15;
+            // 
+            // labelBell
+            // 
+            this.labelBell.AutoSize = true;
+            this.labelBell.BackColor = System.Drawing.Color.White;
+            this.labelBell.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelBell.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
+            this.labelBell.Location = new System.Drawing.Point(794, 6);
+            this.labelBell.Name = "labelBell";
+            this.labelBell.Size = new System.Drawing.Size(26, 20);
+            this.labelBell.TabIndex = 15;
+            this.labelBell.Text = "🔔";
             // 
             // panel4
             // 
@@ -766,15 +778,6 @@
             this.label1.Size = new System.Drawing.Size(83, 13);
             this.label1.TabIndex = 0;
             this.label1.Text = " Appoinments";
-            // 
-            // label14
-            // 
-            this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(748, 10);
-            this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(41, 13);
-            this.label14.TabIndex = 15;
-            this.label14.Text = "label14";
             // 
             // frmReceptionistDashboard
             // 
@@ -886,6 +889,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn txtTreatment;
         private System.Windows.Forms.DataGridViewTextBoxColumn colStatus;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label label14;
+        private System.Windows.Forms.Label labelBell;
     }
 }

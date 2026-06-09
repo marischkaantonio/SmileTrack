@@ -19,10 +19,10 @@ namespace SmileTrack
             dtpDate.ValueChanged += DtpDate_ValueChanged;
             cmbView.SelectedIndexChanged += CmbView_SelectedIndexChanged;
             txtSearch.TextChanged += TxtSearch_TextChanged;
-            btnDone.Click += BtnDone_Click;
+            btnDone.Click += btnDone_Click_1; // Binago para ituro sa updated button click event mo
             btnResched.Click += BtnReschedule_Click;
             btnCancel.Click += BtnCancel_Click;
-            dgvSched.CellDoubleClick += DgvSched_CellDoubleClick;
+            dgvSched.CellDoubleClick += dgvSched_CellDoubleClick;
         }
 
         private void My_Schedule_Load(object sender, EventArgs e)
@@ -34,14 +34,28 @@ namespace SmileTrack
 
             if (dgvSched.Columns.Count == 0)
             {
-                dgvSched.Columns.Add("AppointmentID", "AppointmentID");
-                dgvSched.Columns["AppointmentID"].Visible = false;
-                dgvSched.Columns.Add("Time", "Time");
-                dgvSched.Columns.Add("PatientName", "Patient Name");
-                dgvSched.Columns.Add("Treatment", "Treatment");
-                dgvSched.Columns.Add("Status", "Status");
-                dgvSched.Columns.Add("Note", "Note");
-                dgvSched.Columns.Add("Dentist", "Dentist");
+                // Siguraduhing naka-set nang maayos ang Name ng mga Columns
+                int idIdx = dgvSched.Columns.Add("AppointmentID", "AppointmentID");
+                dgvSched.Columns[idIdx].Name = "AppointmentID";
+                dgvSched.Columns[idIdx].Visible = false;
+
+                int timeIdx = dgvSched.Columns.Add("Time", "Time");
+                dgvSched.Columns[timeIdx].Name = "Time";
+
+                int nameIdx = dgvSched.Columns.Add("PatientName", "Patient Name");
+                dgvSched.Columns[nameIdx].Name = "PatientName";
+
+                int treatIdx = dgvSched.Columns.Add("Treatment", "Treatment");
+                dgvSched.Columns[treatIdx].Name = "Treatment";
+
+                int statIdx = dgvSched.Columns.Add("Status", "Status");
+                dgvSched.Columns[statIdx].Name = "Status";
+
+                int noteIdx = dgvSched.Columns.Add("Note", "Note");
+                dgvSched.Columns[noteIdx].Name = "Note";
+
+                int dentIdx = dgvSched.Columns.Add("Dentist", "Dentist");
+                dgvSched.Columns[dentIdx].Name = "Dentist";
             }
             LoadSchedule();
         }
@@ -108,16 +122,6 @@ namespace SmileTrack
             return null;
         }
 
-        private void BtnDone_Click(object sender, EventArgs e)
-        {
-            var id = GetSelectedAppointmentId();
-            if (id == null) { MessageBox.Show("Select an appointment!"); return; }
-            if (MessageBox.Show("Mark as Completed?", "Confirm", MessageBoxButtons.YesNo) == DialogResult.Yes)
-            {
-                ExecuteUpdate("UPDATE Appointments SET Status = 'Completed' WHERE AppointmentID = @id", id.Value);
-            }
-        }
-
         private void BtnCancel_Click(object sender, EventArgs e)
         {
             var id = GetSelectedAppointmentId();
@@ -132,7 +136,7 @@ namespace SmileTrack
         {
             var id = GetSelectedAppointmentId();
             if (id == null) { MessageBox.Show("Select an appointment!"); return; }
-           
+
             MessageBox.Show("Reschedule logic triggered for ID: " + id);
         }
 
@@ -152,9 +156,65 @@ namespace SmileTrack
             catch (Exception ex) { MessageBox.Show("Error: " + ex.Message); }
         }
 
-        private void DgvSched_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        private void dgvSched_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex >= 0) BtnReschedule_Click(this, EventArgs.Empty);
+        }
+
+        
+        private void btnDone_Click_1(object sender, EventArgs e)
+        {
+            if (dgvSched.CurrentRow == null)
+            {
+                MessageBox.Show("Mangyaring pumili muna ng appointment mula sa listahan.");
+                return;
+            }
+
+           
+            var appointmentId = GetSelectedAppointmentId();
+            if (appointmentId == null)
+            {
+                MessageBox.Show("Hindi mahanap ang valid na Appointment ID.");
+                return;
+            }
+
+            string patientName = dgvSched.CurrentRow.Cells[2].Value?.ToString() ?? "Patient";
+
+            if (MessageBox.Show($"Mark appointment for {patientName} as Completed?", "Confirm", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            {
+                try
+                {
+                    string query = "UPDATE Appointments SET Status = 'Completed' WHERE AppointmentID = @AppID";
+
+                   
+                    using (var con = new SqlConnection(connectionString))
+                    using (var cmd = new SqlCommand(query, con))
+                    {
+                        cmd.Parameters.AddWithValue("@AppID", appointmentId.Value);
+                        con.Open();
+                        cmd.ExecuteNonQuery();
+                    }
+
+                    // I-refresh ang data sa DataGridView pagkatapos mag-update
+                    LoadSchedule();
+
+                    // Mga real-time notification helpers mo
+                    try
+                    {
+                        DatabaseHelper.NotifyAppointmentsChanged();
+                        DatabaseHelper.RaiseAppointmentsChanged();
+                    }
+                    catch { }
+
+                    DatabaseHelper.TriggerNotification($"Patient {patientName} record has been updated to COMPLETED.");
+
+                    MessageBox.Show("Appointment marked as done!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error updating database: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
         }
     }
 }
