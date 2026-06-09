@@ -89,6 +89,7 @@
             this.txtTreatment = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colStatus = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.label1 = new System.Windows.Forms.Label();
+            this.label14 = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -679,6 +680,7 @@
             // 
             // panelReceptDashboard
             // 
+            this.panelReceptDashboard.Controls.Add(this.label14);
             this.panelReceptDashboard.Controls.Add(this.panel7);
             this.panelReceptDashboard.Controls.Add(this.dgvWalkInQueue);
             this.panelReceptDashboard.Controls.Add(this.panel4);
@@ -765,6 +767,15 @@
             this.label1.TabIndex = 0;
             this.label1.Text = " Appoinments";
             // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Location = new System.Drawing.Point(748, 10);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(41, 13);
+            this.label14.TabIndex = 15;
+            this.label14.Text = "label14";
+            // 
             // frmReceptionistDashboard
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -803,6 +814,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
             this.panelReceptDashboard.ResumeLayout(false);
+            this.panelReceptDashboard.PerformLayout();
             this.panel4.ResumeLayout(false);
             this.panel4.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvAppointments)).EndInit();
@@ -874,5 +886,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn txtTreatment;
         private System.Windows.Forms.DataGridViewTextBoxColumn colStatus;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label label14;
     }
 }

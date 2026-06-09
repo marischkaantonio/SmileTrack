@@ -3,47 +3,41 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Text;
 using System.Windows.Forms;
+using System.Windows.Forms.DataVisualization.Charting; // Tiyaking kasama ito para sa Chart
 
 namespace SmileTrack
 {
     public partial class DentistDashboard : Form
     {
-        // Palitan ang connection string kung iba ang settings ng SQL mo
         private readonly string connectionString = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=SmileTrackDB;Integrated Security=True;Encrypt=False";
         private Timer refreshTimer;
-            
-            // Event definition
-            public event EventHandler AppointmentChanged;
 
-            // Method to raise the event
-            protected virtual void OnAppointmentChanged()
-            {
-                AppointmentChanged?.Invoke(this, EventArgs.Empty);
-            }
+        public event EventHandler AppointmentChanged;
 
-            // Example: call this after updating appointments
-            public void UpdateAppointments()
-            {
-                // Your appointment update logic here
-                // e.g., LoadAppointmentsFromDb();
+        protected virtual void OnAppointmentChanged()
+        {
+            AppointmentChanged?.Invoke(this, EventArgs.Empty);
+        }
 
-                // Notify subscribers
-                OnAppointmentChanged();
-            }
-        
+        public void UpdateAppointments()
+        {
+            OnAppointmentChanged();
+        }
+
         public DentistDashboard()
         {
             InitializeComponent();
+            // Ligtas na pag-subscribe sa static event ng DatabaseHelper
             try { DatabaseHelper.AppointmentsChanged -= DatabaseHelper_AppointmentsChanged; } catch { }
             DatabaseHelper.AppointmentsChanged += DatabaseHelper_AppointmentsChanged;
         }
 
         private void DentistDashboard_Load(object sender, EventArgs e)
         {
-            // Tawagin lahat ng loaders
+            // Unang load ng data
             RefreshDashboard();
 
-           
+            // Setup ng auto-refresh bawat 60 segundo
             refreshTimer = new Timer();
             refreshTimer.Interval = 60000;
             refreshTimer.Tick += (s, ev) => RefreshDashboard();
@@ -68,7 +62,6 @@ namespace SmileTrack
         {
             try
             {
-                // Only show today's appointments (exclude cancelled). Include IDs so UI actions can open the appointment.
                 string sql = @"SELECT a.AppointmentID, a.PatientID,
                                       FORMAT(a.AppointmentDateTime,'hh:mm tt') AS [Time],
                                       ISNULL(p.FirstName,'') + ' ' + ISNULL(p.LastName,'') AS [Patient],
@@ -81,7 +74,6 @@ namespace SmileTrack
 
                 var dt = DatabaseHelper.ExecuteQuery(sql);
 
-                // Bind safely to avoid duplicate columns defined in designer
                 dgvSched.SuspendLayout();
                 try
                 {
@@ -141,17 +133,22 @@ namespace SmileTrack
         {
             try
             {
-                // Build treatment summary (completed) - similar to receptionist chart
+                // Kukunin ang mga 'Completed' treatments ng kasalukuyang dentist
                 string sql = @"SELECT ISNULL(Treatment,'<unspecified>') AS Treatment, COUNT(*) AS C
                                FROM Appointments
                                WHERE ISNULL(Status,'') = 'Completed'
                                GROUP BY ISNULL(Treatment,'<unspecified>')";
 
                 var dt = DatabaseHelper.ExecuteQuery(sql);
+
                 chart1.Series.Clear();
                 chart1.Legends.Clear();
-                var s = chart1.Series.Add("Treatment");
-                s.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Pie;
+                chart1.ChartAreas[0].AxisX.Interval = 1; // Para hindi mag-skip ang mga labels sa X axis
+
+                var s = chart1.Series.Add("TreatmentSummary");
+
+                // Binago sa 'Column' (Bar) para magtugma sa hitsura ng iyong UI Design
+                s.ChartType = SeriesChartType.Column;
                 s.IsValueShownAsLabel = true;
 
                 foreach (DataRow r in dt.Rows)
@@ -160,8 +157,13 @@ namespace SmileTrack
                     int c = Convert.ToInt32(r["C"]);
                     s.Points.AddXY(t, c);
                 }
+
+                chart1.Update();
             }
-            catch { }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Chart Error: " + ex.Message);
+            }
         }
 
         private void LoadDashboardSummary()
@@ -172,30 +174,30 @@ namespace SmileTrack
                 {
                     conn.Open();
 
-                    // Today's Appointments (excluding cancelled)
+                    // 1. Today's Appointments (Excluding Cancelled)
                     SqlCommand cmdToday = new SqlCommand("SELECT COUNT(*) FROM Appointments WHERE CAST(AppointmentDateTime AS DATE) = CAST(GETDATE() AS DATE) AND ISNULL(Status,'') NOT IN ('Cancelled')", conn);
                     txtTodaysAppoinment.Text = cmdToday.ExecuteScalar()?.ToString() ?? "0";
 
-                    // Patients Seen (Completed today)
+                    // 2. Patients Seen (Completed Today)
                     SqlCommand cmdSeen = new SqlCommand("SELECT COUNT(*) FROM Appointments WHERE Status='Completed' AND CAST(AppointmentDateTime AS DATE) = CAST(GETDATE() AS DATE)", conn);
                     txtPatientSeen.Text = cmdSeen.ExecuteScalar()?.ToString() ?? "0";
 
-                    // Treatment Done breakdown (completed today grouped by treatment)
+                    // 3. Treatment Done (Listahan ng mga nagawa ngayong araw)
                     SqlCommand cmdTreat = new SqlCommand(@"SELECT ISNULL(Treatment,'<unspecified>') AS Treatment, COUNT(*) AS C
-                                                          FROM Appointments
-                                                          WHERE Status='Completed' AND CAST(AppointmentDateTime AS DATE) = CAST(GETDATE() AS DATE)
-                                                          GROUP BY ISNULL(Treatment,'<unspecified>')", conn);
+                                                           FROM Appointments
+                                                           WHERE Status='Completed' AND CAST(AppointmentDateTime AS DATE) = CAST(GETDATE() AS DATE)
+                                                           GROUP BY ISNULL(Treatment,'<unspecified>')", conn);
                     var sb = new StringBuilder();
                     using (var rdr = cmdTreat.ExecuteReader())
                     {
                         while (rdr.Read())
                         {
-                            sb.AppendLine($"{rdr["Treatment"].ToString()}: {rdr["C"].ToString()}");
+                            sb.AppendLine($"{rdr["Treatment"]}: {rdr["C"]}");
                         }
                     }
                     txtTreatmentDone.Text = sb.Length > 0 ? sb.ToString().TrimEnd() : "0";
 
-                    // Upcoming (future scheduled, not cancelled)
+                    // 4. Upcoming Appointments (Lahat ng darating na schedule sa hinaharap)
                     SqlCommand cmdUpcoming = new SqlCommand("SELECT COUNT(*) FROM Appointments WHERE AppointmentDateTime > GETDATE() AND ISNULL(Status,'') NOT IN ('Cancelled')", conn);
                     txtUpApp.Text = cmdUpcoming.ExecuteScalar()?.ToString() ?? "0";
                 }
@@ -249,20 +251,16 @@ namespace SmileTrack
                 pi.StartPosition = FormStartPosition.CenterParent;
                 pi.ShowDialog(this);
 
-                // After editing, refresh dashboard
                 RefreshDashboard();
             }
             catch { /* ignore */ }
         }
-
-       
 
         private void btnMySched_Click_1(object sender, EventArgs e)
         {
             new My_Schedule().Show(this);
         }
 
-        // Public method so other forms can request the dentist dashboard to refresh appointments
         public void RefreshAppointments()
         {
             try
@@ -275,11 +273,9 @@ namespace SmileTrack
 
                 LoadAppointmentsFromDb();
                 LoadDashboardSummary();
+                LoadTreatmentSummaryChart();
             }
-            catch
-            {
-                // swallow exceptions to avoid disrupting caller
-            }
+            catch { }
         }
 
         private void DatabaseHelper_AppointmentsChanged()
@@ -292,13 +288,9 @@ namespace SmileTrack
             catch { }
         }
 
-
-
         private void DentistDashboard_Load_1(object sender, EventArgs e)
         {
-
+            // Iwanang blanko o tanggalin kung hindi ginagamit sa events
         }
-
-
     }
 }
