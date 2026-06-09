@@ -7,20 +7,50 @@ using System.Windows.Forms;
 namespace SmileTrack
 {
     public partial class DentistDashboard : Form
-    {
+    {        public string DentistName { get; private set; }
         // Palitan ang connection string kung iba ang settings ng SQL mo
         private readonly string connectionString = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=SmileTrackDB;Integrated Security=True;Encrypt=False";
         private Timer refreshTimer;
+            
+            // Event definition
+            public event EventHandler AppointmentChanged;
 
+            // Method to raise the event
+            protected virtual void OnAppointmentChanged()
+            {
+                AppointmentChanged?.Invoke(this, EventArgs.Empty);
+            }
+
+            // Example: call this after updating appointments
+            public void UpdateAppointments()
+            {
+                // Your appointment update logic here
+                // e.g., LoadAppointmentsFromDb();
+
+                // Notify subscribers
+                OnAppointmentChanged();
+            }
+        
         public DentistDashboard()
         {
             InitializeComponent();
+            try { btnDashboard.Click -= BtnDashboard_Click; } catch { }
+            btnDashboard.Click += BtnDashboard_Click;
+
+            try { dgvSched.CellDoubleClick -= DgvSched_CellDoubleClick; } catch { }
+            dgvSched.CellDoubleClick += DgvSched_CellDoubleClick;
+            try { DatabaseHelper.AppointmentsChanged -= DatabaseHelper_AppointmentsChanged; } catch { }
+            DatabaseHelper.AppointmentsChanged += DatabaseHelper_AppointmentsChanged;
+        }
+
+        public DentistDashboard(string dentistName) : this()
+        {
+            this.DentistName = dentistName ?? string.Empty;
         }
 
                 private void DentistDashboard_Load(object sender, EventArgs e)
         {
-            // Ensure DB and tables exist
-    
+            
             try { DatabaseHelper.EnsureDatabaseAndTables(); } catch { }
 
             // Call all loaders
@@ -238,7 +268,7 @@ namespace SmileTrack
             new My_Schedule().Show(this);
         }
 
-        // Public method so other forms can request the dentist dashboard to refresh appointmentsd
+
         public void RefreshAppointments()
         {
             try
@@ -268,9 +298,11 @@ namespace SmileTrack
             catch { }
         }
 
+
         private void DentistDashboard_Load_1(object sender, EventArgs e)
         {
 
         }
+
     }
 }
