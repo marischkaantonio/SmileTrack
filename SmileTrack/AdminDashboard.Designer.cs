@@ -134,6 +134,7 @@
             this.btnUserMngt.TabIndex = 2;
             this.btnUserMngt.Text = "UserManagement";
             this.btnUserMngt.UseVisualStyleBackColor = false;
+            this.btnUserMngt.Click += new System.EventHandler(this.btnUserMngt_Click_1);
             // 
             // btnReports
             // 

@@ -34,6 +34,8 @@ namespace SmileTrack
         public DentistDashboard()
         {
             InitializeComponent();
+            try { DatabaseHelper.AppointmentsChanged -= DatabaseHelper_AppointmentsChanged; } catch { }
+            DatabaseHelper.AppointmentsChanged += DatabaseHelper_AppointmentsChanged;
         }
 
         private void DentistDashboard_Load(object sender, EventArgs e)
@@ -109,11 +111,18 @@ namespace SmileTrack
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
                     conn.Open();
-                    string query = @"SELECT p.FirstName + ' ' + p.LastName AS Patient, 
-                                     MAX(a.AppointmentDateTime) AS LastVisit 
-                                     FROM Patients p 
-                                     LEFT JOIN Appointments a ON p.PatientID = a.PatientID 
-                                     GROUP BY p.FirstName, p.LastName";
+                    string query = @"SELECT p.FirstName + ' ' + p.LastName AS Patient,
+                                     la.AppointmentDateTime AS LastVisit,
+                                     la.Treatment AS Treatment,
+                                     la.Dentist AS Dentist,
+                                     la.Status AS [Status]
+                                     FROM Patients p
+                                     OUTER APPLY (
+                                         SELECT TOP(1) a.AppointmentDateTime, a.Treatment, a.Dentist, a.Status
+                                         FROM Appointments a
+                                         WHERE a.PatientID = p.PatientID
+                                         ORDER BY a.AppointmentDateTime DESC
+                                     ) la";
 
                     SqlDataAdapter da = new SqlDataAdapter(query, conn);
                     DataTable dt = new DataTable();

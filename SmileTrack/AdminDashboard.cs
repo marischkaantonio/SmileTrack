@@ -343,6 +343,11 @@ namespace SmileTrack
         private void btnReports_Click_1(object sender, EventArgs e) { try { new Transaction_Billing_Reports().ShowDialog(this); } catch { } }
         private void FormAdminDashboard_Load(object sender, EventArgs e) { }
         private void panelDashboard_Paint(object sender, PaintEventArgs e) { }
+
+        private void btnUserMngt_Click_1(object sender, EventArgs e)
+        {
+
+        }
     }
 
     // Auxiliary structural model mapping references

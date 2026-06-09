@@ -297,20 +297,51 @@ namespace SmileTrack
         {
             try
             {
-                // If PatientID contains an existing numeric id → update.
                 var idText = txtPatientID.Text?.Trim();
+                int patientId = 0;
+
                 if (!string.IsNullOrEmpty(idText) && int.TryParse(idText, out int existingId) && existingId > 0)
                 {
-                    // verify existence before attempting update
                     var existsDt = DatabaseHelper.ExecuteQuery(
                         "SELECT COUNT(1) AS C FROM Patients WHERE PatientID = @id",
                         new SqlParameter("@id", existingId));
 
                     var exists = existsDt.Rows.Count > 0 && Convert.ToInt32(existsDt.Rows[0]["C"]) > 0;
-                if (exists)
+
+                    if (exists)
+                    {
+                        bool updated = DatabaseHelper.UpdatePatient(
+                            existingId,
+                            txtFname.Text.Trim(),
+                            txtLname.Text.Trim(),
+                            dtpBirthdate.Value,
+                            (int)nudAge.Value,
+                            rbMale.Checked ? "Male" : rbFemale.Checked ? "Female" : string.Empty,
+                            txtContact.Text.Trim(),
+                            txtEmail.Text.Trim(),
+                            txtAddress.Text.Trim());
+
+                        if (updated)
+                            MessageBox.Show($"Patient updated successfully! Patient ID: {existingId}", "Update", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        else
+                            MessageBox.Show("No patient was updated. The ID may not exist.", "Update", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+
+                        foreach (Form f in Application.OpenForms)
+                            if (f is frmPatientRecords fr) try { fr.LoadPatients(); } catch { }
+
+                        patientId = existingId;
+                    }
+                    else
+                    {
+                        if (MessageBox.Show($"Patient ID {existingId} was not found. Create a new patient instead?", "Not found", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
+                            return;
+                    }
+                }
+
+                // ✅ FIXED: This block is now OUTSIDE the else — runs for both new and existing patients
+                if (patientId == 0)
                 {
-                    bool updated = DatabaseHelper.UpdatePatient(
-                        existingId,
+                    int newId = DatabaseHelper.AddPatient(
                         txtFname.Text.Trim(),
                         txtLname.Text.Trim(),
                         dtpBirthdate.Value,
@@ -320,73 +351,45 @@ namespace SmileTrack
                         txtEmail.Text.Trim(),
                         txtAddress.Text.Trim());
 
-                    if (updated)
-                        MessageBox.Show($"Patient updated successfully! Patient ID: {existingId}", "Update", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    else
-                        MessageBox.Show("No patient was updated. The ID may not exist.", "Update", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-
-                    // refresh any open records window
-                    foreach (Form f in Application.OpenForms)
-                        if (f is frmPatientRecords fr) try { fr.LoadPatients(); } catch { }
-
-                    // continue instead of returning so user can also save a new appointment for this patient
-                    // patient id will be existingId below
-                    // (previous behavior returned early and prevented appointment creation)
-                }
-
-                    // ID present but not found in DB — offer to create new instead
-                    if (MessageBox.Show($"Patient ID {existingId} was not found. Create a new patient instead?", "Not found", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
-                        return;
-                    // fall through to create new
-                }
-
-                // Create new patient
-                int newId = DatabaseHelper.AddPatient(
-                    txtFname.Text.Trim(),
-                    txtLname.Text.Trim(),
-                    dtpBirthdate.Value,
-                    (int)nudAge.Value,
-                    rbMale.Checked ? "Male" : rbFemale.Checked ? "Female" : string.Empty,
-                    txtContact.Text.Trim(),
-                    txtEmail.Text.Trim(),
-                    txtAddress.Text.Trim());
-
-                MessageBox.Show($"Patient saved successfully! Patient ID: {newId}", "Save", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-                // determine patient id (either updated existing or newly created)
-                int patientId;
-                if (!string.IsNullOrEmpty(idText) && int.TryParse(idText, out int existingId2) && existingId2 > 0)
-                    patientId = existingId2;
-                else
+                    MessageBox.Show($"Patient saved successfully! Patient ID: {newId}", "Save", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     patientId = newId;
+                }
 
-                // set the generated id so user sees the saved record
                 txtPatientID.Text = patientId.ToString();
 
-                // Refresh or open patient records window
+                // ✅ FIXED: Patient Records refresh is now always called
                 frmPatientRecords existing = null;
                 foreach (Form f in Application.OpenForms)
                 {
                     if (f is frmPatientRecords fr) { existing = fr; break; }
                 }
 
-                if (existing != null) { try { existing.LoadPatients(); existing.BringToFront(); existing.Focus(); } catch { } }
+                if (existing != null)
+                {
+                    try { existing.LoadPatients(); existing.BringToFront(); existing.Focus(); } catch { }
+                }
                 else
                 {
-                    try { var recordForm = new frmPatientRecords(); recordForm.LoadPatients(); recordForm.StartPosition = FormStartPosition.CenterParent; recordForm.Show(this); }
-                    catch { /* ignore UI refresh errors */ }
+                    try
+                    {
+                        var recordForm = new frmPatientRecords();
+                        recordForm.LoadPatients();
+                        recordForm.StartPosition = FormStartPosition.CenterParent;
+                        recordForm.Show(this);
+                    }
+                    catch { }
+                }
 
-                // If there is no appointment id yet, and appointment fields are filled, create a new appointment
-
+                // ✅ FIXED: Appointment creation is now ALWAYS reached (was trapped inside else before)
                 try
                 {
-                    // Create appointment if no appointment exists AND either the visit type is chosen
-                    // (Walk-in or Appointment) OR dentist/treatment fields are provided.
                     string visitTypePreview = rbWalkin.Checked ? "Walk-in" : rbAppointment.Checked ? "Appointment" : string.Empty;
                     bool visitTypeChosen = !string.IsNullOrWhiteSpace(visitTypePreview);
 
                     bool shouldCreateAppointment = string.IsNullOrWhiteSpace(txtAppointmentID.Text)
-                        && (visitTypeChosen || (cmbDentist.SelectedItem != null || !string.IsNullOrWhiteSpace(cmbDentist.Text)) || (cmbTreatmentType.SelectedItem != null || !string.IsNullOrWhiteSpace(cmbTreatmentType.Text)));
+                        && (visitTypeChosen
+                            || (cmbDentist.SelectedItem != null || !string.IsNullOrWhiteSpace(cmbDentist.Text))
+                            || (cmbTreatmentType.SelectedItem != null || !string.IsNullOrWhiteSpace(cmbTreatmentType.Text)));
 
                     if (shouldCreateAppointment)
                     {
@@ -401,16 +404,14 @@ namespace SmileTrack
                         txtAppointmentID.Text = apptId.ToString();
                         MessageBox.Show($"Appointment created (ID: {apptId}).", "Appointment", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-                        // Refresh other open dashboards and patient records so they show the new appointment immediately
+                        // ✅ These now always fire after appointment is created
                         try { RefreshOpenPatientRecords(patientId); } catch { }
-                        try { DatabaseHelper.RaiseAppointmentsChanged(); } catch { }
+                        try { DatabaseHelper.RaiseAppointmentsChanged(); } catch { } // 👈 This triggers DentistDashboard refresh
                     }
                 }
                 catch (Exception ex)
                 {
-                    // non-fatal: show message but continue
                     MessageBox.Show("Appointment creation completed with warnings: " + ex.Message, "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                }
                 }
             }
             catch (Exception ex)

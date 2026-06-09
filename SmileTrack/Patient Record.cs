@@ -68,15 +68,8 @@ namespace SmileTrack
         {
             try
             {
-                var dt = DatabaseHelper.ExecuteQuery("SELECT PatientID, FirstName, LastName, BirthDate, Age, Gender, ContactNo, Email, Address FROM Patients ORDER BY PatientID DESC");
-                dgvPatientRecord.AutoGenerateColumns = true;
-                dgvPatientRecord.DataSource = dt;
-
-                // If rows exist, show first row details immediately
-                if (dgvPatientRecord.Rows.Count > 0)
-                    ShowRowSummary(dgvPatientRecord.Rows[0]);
-                else
-                    ClearDetails();
+                // Use LoadPatientRecords to include last appointment/treatment information
+                LoadPatientRecords();
             }
             catch (Exception ex)
             {
@@ -87,7 +80,7 @@ namespace SmileTrack
         private void LoadPatientRecords(string searchQuery = "")
         {
             const string baseSql = @"
-SELECT 
+SELECT
     p.PatientID AS [Patient ID],
     p.FirstName AS [First Name],
     p.LastName AS [Last Name],
@@ -97,17 +90,18 @@ SELECT
     p.ContactNo AS [Contact No],
     p.Email AS [Email],
     p.Address AS [Address],
-    a.AppointmentDateTime AS [Last Appointment],
-    a.Treatment AS [Treatment],
-    a.Dentist AS [Dentist],
-    a.Status AS [Status]
+    la.AppointmentDateTime AS [Last Appointment],
+    la.Treatment AS [Treatment],
+    la.Dentist AS [Dentist],
+    la.Status AS [Status]
 FROM Patients p
-LEFT JOIN (
-    SELECT PatientID, MAX(AppointmentDateTime) AS AppointmentDateTime
-    FROM Appointments
-    GROUP BY PatientID
-) la ON p.PatientID = la.PatientID
-LEFT JOIN Appointments a ON p.PatientID = a.PatientID AND a.AppointmentDateTime = la.AppointmentDateTime
+OUTER APPLY (
+    SELECT TOP(1) a.AppointmentDateTime, a.Treatment, a.Dentist, a.Status
+    FROM Appointments a
+    WHERE a.PatientID = p.PatientID
+    ORDER BY a.AppointmentDateTime DESC
+ ) la
+ORDER BY p.PatientID DESC
 ";
 
             try
@@ -344,26 +338,36 @@ LEFT JOIN Appointments a ON p.PatientID = a.PatientID AND a.AppointmentDateTime 
                     {
                         var appt = apptDt.Rows[0];
                         // Last appointment (date)
-                        if (DateTime.TryParse(Convert.ToString(appt["AppointmentDateTime"]), out DateTime ladate))
-                            lblLastAppointment.Text = ladate.ToString("yyyy-MM-dd");
-                        else
-                            lblLastAppointment.Text = Convert.ToString(appt["AppointmentDateTime"]) ?? "No Appointment";
+                        try
+                        {
+                            if (appt["AppointmentDateTime"] != DBNull.Value && DateTime.TryParse(Convert.ToString(appt["AppointmentDateTime"]), out DateTime ladate))
+                                lblLastAppointment.Text = ladate.ToString("yyyy-MM-dd");
+                            else
+                                lblLastAppointment.Text = "No Appointment";
+                        }
+                        catch { lblLastAppointment.Text = "No Appointment"; }
 
-                        lblTreatment.Text = appt["Treatment"]?.ToString() ?? string.Empty;
-                        lblDentist.Text = appt["Dentist"]?.ToString() ?? string.Empty;
-                        lblStatus.Text = appt["Status"]?.ToString() ?? string.Empty;
+                        lblTreatment.Text = appt.Table.Columns.Contains("Treatment") && appt["Treatment"] != DBNull.Value ? appt["Treatment"].ToString() : string.Empty;
+                        lblDentist.Text = appt.Table.Columns.Contains("Dentist") && appt["Dentist"] != DBNull.Value ? appt["Dentist"].ToString() : string.Empty;
+                        lblStatus.Text = appt.Table.Columns.Contains("Status") && appt["Status"] != DBNull.Value ? appt["Status"].ToString() : string.Empty;
                     }
                     else
                     {
-                        lblLastAppointment.Text = "No Appointment";
-                        lblTreatment.Text = string.Empty;
-                        lblDentist.Text = string.Empty;
-                        lblStatus.Text = string.Empty;
+                        // No appointment rows found; fallback to reading grid columns if present
+                        var last = GetCellValueIfColumnExists(row, "Last Appointment", "AppointmentDateTime", "LastAppointment");
+                        if (last != null && DateTime.TryParse(last.ToString(), out DateTime dt))
+                            lblLastAppointment.Text = dt.ToString("yyyy-MM-dd");
+                        else
+                            lblLastAppointment.Text = last?.ToString() ?? "No Appointment";
+
+                        lblTreatment.Text = Convert.ToString(GetCellValueIfColumnExists(row, "Treatment") ?? string.Empty);
+                        lblDentist.Text = Convert.ToString(GetCellValueIfColumnExists(row, "Dentist") ?? string.Empty);
+                        lblStatus.Text = Convert.ToString(GetCellValueIfColumnExists(row, "Status") ?? string.Empty);
                     }
                 }
                 else
                 {
-                    // No patient id in row — try to read appointment columns if present in grid (but do not fallback)
+                    // No patient id in row — try to read appointment columns if present in grid
                     var last = GetCellValueIfColumnExists(row, "Last Appointment", "AppointmentDateTime", "LastAppointment");
                     if (last != null && DateTime.TryParse(last.ToString(), out DateTime dt))
                         lblLastAppointment.Text = dt.ToString("yyyy-MM-dd");

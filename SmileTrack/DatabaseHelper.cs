@@ -112,6 +112,41 @@ CREATE TABLE dbo.InvoiceItems
 END
 ";
                 cmd.ExecuteNonQuery();
+
+                // Ensure foreign keys with ON DELETE CASCADE exist for referential integrity
+                cmd.CommandText = @"
+IF NOT EXISTS (SELECT * FROM sys.foreign_keys WHERE name = 'FK_Appointments_Patients')
+BEGIN
+    ALTER TABLE dbo.Appointments DROP CONSTRAINT IF EXISTS FK_Appointments_Patients; -- safe no-op on newer SQL Server
+    ALTER TABLE dbo.Appointments ADD CONSTRAINT FK_Appointments_Patients FOREIGN KEY (PatientID) REFERENCES dbo.Patients(PatientID) ON DELETE CASCADE;
+END
+
+IF NOT EXISTS (SELECT * FROM sys.foreign_keys WHERE name = 'FK_Invoices_Patients')
+BEGIN
+    ALTER TABLE dbo.Invoices DROP CONSTRAINT IF EXISTS FK_Invoices_Patients;
+    ALTER TABLE dbo.Invoices ADD CONSTRAINT FK_Invoices_Patients FOREIGN KEY (PatientID) REFERENCES dbo.Patients(PatientID) ON DELETE CASCADE;
+END
+
+IF NOT EXISTS (SELECT * FROM sys.foreign_keys WHERE name = 'FK_InvoiceItems_Invoices')
+BEGIN
+    ALTER TABLE dbo.InvoiceItems DROP CONSTRAINT IF EXISTS FK_InvoiceItems_Invoices;
+    ALTER TABLE dbo.InvoiceItems ADD CONSTRAINT FK_InvoiceItems_Invoices FOREIGN KEY (InvoiceID) REFERENCES dbo.Invoices(InvoiceID) ON DELETE CASCADE;
+END
+
+-- Create helpful indexes if not present
+IF NOT EXISTS (SELECT * FROM sys.indexes WHERE name = 'IX_Appointments_AppointmentDateTime')
+    CREATE NONCLUSTERED INDEX IX_Appointments_AppointmentDateTime ON dbo.Appointments(AppointmentDateTime);
+
+IF NOT EXISTS (SELECT * FROM sys.indexes WHERE name = 'IX_Appointments_PatientID')
+    CREATE NONCLUSTERED INDEX IX_Appointments_PatientID ON dbo.Appointments(PatientID);
+
+IF NOT EXISTS (SELECT * FROM sys.indexes WHERE name = 'IX_Invoices_PatientID')
+    CREATE NONCLUSTERED INDEX IX_Invoices_PatientID ON dbo.Invoices(PatientID);
+
+IF NOT EXISTS (SELECT * FROM sys.indexes WHERE name = 'IX_InvoiceItems_InvoiceID')
+    CREATE NONCLUSTERED INDEX IX_InvoiceItems_InvoiceID ON dbo.InvoiceItems(InvoiceID);
+";
+                cmd.ExecuteNonQuery();
             }
         }
 
