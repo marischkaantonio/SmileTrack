@@ -392,24 +392,46 @@ namespace SmileTrack
                         && (visitTypeChosen
                             || (cmbDentist.SelectedItem != null || !string.IsNullOrWhiteSpace(cmbDentist.Text))
                             || (cmbTreatmentType.SelectedItem != null || !string.IsNullOrWhiteSpace(cmbTreatmentType.Text)));
+    if (shouldCreateAppointment)
+    {
+        string dentist = cmbDentist.SelectedItem?.ToString() ?? cmbDentist.Text ?? string.Empty;
+        string treatment = cmbTreatmentType.SelectedItem?.ToString() ?? cmbTreatmentType.Text ?? string.Empty;
+        string status = cmbStatus.SelectedItem?.ToString() ?? cmbStatus.Text ?? string.Empty;
+        if (string.IsNullOrWhiteSpace(status)) status = "Scheduled";
+        string visitType = rbWalkin.Checked ? "Walk-in" : rbAppointment.Checked ? "Appointment" : string.Empty;
+        string notes = richtxtNotes.Text ?? string.Empty;
 
-                    if (shouldCreateAppointment)
-                    {
-                        string dentist = cmbDentist.SelectedItem?.ToString() ?? cmbDentist.Text ?? string.Empty;
-                        string treatment = cmbTreatmentType.SelectedItem?.ToString() ?? cmbTreatmentType.Text ?? string.Empty;
-                        string status = cmbStatus.SelectedItem?.ToString() ?? cmbStatus.Text ?? string.Empty;
-                        if (string.IsNullOrWhiteSpace(status)) status = "Scheduled";
-                        string visitType = rbWalkin.Checked ? "Walk-in" : rbAppointment.Checked ? "Appointment" : string.Empty;
-                        string notes = richtxtNotes.Text ?? string.Empty;
+        if (!string.IsNullOrWhiteSpace(txtAppointmentID.Text) && int.TryParse(txtAppointmentID.Text, out int existingAppt) && existingAppt > 0)
+        {
+            // Update existing appointment so Treatment/Dentist/Status persist
+            using (var con = new SqlConnection(connectionString))
+            using (var cmd = con.CreateCommand())
+            {
+                con.Open();
+                cmd.CommandText = @"UPDATE Appointments SET AppointmentDateTime=@dt, Dentist=@dentist, Treatment=@treatment, Status=@status, VisitType=@visittype, Notes=@notes WHERE AppointmentID=@id";
+                cmd.Parameters.AddWithValue("@dt", dtAppoinment.Value);
+                cmd.Parameters.AddWithValue("@dentist", dentist ?? string.Empty);
+                cmd.Parameters.AddWithValue("@treatment", treatment ?? string.Empty);
+                cmd.Parameters.AddWithValue("@status", status ?? string.Empty);
+                cmd.Parameters.AddWithValue("@visittype", visitType ?? string.Empty);
+                cmd.Parameters.AddWithValue("@notes", notes ?? string.Empty);
+                cmd.Parameters.AddWithValue("@id", existingAppt);
+                cmd.ExecuteNonQuery();
+            }
+            MessageBox.Show($"Appointment updated (ID: {existingAppt}).", "Appointment", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+        else
+        {
+            int apptId = DatabaseHelper.AddAppointment(patientId, dtAppoinment.Value, dentist, treatment, status, visitType, notes);
+            txtAppointmentID.Text = apptId.ToString();
+            MessageBox.Show($"Appointment created (ID: {apptId}).", "Appointment", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
 
-                        int apptId = DatabaseHelper.AddAppointment(patientId, dtAppoinment.Value, dentist, treatment, status, visitType, notes);
-                        txtAppointmentID.Text = apptId.ToString();
-                        MessageBox.Show($"Appointment created (ID: {apptId}).", "Appointment", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-                        // ✅ These now always fire after appointment is created
-                        try { RefreshOpenPatientRecords(patientId); } catch { }
-                        try { DatabaseHelper.RaiseAppointmentsChanged(); } catch { } // 👈 This triggers DentistDashboard refresh
-                    }
+        // Refresh other open dashboards and patient records so they show the new appointment immediately
+        try { RefreshOpenPatientRecords(patientId); } catch { }
+        try { DatabaseHelper.RaiseAppointmentsChanged(); } catch { } // 👈 This triggers DentistDashboard refresh
+        try { foreach (Form f in Application.OpenForms) if (f is frmPatientRecords fr) fr.RefreshFilterLists(); } catch { }
+    }
                 }
                 catch (Exception ex)
                 {
