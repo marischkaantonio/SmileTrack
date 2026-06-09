@@ -326,6 +326,8 @@ namespace SmileTrack
                         else
                             MessageBox.Show("No patient was updated. The ID may not exist.", "Update", MessageBoxButtons.OK, MessageBoxIcon.Warning);
 
+                        try { DatabaseHelper.RaiseAppointmentsChanged(); } catch { }
+
                         foreach (Form f in Application.OpenForms)
                             if (f is frmPatientRecords fr) try { fr.LoadPatients(); } catch { }
 
@@ -446,6 +448,12 @@ namespace SmileTrack
                 }
 
                 MessageBox.Show("Appointment updated successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                // Refresh other forms and dashboards
+                int pid = 0;
+                if (int.TryParse(txtPatientID.Text.Trim(), out int parsed) && parsed > 0) pid = parsed;
+                try { if (pid > 0) RefreshOpenPatientRecords(pid); } catch { }
+                try { DatabaseHelper.RaiseAppointmentsChanged(); } catch { }
 
                 var recordsForm = new frmPatientRecords();
                 recordsForm.Show();

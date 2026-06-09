@@ -77,14 +77,15 @@ BEGIN
 CREATE TABLE dbo.Appointments
 (
     AppointmentID INT IDENTITY(1,1) PRIMARY KEY,
-    PatientID INT NOT NULL REFERENCES dbo.Patients(PatientID),
+    PatientID INT NOT NULL,
     AppointmentDateTime DATETIME2 NOT NULL,
     Dentist NVARCHAR(200) NULL,
     Treatment NVARCHAR(500) NULL,
-    Status NVARCHAR(50) NULL,
-    VisitType NVARCHAR(50) NULL,
+    Status NVARCHAR(50) NOT NULL DEFAULT 'Scheduled',
+    VisitType NVARCHAR(50) NOT NULL DEFAULT '',
     Notes NVARCHAR(MAX) NULL,
-    CreatedAt DATETIME2 DEFAULT SYSUTCDATETIME()
+    CreatedAt DATETIME2 DEFAULT SYSUTCDATETIME(),
+    CONSTRAINT FK_Appointments_Patients FOREIGN KEY (PatientID) REFERENCES dbo.Patients(PatientID) ON DELETE CASCADE
 );
 END
 ";
@@ -97,15 +98,16 @@ CREATE TABLE dbo.Invoices
 (
     InvoiceID INT IDENTITY(1,1) PRIMARY KEY,
     InvoiceNo NVARCHAR(50) NOT NULL,
-    PatientID INT NULL REFERENCES dbo.Patients(PatientID),
+    PatientID INT NULL,
     InvoiceDate DATETIME2 NOT NULL,
     DueDate DATETIME2 NULL,
     TotalAmount DECIMAL(18,2) NOT NULL,
     PaidAmount DECIMAL(18,2) NOT NULL DEFAULT 0,
     BalanceAmount DECIMAL(18,2) NOT NULL,
-    Status NVARCHAR(50) NULL,
+    Status NVARCHAR(50) NOT NULL DEFAULT '',
     Notes NVARCHAR(MAX) NULL,
-    CreatedAt DATETIME2 DEFAULT SYSUTCDATETIME()
+    CreatedAt DATETIME2 DEFAULT SYSUTCDATETIME(),
+    CONSTRAINT FK_Invoices_Patients FOREIGN KEY (PatientID) REFERENCES dbo.Patients(PatientID) ON DELETE CASCADE
 );
 END
 ";
