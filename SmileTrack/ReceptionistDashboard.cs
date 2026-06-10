@@ -17,9 +17,13 @@ namespace SmileTrack
         {
             InitializeComponent();
 
-            DatabaseHelper.NotificationTriggered += DatabaseHelper_NotificationTriggered;
 
+            // 1. I-setup ang Timer kapag nag-load ang system ni Receptionist
+            notificationTimer.Interval = 5000; // Magche-check kada 5 segundo
+            notificationTimer.Tick += new EventHandler(notificationTimer_Tick);
+            notificationTimer.Start(); // Simulan ang pag-detect sa background
             WireGridEvents();
+
             try { DatabaseHelper.AppointmentsChanged -= DatabaseHelper_AppointmentsChanged; } catch { }
             DatabaseHelper.AppointmentsChanged += DatabaseHelper_AppointmentsChanged;
             try { btnAddWalkIn.Click -= btnAddWalkIn_Click; } catch { }
@@ -214,7 +218,7 @@ namespace SmileTrack
             }
         }
 
-     
+        // Helper para sa malinis na pag-bind ng Data nang hindi nasisira ang control UI
         private void BindGridClean(DataGridView grid, DataTable dt)
         {
             if (grid == null) return;
@@ -226,7 +230,7 @@ namespace SmileTrack
                 grid.AutoGenerateColumns = true;
                 grid.DataSource = dt ?? new DataTable();
 
-             
+                // UI Settings base sa wireframe mo
                 grid.ReadOnly = true;
                 grid.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
                 grid.AllowUserToAddRows = false;
@@ -396,54 +400,128 @@ namespace SmileTrack
         }
 
 
-       
-        
-
-        private void ReceptionistDashboard_FormClosed(object sender, FormClosedEventArgs e)
+        private void notificationTimer_Tick(object sender, EventArgs e)
         {
-            DatabaseHelper.AppointmentsChanged -= DatabaseHelper_AppointmentsChanged;
-        }
+            // Patayin muna ang timer sandali para hindi magpatong-patong ang query kung sakaling mabagal ang network
+            notificationTimer.Stop();
 
-
-    private void DatabaseHelper_NotificationTriggered(string message)
-        {
-            
-            if (this.InvokeRequired)
+            try
             {
-                this.Invoke(new Action(() => DatabaseHelper_NotificationTriggered(message)));
-                return;
+                // 2. Kuhanin ang mga bagong updates mula sa database
+                DataTable dtUpdates = GetNewStatusUpdatesFromDB();
+
+                if (dtUpdates.Rows.Count > 0)
+                {
+                    // 3. Baguhin ang anyo ng lblBell na nakikita sa image_43f427.png
+                    labelBell.Text = $"🔔 ({dtUpdates.Rows.Count})";
+                    labelBell.ForeColor = Color.Red; // Gawing alert-red ang kulay
+                    labelBell.Font = new Font(labelBell.Font, FontStyle.Bold);
+
+                    // 4. I-loop ang bawat update para ipakita ang kanya-kanyang message box alert
+                    foreach (DataRow row in dtUpdates.Rows)
+                    {
+                        string appointmentID = row["AppointmentID"].ToString();
+                        string patientName = row["PatientName"].ToString();
+                        string dentistName = row["DentistName"].ToString();
+                        string status = row["Status"].ToString();
+
+                        // Pagandahin ang text depende sa naging status ng appointment
+                        string statusTag = status;
+                        if (status == "Done") statusTag = "✅ DONE / TAPOS NA";
+                        if (status == "Resched") statusTag = "📅 RESCHEDULED";
+                        if (status == "Cancelled") statusTag = "❌ CANCELLED / KANSELADO";
+
+                        string alertMessage = $"👨‍⚕️ Dentist: Dr. {dentistName}\n" +
+                                              $"👤 Patient: {patientName}\n" +
+                                              $"📢 New Status: {statusTag}";
+
+                        // Magpapakita ang pop-up notification kay Receptionist
+                        MessageBox.Show(alertMessage,
+                                        "Appointment Notification Update",
+                                        MessageBoxButtons.OK,
+                                        MessageBoxIcon.Information);
+
+                        // 5. I-update agad ang database para markahan na "Read" na ito, para hindi na mag-pop up uli
+                        MarkNotificationAsRead(appointmentID);
+                    }
+
+                    // 6. Pagkatapos basahin lahat, i-refresh ang mga Tables/DataGridViews sa screen mo
+                    RefreshAppointmentTables();
+                }
             }
-
-            
-            labelBell.Text = "🔔 New Alert!";
-            labelBell.ForeColor = System.Drawing.Color.Red; 
-
-          
-            LoadReceptionistRecords();
+            catch (Exception ex)
+            {
+                // Opsyonal: I-log ang error pero huwag sirain ang takbo ng system
+                Console.WriteLine("Error sa Notification: " + ex.Message);
+            }
+            finally
+            {
+                // Muling buhayin ang timer para sa susunod na 5 segundo
+                notificationTimer.Start();
+            }
         }
 
-       
-        private void labelBell_Click(object sender, EventArgs e)
+        // Kukuha ng mga appointments na binago ng Dentist na hindi pa nakikita ni Receptionist
+        private DataTable GetNewStatusUpdatesFromDB()
+        {
+            DataTable dt = new DataTable();
+
+            // Query gamit ang INNER JOIN para makuha ang pangalan ng Pasyente at Dentist sabay ng Status
+            string query = @"SELECT a.AppointmentID, p.PatientName, d.DentistName, a.Status 
+                      FROM Appointments a
+                      INNER JOIN Patients p ON a.PatientID = p.PatientID
+                      INNER JOIN Dentists d ON a.DentistID = d.DentistID
+                      WHERE a.IsNotificationRead = 0 
+                        AND a.Status IN ('Done', 'Resched', 'Cancelled')";
+
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    using (SqlDataAdapter da = new SqlDataAdapter(cmd))
+                    {
+                        da.Fill(dt);
+                    }
+                }
+            }
+            return dt;
+        }
+
+        // Babaguhin ang IsNotificationRead flag sa database para hindi na umulit ang popup sa susunod na segundong pag-ikot
+        private void MarkNotificationAsRead(string appointmentID)
+        {
+            string query = "UPDATE Appointments SET IsNotificationRead = 1 WHERE AppointmentID = @ID";
+
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@ID", appointmentID);
+                    conn.Open();
+                    cmd.ExecuteNonQuery();
+                    conn.Close();
+                }
+            }
+        }
+
+        // I-code mo rito ang kasalukuyan mong pamamaraan ng pag-refresh ng DataGridViews mo
+        private void RefreshAppointmentTables()
+        {
+            // Halimbawa lamang:
+            // dgvAppointments.DataSource = LoadAppointmentsData();
+            // dgvReminders.DataSource = LoadRemindersData();
+        }
+
+        // Kapag ni-click ni Receptionist si lblBell, pwede nating i-reset ang alert state nito
+        private void lblBell_Click(object sender, EventArgs e)
         {
             labelBell.Text = "🔔";
-            labelBell.ForeColor = System.Drawing.Color.Black; 
-        }
-
-        private void LoadReceptionistRecords()
-        {
-            
-        }
-
-       
-        protected override void OnFormClosing(FormClosingEventArgs e)
-        {
-            DatabaseHelper.NotificationTriggered -= DatabaseHelper_NotificationTriggered;
-            base.OnFormClosing(e);
-        }
-
-        private void panelReceptDashboard_Paint(object sender, PaintEventArgs e)
-        {
-
+            labelBell.ForeColor = Color.Orange; // Ibalik sa orihinal nitong kulay base sa image_43f427.png
+            labelBell.Font = new Font(labelBell.Font, FontStyle.Regular);
         }
     }
 }
+
+
+
+        

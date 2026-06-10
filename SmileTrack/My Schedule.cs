@@ -161,7 +161,7 @@ namespace SmileTrack
             if (e.RowIndex >= 0) BtnReschedule_Click(this, EventArgs.Empty);
         }
 
-        
+
         private void btnDone_Click_1(object sender, EventArgs e)
         {
             if (dgvSched.CurrentRow == null)
@@ -170,7 +170,7 @@ namespace SmileTrack
                 return;
             }
 
-           
+
             var appointmentId = GetSelectedAppointmentId();
             if (appointmentId == null)
             {
@@ -186,7 +186,7 @@ namespace SmileTrack
                 {
                     string query = "UPDATE Appointments SET Status = 'Completed' WHERE AppointmentID = @AppID";
 
-                   
+
                     using (var con = new SqlConnection(connectionString))
                     using (var cmd = new SqlCommand(query, con))
                     {
@@ -215,11 +215,6 @@ namespace SmileTrack
                     MessageBox.Show("Error updating database: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
-        }
-
-        private void btnHome_Click(object sender, EventArgs e)
-        {
-
         }
     }
 }

@@ -80,6 +80,7 @@
             this.btnNext = new System.Windows.Forms.Button();
             this.btnPrev = new System.Windows.Forms.Button();
             this.lblPageInfo = new System.Windows.Forms.Label();
+            this.btnHome = new System.Windows.Forms.Button();
             this.dgvInvoiceItems.SuspendLayout();
             this.panel3.SuspendLayout();
             this.panel6.SuspendLayout();
@@ -754,11 +755,26 @@
             this.lblPageInfo.TabIndex = 30;
             this.lblPageInfo.Text = "Page 1 0f N";
             // 
+            // btnHome
+            // 
+            this.btnHome.BackColor = System.Drawing.Color.White;
+            this.btnHome.Font = new System.Drawing.Font("Gill Sans Ultra Bold", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnHome.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
+            this.btnHome.Location = new System.Drawing.Point(12, 11);
+            this.btnHome.Margin = new System.Windows.Forms.Padding(2);
+            this.btnHome.Name = "btnHome";
+            this.btnHome.Size = new System.Drawing.Size(32, 27);
+            this.btnHome.TabIndex = 35;
+            this.btnHome.Text = "🏠";
+            this.btnHome.UseVisualStyleBackColor = false;
+            this.btnHome.Click += new System.EventHandler(this.btnHome_Click);
+            // 
             // BillingForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1302, 615);
+            this.Controls.Add(this.btnHome);
             this.Controls.Add(this.btnLast);
             this.Controls.Add(this.panel11);
             this.Controls.Add(this.btnFirst);
@@ -852,5 +868,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn UnitPrice;
         private System.Windows.Forms.DataGridViewTextBoxColumn Status;
         private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Button btnHome;
     }
 }

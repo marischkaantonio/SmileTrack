@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data;
 using System.Data.SqlClient;
+using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using System.Windows.Forms.DataVisualization.Charting; // Tiyaking kasama ito para sa Chart
@@ -256,10 +257,7 @@ namespace SmileTrack
             catch { /* ignore */ }
         }
 
-        private void btnMySched_Click_1(object sender, EventArgs e)
-        {
-            new My_Schedule().Show(this);
-        }
+        
 
         public void RefreshAppointments()
         {
@@ -291,6 +289,35 @@ namespace SmileTrack
         private void DentistDashboard_Load_1(object sender, EventArgs e)
         {
             // Iwanang blanko o tanggalin kung hindi ginagamit sa events
+        }
+
+        private void btnMySched_Click(object sender, EventArgs e)
+        {
+            new My_Schedule().Show(this);
+
+            string activeDentist = "Dr. Margie";
+
+            
+        }
+
+        private void label3_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void txtPatientSeen_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnDashboard_Click_1(object sender, EventArgs e)
+        {
+
+        }
+
+        private void txtTodaysAppoinment_TextChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

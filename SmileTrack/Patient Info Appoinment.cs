@@ -18,7 +18,7 @@ namespace SmileTrack
 
             // initialize runtime UI state once
             rbWalkin.Checked = false;
-            rbAppointment.Checked = false;
+            rbAppointment.Checked = false; rbAppointment.Checked = false;
             rbMale.Checked = false;
             rbFemale.Checked = false;
 
@@ -36,7 +36,7 @@ namespace SmileTrack
         }
 
         private void Patient_Info_Appoinment_Load(object sender, EventArgs e)
-        {   
+        {
         }
 
         private void txtPatientID_TextChanged(object sender, EventArgs e)
@@ -297,150 +297,93 @@ namespace SmileTrack
         {
             try
             {
-                var idText = txtPatientID.Text?.Trim();
-                int patientId = 0;
+                int patientId;
 
-                if (!string.IsNullOrEmpty(idText) && int.TryParse(idText, out int existingId) && existingId > 0)
+                // EXISTING PATIENT
+                if (!string.IsNullOrWhiteSpace(txtPatientID.Text) &&
+                    int.TryParse(txtPatientID.Text, out patientId))
                 {
-                    var existsDt = DatabaseHelper.ExecuteQuery(
-                        "SELECT COUNT(1) AS C FROM Patients WHERE PatientID = @id",
-                        new SqlParameter("@id", existingId));
-
-                    var exists = existsDt.Rows.Count > 0 && Convert.ToInt32(existsDt.Rows[0]["C"]) > 0;
-
-                    if (exists)
-                    {
-                        bool updated = DatabaseHelper.UpdatePatient(
-                            existingId,
-                            txtFname.Text.Trim(),
-                            txtLname.Text.Trim(),
-                            dtpBirthdate.Value,
-                            (int)nudAge.Value,
-                            rbMale.Checked ? "Male" : rbFemale.Checked ? "Female" : string.Empty,
-                            txtContact.Text.Trim(),
-                            txtEmail.Text.Trim(),
-                            txtAddress.Text.Trim());
-
-                        if (updated)
-                            MessageBox.Show($"Patient updated successfully! Patient ID: {existingId}", "Update", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        else
-                            MessageBox.Show("No patient was updated. The ID may not exist.", "Update", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-
-                        try { DatabaseHelper.RaiseAppointmentsChanged(); } catch { }
-
-                        foreach (Form f in Application.OpenForms)
-                            if (f is frmPatientRecords fr) try { fr.LoadPatients(); } catch { }
-
-                        patientId = existingId;
-                    }
-                    else
-                    {
-                        if (MessageBox.Show($"Patient ID {existingId} was not found. Create a new patient instead?", "Not found", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
-                            return;
-                    }
-                }
-
-                // ✅ FIXED: This block is now OUTSIDE the else — runs for both new and existing patients
-                if (patientId == 0)
-                {
-                    int newId = DatabaseHelper.AddPatient(
+                    bool updated = DatabaseHelper.UpdatePatient(
+                        patientId,
                         txtFname.Text.Trim(),
                         txtLname.Text.Trim(),
                         dtpBirthdate.Value,
                         (int)nudAge.Value,
-                        rbMale.Checked ? "Male" : rbFemale.Checked ? "Female" : string.Empty,
+                        rbMale.Checked ? "Male" :
+                        rbFemale.Checked ? "Female" : "",
                         txtContact.Text.Trim(),
                         txtEmail.Text.Trim(),
                         txtAddress.Text.Trim());
 
-                    MessageBox.Show($"Patient saved successfully! Patient ID: {newId}", "Save", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    patientId = newId;
+                    // Use DatabaseHelper.AddAppointment to ensure consistent data
+                    var status = string.IsNullOrWhiteSpace(cmbStatus.Text) ? "Scheduled" : cmbStatus.Text;
+                    var visitType = rbWalkin.Checked ? "Walk-in" : "Appointment";
+                    int appointmentId = DatabaseHelper.AddAppointment(
+                        patientId,
+                        dtAppoinment.Value,
+                        cmbDentist.Text,
+                        cmbTreatmentType.Text,
+                        status,
+                        visitType,
+                        richtxtNotes.Text ?? string.Empty);
+
+                    txtAppointmentID.Text = appointmentId.ToString();
+
+                    MessageBox.Show(
+                        "Patient updated and new appointment saved!",
+                        "Success",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Information);
+
+                    // Refresh any open patient records views and dashboards so the new appointment shows in the dgv
+                    RefreshOpenPatientRecords(patientId);
+
+                    return;
                 }
+
+                // NEW PATIENT
+                patientId = DatabaseHelper.AddPatient(
+                    txtFname.Text.Trim(),
+                    txtLname.Text.Trim(),
+                    dtpBirthdate.Value,
+                    (int)nudAge.Value,
+                    rbMale.Checked ? "Male" :
+                    rbFemale.Checked ? "Female" : "",
+                    txtContact.Text.Trim(),
+                    txtEmail.Text.Trim(),
+                    txtAddress.Text.Trim());
 
                 txtPatientID.Text = patientId.ToString();
 
-                // ✅ FIXED: Patient Records refresh is now always called
-                frmPatientRecords existing = null;
-                foreach (Form f in Application.OpenForms)
-                {
-                    if (f is frmPatientRecords fr) { existing = fr; break; }
-                }
+                var statusNew = string.IsNullOrWhiteSpace(cmbStatus.Text) ? "Scheduled" : cmbStatus.Text;
+                var visitTypeNew = rbWalkin.Checked ? "Walk-in" : "Appointment";
+                int appointmentIdNew = DatabaseHelper.AddAppointment(
+                    patientId,
+                    dtAppoinment.Value,
+                    cmbDentist.Text,
+                    cmbTreatmentType.Text,
+                    statusNew,
+                    visitTypeNew,
+                    richtxtNotes.Text ?? string.Empty);
 
-                if (existing != null)
-                {
-                    try { existing.LoadPatients(); existing.BringToFront(); existing.Focus(); } catch { }
-                }
-                else
-                {
-                    try
-                    {
-                        var recordForm = new frmPatientRecords();
-                        recordForm.LoadPatients();
-                        recordForm.StartPosition = FormStartPosition.CenterParent;
-                        recordForm.Show(this);
-                    }
-                    catch { }
-                }
+                txtAppointmentID.Text = appointmentIdNew.ToString();
 
-                // ✅ FIXED: Appointment creation is now ALWAYS reached (was trapped inside else before)
-                try
-                {
-                    string visitTypePreview = rbWalkin.Checked ? "Walk-in" : rbAppointment.Checked ? "Appointment" : string.Empty;
-                    bool visitTypeChosen = !string.IsNullOrWhiteSpace(visitTypePreview);
+                MessageBox.Show(
+                    "Patient and appointment saved successfully!",
+                    "Success",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
 
-                    bool shouldCreateAppointment = string.IsNullOrWhiteSpace(txtAppointmentID.Text)
-                        && (visitTypeChosen
-                            || (cmbDentist.SelectedItem != null || !string.IsNullOrWhiteSpace(cmbDentist.Text))
-                            || (cmbTreatmentType.SelectedItem != null || !string.IsNullOrWhiteSpace(cmbTreatmentType.Text)));
-    if (shouldCreateAppointment)
-    {
-        string dentist = cmbDentist.SelectedItem?.ToString() ?? cmbDentist.Text ?? string.Empty;
-        string treatment = cmbTreatmentType.SelectedItem?.ToString() ?? cmbTreatmentType.Text ?? string.Empty;
-        string status = cmbStatus.SelectedItem?.ToString() ?? cmbStatus.Text ?? string.Empty;
-        if (string.IsNullOrWhiteSpace(status)) status = "Scheduled";
-        string visitType = rbWalkin.Checked ? "Walk-in" : rbAppointment.Checked ? "Appointment" : string.Empty;
-        string notes = richtxtNotes.Text ?? string.Empty;
-
-        if (!string.IsNullOrWhiteSpace(txtAppointmentID.Text) && int.TryParse(txtAppointmentID.Text, out int existingAppt) && existingAppt > 0)
-        {
-            // Update existing appointment so Treatment/Dentist/Status persist
-            using (var con = new SqlConnection(connectionString))
-            using (var cmd = con.CreateCommand())
-            {
-                con.Open();
-                cmd.CommandText = @"UPDATE Appointments SET AppointmentDateTime=@dt, Dentist=@dentist, Treatment=@treatment, Status=@status, VisitType=@visittype, Notes=@notes WHERE AppointmentID=@id";
-                cmd.Parameters.AddWithValue("@dt", dtAppoinment.Value);
-                cmd.Parameters.AddWithValue("@dentist", dentist ?? string.Empty);
-                cmd.Parameters.AddWithValue("@treatment", treatment ?? string.Empty);
-                cmd.Parameters.AddWithValue("@status", status ?? string.Empty);
-                cmd.Parameters.AddWithValue("@visittype", visitType ?? string.Empty);
-                cmd.Parameters.AddWithValue("@notes", notes ?? string.Empty);
-                cmd.Parameters.AddWithValue("@id", existingAppt);
-                cmd.ExecuteNonQuery();
-            }
-            MessageBox.Show($"Appointment updated (ID: {existingAppt}).", "Appointment", MessageBoxButtons.OK, MessageBoxIcon.Information);
-        }
-        else
-        {
-            int apptId = DatabaseHelper.AddAppointment(patientId, dtAppoinment.Value, dentist, treatment, status, visitType, notes);
-            txtAppointmentID.Text = apptId.ToString();
-            MessageBox.Show($"Appointment created (ID: {apptId}).", "Appointment", MessageBoxButtons.OK, MessageBoxIcon.Information);
-        }
-
-        // Refresh other open dashboards and patient records so they show the new appointment immediately
-        try { RefreshOpenPatientRecords(patientId); } catch { }
-        try { DatabaseHelper.RaiseAppointmentsChanged(); } catch { } // 👈 This triggers DentistDashboard refresh
-        try { foreach (Form f in Application.OpenForms) if (f is frmPatientRecords fr) fr.RefreshFilterLists(); } catch { }
-    }
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show("Appointment creation completed with warnings: " + ex.Message, "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                }
+                // Refresh any open patient records views and dashboards so the new patient/appointment shows in the dgv
+                RefreshOpenPatientRecords(patientId);
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error saving patient: " + ex.Message, "Database Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(
+                    ex.Message,
+                    "Database Error",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
             }
         }
 
@@ -470,12 +413,6 @@ namespace SmileTrack
                 }
 
                 MessageBox.Show("Appointment updated successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-                // Refresh other forms and dashboards
-                int pid = 0;
-                if (int.TryParse(txtPatientID.Text.Trim(), out int parsed) && parsed > 0) pid = parsed;
-                try { if (pid > 0) RefreshOpenPatientRecords(pid); } catch { }
-                try { DatabaseHelper.RaiseAppointmentsChanged(); } catch { }
 
                 var recordsForm = new frmPatientRecords();
                 recordsForm.Show();
@@ -545,20 +482,10 @@ namespace SmileTrack
                 }
 
                 // Refresh receptionist dashboard if open (do not change its window order)
-                try
-                {
-                    if (targetReception != null)
-                    {
-                        // refresh data but do not BringToFront / Activate
-                        targetReception.RefreshDashboard();
-                    }
-                }
-                catch
-                {
-                    // ignore refresh failures
-                }
+               
+                
 
-                // Refresh dentist dashboard if open (reload appointments) but do not change its window order
+               
                 try
                 {
                     if (targetDentist != null)
@@ -568,9 +495,10 @@ namespace SmileTrack
                 }
                 catch
                 {
-                    
+                    // ignore
                 }
 
+                // Finally ensure patient records is refreshed and selected and brought to front/activated
                 try
                 {
                     targetPatientRecords.RefreshAndSelectPatient(patientId);
@@ -583,7 +511,7 @@ namespace SmileTrack
                     targetPatientRecords.Activate();
                     targetPatientRecords.Focus();
                 }
-                catch   
+                catch
                 {
                     // ignore individual refresh failures
                 }
@@ -701,5 +629,6 @@ namespace SmileTrack
                 MessageBox.Show("Error loading patient and appointment: " + ex.Message, "Database Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
     }
 }

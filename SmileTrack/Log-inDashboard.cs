@@ -1,16 +1,17 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Diagnostics.Eventing.Reader;
 using System.Drawing;
+using System.Drawing.Drawing2D;
+using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.IO;
-using Newtonsoft.Json;
-using System.Text.Json;
 
 
 namespace SmileTrack
@@ -121,8 +122,24 @@ namespace SmileTrack
             
             txtUname.Focus();
         }
+     
 
-        private void LoginForm_Load(object sender, EventArgs e)
+private void RoundPanel(Panel panel, int radius)
+    {
+        GraphicsPath path = new GraphicsPath();
+        path.StartFigure();
+        path.AddArc(new Rectangle(0, 0, radius, radius), 180, 90);
+        path.AddLine(radius, 0, panel.Width - radius, 0);
+        path.AddArc(new Rectangle(panel.Width - radius, 0, radius, radius), 270, 90);
+        path.AddLine(panel.Width, radius, panel.Width, panel.Height - radius);
+        path.AddArc(new Rectangle(panel.Width - radius, panel.Height - radius, radius, radius), 0, 90);
+        path.AddLine(panel.Width - radius, panel.Height, radius, panel.Height);
+        path.AddArc(new Rectangle(0, panel.Height - radius, radius, radius), 90, 90);
+        path.CloseFigure();
+        panel.Region = new Region(path);
+    }
+
+    private void LoginForm_Load(object sender, EventArgs e)
         {
         
         }

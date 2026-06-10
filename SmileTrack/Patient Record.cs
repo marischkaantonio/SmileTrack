@@ -14,6 +14,7 @@ namespace SmileTrack
             ? @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=SmileTrackDB;Integrated Security=True;Encrypt=False"
             : DatabaseHelper.ConnectionString;
 
+        // Other forms can set this to receive the selected patient id
         public Action<int> PatientSelected { get; internal set; }
 
         public frmPatientRecords()
@@ -21,6 +22,7 @@ namespace SmileTrack
             InitializeComponent();
             this.Load += frmPatientRecords_Load;
 
+            // Wire events (designer may already wire these; we detach then attach to be safe)
             btnSearch.Click -= btnSearch_Click;
             btnSearch.Click += btnSearch_Click;
 
@@ -42,12 +44,13 @@ namespace SmileTrack
             btnClear.Click -= btnClear_Click;
             btnClear.Click += btnClear_Click;
 
+            // btnDelete may or may not exist in the designer — attach if present
             try
             {
                 btnDelete.Click -= btnDelete_Click;
                 btnDelete.Click += btnDelete_Click;
             }
-            catch { }
+            catch { /* ignore */ }
 
             dgvPatientRecord.CellClick -= dgvPatientRecord_CellContentClick;
             dgvPatientRecord.CellClick += dgvPatientRecord_CellContentClick;
@@ -55,102 +58,78 @@ namespace SmileTrack
             dgvPatientRecord.CellDoubleClick -= dgvPatientRecord_CellDoubleClick;
             dgvPatientRecord.CellDoubleClick += dgvPatientRecord_CellDoubleClick;
 
+            // Ensure keyboard / row navigation updates the detail panel as well
             dgvPatientRecord.SelectionChanged -= dgvPatientRecord_SelectionChanged;
             dgvPatientRecord.SelectionChanged += dgvPatientRecord_SelectionChanged;
         }
 
-        // ─────────────────────────────────────────────────────────────
-        // LOAD
-        // ─────────────────────────────────────────────────────────────
-
+        // Public so other forms can call after saving a patient
         public void LoadPatients()
         {
             try
             {
-                LoadPatientRecords();
-                try { RefreshFilterLists(); } catch { }
+                var dt = DatabaseHelper.ExecuteQuery("SELECT PatientID, FirstName, LastName, BirthDate, Age, Gender, ContactNo, Email, Address FROM Patients ORDER BY PatientID DESC");
+                dgvPatientRecord.AutoGenerateColumns = true;
+                dgvPatientRecord.DataSource = dt;
+
+                // If rows exist, show first row details immediately
+                if (dgvPatientRecord.Rows.Count > 0)
+                    ShowRowSummary(dgvPatientRecord.Rows[0]);
+                else
+                    ClearDetails();
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error loading patients: " + ex.Message, "Database Error",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Error loading patients: " + ex.Message, "Database Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
         private void LoadPatientRecords(string searchQuery = "")
         {
-            // FIX: Removed the broken WHERE clause that was appended after ORDER BY.
-            // Search is handled separately below.
             const string baseSql = @"
-SELECT
-    p.PatientID          AS [Patient ID],
-    p.FirstName          AS [First Name],
-    p.LastName           AS [Last Name],
-    p.BirthDate          AS [Birth Date],
-    p.Age                AS [Age],
-    p.Gender             AS [Gender],
-    p.ContactNo          AS [Contact No],
-    p.Email              AS [Email],
-    p.Address            AS [Address],
-    la.AppointmentDateTime AS [Last Appointment],
-    la.Treatment         AS [Treatment],
-    la.Dentist           AS [Dentist],
-    la.Status            AS [Status]
+SELECT 
+    p.PatientID AS [Patient ID],
+    p.FirstName AS [First Name],
+    p.LastName AS [Last Name],
+    p.BirthDate AS [Birth Date],
+    p.Age AS [Age],
+    p.Gender AS [Gender],
+    p.ContactNo AS [Contact No],
+    p.Email AS [Email],
+    p.Address AS [Address],
+    a.AppointmentDateTime AS [Last Appointment],
+    a.Treatment AS [Treatment],
+    a.Dentist AS [Dentist],
+    a.Status AS [Status]
 FROM Patients p
-OUTER APPLY (
-    SELECT TOP(1)
-        a.AppointmentDateTime,
-        a.Treatment,
-        a.Dentist,
-        a.Status
-    FROM Appointments a
-    WHERE a.PatientID = p.PatientID
-    ORDER BY a.AppointmentDateTime DESC
-) la
-ORDER BY p.PatientID DESC";
-
-            const string searchSql = @"
-SELECT
-    p.PatientID          AS [Patient ID],
-    p.FirstName          AS [First Name],
-    p.LastName           AS [Last Name],
-    p.BirthDate          AS [Birth Date],
-    p.Age                AS [Age],
-    p.Gender             AS [Gender],
-    p.ContactNo          AS [Contact No],
-    p.Email              AS [Email],
-    p.Address            AS [Address],
-    la.AppointmentDateTime AS [Last Appointment],
-    la.Treatment         AS [Treatment],
-    la.Dentist           AS [Dentist],
-    la.Status            AS [Status]
-FROM Patients p
-OUTER APPLY (
-    SELECT TOP(1)
-        a.AppointmentDateTime,
-        a.Treatment,
-        a.Dentist,
-        a.Status
-    FROM Appointments a
-    WHERE a.PatientID = p.PatientID
-    ORDER BY a.AppointmentDateTime DESC
-) la
-WHERE p.FirstName  LIKE @search
-   OR p.LastName   LIKE @search
-   OR CAST(p.PatientID AS VARCHAR) LIKE @search
-ORDER BY p.PatientID DESC";
+LEFT JOIN (
+    SELECT PatientID, MAX(AppointmentDateTime) AS AppointmentDateTime
+    FROM Appointments
+    GROUP BY PatientID
+) la ON p.PatientID = la.PatientID
+LEFT JOIN Appointments a ON p.PatientID = a.PatientID AND a.AppointmentDateTime = la.AppointmentDateTime
+";
 
             try
             {
-                DataTable dt;
                 if (string.IsNullOrWhiteSpace(searchQuery))
-                    dt = DatabaseHelper.ExecuteQuery(baseSql);
-                else
-                    dt = DatabaseHelper.ExecuteQuery(searchSql,
-                             new SqlParameter("@search", "%" + searchQuery + "%"));
+                {
+                    var dt = DatabaseHelper.ExecuteQuery(baseSql);
+                    dgvPatientRecord.AutoGenerateColumns = true;
+                    dgvPatientRecord.DataSource = dt;
 
+                    if (dgvPatientRecord.Rows.Count > 0)
+                        ShowRowSummary(dgvPatientRecord.Rows[0]);
+                    else
+                        ClearDetails();
+
+                    return;
+                }
+
+                var sql = baseSql + " WHERE p.FirstName LIKE @search OR p.LastName LIKE @search OR CAST(p.PatientID AS VARCHAR) LIKE @search";
+                var dt2 = DatabaseHelper.ExecuteQuery(sql, new SqlParameter("@search", "%" + searchQuery + "%"));
                 dgvPatientRecord.AutoGenerateColumns = true;
-                dgvPatientRecord.DataSource = dt;
+                dgvPatientRecord.DataSource = dt2;
 
                 if (dgvPatientRecord.Rows.Count > 0)
                     ShowRowSummary(dgvPatientRecord.Rows[0]);
@@ -159,56 +138,9 @@ ORDER BY p.PatientID DESC";
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error loading records: " + ex.Message, "Database Error",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Error loading records: " + ex.Message, "Database Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-
-        // ─────────────────────────────────────────────────────────────
-        // FIX: RefreshFilterLists — populate dentist & status combos
-        //      from the Appointments table. Works as soon as at least
-        //      one appointment has been saved.
-        // ─────────────────────────────────────────────────────────────
-        public void RefreshFilterLists()
-        {
-            try
-            {
-                // ── Dentist filter ──────────────────────────────────
-                var dtDentist = DatabaseHelper.ExecuteQuery(
-                    @"SELECT DISTINCT ISNULL(Dentist,'') AS Dentist
-                      FROM Appointments
-                      WHERE ISNULL(Dentist,'') <> ''
-                      ORDER BY Dentist");
-
-                cmbFilterbyDentist.SelectedIndexChanged -= cmbFilterbyDentist_SelectedIndexChanged;
-                cmbFilterbyDentist.Items.Clear();
-                cmbFilterbyDentist.Items.Add("(All Dentists)");   // placeholder shown to user
-                foreach (DataRow r in dtDentist.Rows)
-                    cmbFilterbyDentist.Items.Add(r["Dentist"].ToString());
-                cmbFilterbyDentist.SelectedIndex = -1;            // nothing selected = no filter
-                cmbFilterbyDentist.SelectedIndexChanged += cmbFilterbyDentist_SelectedIndexChanged;
-
-                // ── Status filter ───────────────────────────────────
-                var dtStatus = DatabaseHelper.ExecuteQuery(
-                    @"SELECT DISTINCT ISNULL([Status],'') AS [Status]
-                      FROM Appointments
-                      WHERE ISNULL([Status],'') <> ''
-                      ORDER BY [Status]");
-
-                cmbFilterbyStatus.SelectedIndexChanged -= cmbFilterbyStatus_SelectedIndexChanged;
-                cmbFilterbyStatus.Items.Clear();
-                cmbFilterbyStatus.Items.Add("(All Statuses)");    // placeholder
-                foreach (DataRow r in dtStatus.Rows)
-                    cmbFilterbyStatus.Items.Add(r["Status"].ToString());
-                cmbFilterbyStatus.SelectedIndex = -1;
-                cmbFilterbyStatus.SelectedIndexChanged += cmbFilterbyStatus_SelectedIndexChanged;
-            }
-            catch { /* ignore */ }
-        }
-
-        // ─────────────────────────────────────────────────────────────
-        // SEARCH
-        // ─────────────────────────────────────────────────────────────
 
         private void btnSearch_Click(object sender, EventArgs e)
         {
@@ -218,46 +150,35 @@ ORDER BY p.PatientID DESC";
                 LoadPatients();
                 return;
             }
-            LoadPatientRecords(keyword);
+
+            try
+            {
+                var dt = DatabaseHelper.ExecuteQuery(
+                    "SELECT * FROM Patients WHERE FirstName LIKE @keyword OR LastName LIKE @keyword OR ContactNo LIKE @keyword OR Email LIKE @keyword",
+                    new SqlParameter("@keyword", "%" + keyword + "%"));
+                dgvPatientRecord.AutoGenerateColumns = true;
+                dgvPatientRecord.DataSource = dt;
+
+                if (dgvPatientRecord.Rows.Count > 0)
+                    ShowRowSummary(dgvPatientRecord.Rows[0]);
+                else
+                    ClearDetails();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Search error: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void txtSearch_TextChanged(object sender, EventArgs e) => btnSearch.PerformClick();
 
-        // ─────────────────────────────────────────────────────────────
-        // FILTER BY DENTIST
-        // FIX: skip placeholder row; show all patients whose latest
-        //      appointment matches the chosen dentist.
-        // ─────────────────────────────────────────────────────────────
         private void cmbFilterbyDentist_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (cmbFilterbyDentist.SelectedItem == null) return;
-
-            var selected = cmbFilterbyDentist.SelectedItem.ToString();
-
-            // Placeholder selected → show all
-            if (selected == "(All Dentists)" || selected == "")
-            {
-                LoadPatients();
-                return;
-            }
-
+            var dentist = cmbFilterbyDentist.SelectedItem.ToString();
             try
             {
-                var dt = DatabaseHelper.ExecuteQuery(
-                    @"SELECT
-                          a.AppointmentID       AS [Appointment ID],
-                          a.AppointmentDateTime AS [Appointment Date],
-                          ISNULL(p.FirstName,'') + ' ' + ISNULL(p.LastName,'') AS [Patient Name],
-                          p.PatientID           AS [Patient ID],
-                          a.Treatment           AS [Treatment],
-                          a.Status              AS [Status],
-                          a.Dentist             AS [Dentist]
-                      FROM Appointments a
-                      INNER JOIN Patients p ON a.PatientID = p.PatientID
-                      WHERE a.Dentist = @dentist
-                      ORDER BY a.AppointmentDateTime DESC",
-                    new SqlParameter("@dentist", selected));
-
+                var dt = DatabaseHelper.ExecuteQuery("SELECT a.AppointmentID, a.AppointmentDateTime, ISNULL(p.FirstName,'')+' '+ISNULL(p.LastName,'') AS PatientName, a.Treatment, a.Status, a.Dentist FROM Appointments a INNER JOIN Patients p ON a.PatientID=p.PatientID WHERE a.Dentist=@dentist ORDER BY a.AppointmentDateTime", new SqlParameter("@dentist", dentist));
                 dgvPatientRecord.AutoGenerateColumns = true;
                 dgvPatientRecord.DataSource = dt;
 
@@ -268,44 +189,17 @@ ORDER BY p.PatientID DESC";
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Filter error: " + ex.Message, "Error",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Filter error: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
-        // ─────────────────────────────────────────────────────────────
-        // FILTER BY STATUS
-        // FIX: same approach as dentist filter above.
-        // ─────────────────────────────────────────────────────────────
         private void cmbFilterbyStatus_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (cmbFilterbyStatus.SelectedItem == null) return;
-
-            var selected = cmbFilterbyStatus.SelectedItem.ToString();
-
-            if (selected == "(All Statuses)" || selected == "")
-            {
-                LoadPatients();
-                return;
-            }
-
+            var status = cmbFilterbyStatus.SelectedItem.ToString();
             try
             {
-                var dt = DatabaseHelper.ExecuteQuery(
-                    @"SELECT
-                          a.AppointmentID       AS [Appointment ID],
-                          a.AppointmentDateTime AS [Appointment Date],
-                          ISNULL(p.FirstName,'') + ' ' + ISNULL(p.LastName,'') AS [Patient Name],
-                          p.PatientID           AS [Patient ID],
-                          a.Treatment           AS [Treatment],
-                          a.Status              AS [Status],
-                          a.Dentist             AS [Dentist]
-                      FROM Appointments a
-                      INNER JOIN Patients p ON a.PatientID = p.PatientID
-                      WHERE a.Status = @status
-                      ORDER BY a.AppointmentDateTime DESC",
-                    new SqlParameter("@status", selected));
-
+                var dt = DatabaseHelper.ExecuteQuery("SELECT a.AppointmentID, a.AppointmentDateTime, ISNULL(p.FirstName,'')+' '+ISNULL(p.LastName,'') AS PatientName, a.Treatment, a.Status, a.Dentist FROM Appointments a INNER JOIN Patients p ON a.PatientID=p.PatientID WHERE a.Status=@status ORDER BY a.AppointmentDateTime", new SqlParameter("@status", status));
                 dgvPatientRecord.AutoGenerateColumns = true;
                 dgvPatientRecord.DataSource = dt;
 
@@ -316,142 +210,193 @@ ORDER BY p.PatientID DESC";
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Filter error: " + ex.Message, "Error",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Filter error: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
-        // ─────────────────────────────────────────────────────────────
-        // SHOW ROW SUMMARY  (Patient Details panel)
-        // FIX 1: "I lo Appointment" typo — always set explicit strings.
-        // FIX 2: Treatment/Dentist/Status now show "None" when the
-        //        patient genuinely has no appointment yet, so the user
-        //        knows the field was checked (not just forgotten).
-        // FIX 3: When filtered grid shows appointment rows, read the
-        //        appointment columns directly from the row.
-        // ─────────────────────────────────────────────────────────────
+        private void btnExport_Click(object sender, EventArgs e)
+        {
+            var dt = dgvPatientRecord.DataSource as DataTable;
+            if (dt == null || dt.Rows.Count == 0)
+            {
+                MessageBox.Show("No data to export.", "Export", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            using (var sfd = new SaveFileDialog { Filter = "CSV files (.csv)|.csv" })
+            {
+                if (sfd.ShowDialog() != DialogResult.OK) return;
+                using (var sw = new StreamWriter(sfd.FileName, false, new UTF8Encoding(true)))
+                {
+                    sw.WriteLine(string.Join(",", dt.Columns.Cast<DataColumn>().Select(c => Quote(c.ColumnName))));
+                    foreach (DataRow row in dt.Rows)
+                    {
+                        var values = dt.Columns.Cast<DataColumn>().Select(c => Quote(Convert.ToString(row[c]) ?? string.Empty));
+                        sw.WriteLine(string.Join(",", values));
+                    }
+                }
+            }
+
+            MessageBox.Show("Export completed.", "Export", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private void btnClose_Click(object sender, EventArgs e) => Close();
+
+        private void btnClear_Click(object sender, EventArgs e)
+        {
+            txtSearch.Clear();
+            cmbFilterbyDentist.SelectedIndex = -1;
+            cmbFilterbyStatus.SelectedIndex = -1;
+            LoadPatients();
+        }
+
+        private void frmPatientRecords_Load(object sender, EventArgs e)
+        {
+            try
+            {
+                var dtDentist = DatabaseHelper.ExecuteQuery("SELECT DISTINCT ISNULL(Dentist,'') AS Dentist FROM Appointments WHERE ISNULL(Dentist,'') <> '' ORDER BY Dentist");
+                cmbFilterbyDentist.Items.Clear();
+                cmbFilterbyDentist.Items.Add("");
+                foreach (DataRow r in dtDentist.Rows) cmbFilterbyDentist.Items.Add(r["Dentist"].ToString());
+
+                var dtStatus = DatabaseHelper.ExecuteQuery("SELECT DISTINCT ISNULL([Status],'') AS [Status] FROM Appointments WHERE ISNULL([Status],'') <> '' ORDER BY [Status]");
+                cmbFilterbyStatus.Items.Clear();
+                cmbFilterbyStatus.Items.Add("");
+                foreach (DataRow r in dtStatus.Rows) cmbFilterbyStatus.Items.Add(r["Status"].ToString());
+
+                LoadPatients();
+            }
+            catch
+            {
+                // ignore non-fatal load errors
+            }
+        }
+
+        // Show selected row summary on right panel (wired to CellClick)
+        private void dgvPatientRecord_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex < 0) return;
+            ShowRowSummary(dgvPatientRecord.Rows[e.RowIndex]);
+        }
+
+        private void dgvPatientRecord_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex < 0) return;
+            int? id = GetSelectedPatientId();
+            if (id.HasValue)
+            {
+                try { PatientSelected?.Invoke(id.Value); } catch { /* ignore */ }
+                // If caller expects modal selection, close this form to return control
+                if (this.Modal) this.DialogResult = DialogResult.OK;
+            }
+        }
+
+        // Also update details when selection changes (keyboard navigation, programmatic selection)
+        private void dgvPatientRecord_SelectionChanged(object sender, EventArgs e)
+        {
+            if (dgvPatientRecord.CurrentRow != null && dgvPatientRecord.CurrentRow.Index >= 0)
+                ShowRowSummary(dgvPatientRecord.CurrentRow);
+            else
+                ClearDetails();
+        }
+
         private void ShowRowSummary(DataGridViewRow row)
         {
-            if (row == null) { ClearDetails(); return; }
+            if (row == null)
+            {
+                ClearDetails();
+                return;
+            }
 
             try
             {
-                // ── Patient ID ──────────────────────────────────────
-                object pidObj = GetCellValueIfColumnExists(row, "PatientID", "Patient ID", "PatientId");
+                // Determine patient id from the row (do not fall back to first cell for other fields)
+                object pidObj = GetCellValueIfColumnExists(row, "PatientID") ??
+                                GetCellValueIfColumnExists(row, "Patient ID") ??
+                                GetCellValueIfColumnExists(row, "PatientId");
                 int? patientId = null;
-                if (pidObj != null && int.TryParse(pidObj.ToString(), out int pid))
-                    patientId = pid;
+                if (pidObj != null && int.TryParse(pidObj.ToString(), out int pid)) patientId = pid;
 
-                // ── Basic patient fields ────────────────────────────
+                // Basic patient fields (only if those columns actually exist in the grid)
                 lblPatientID.Text = patientId?.ToString() ?? string.Empty;
-                lblFname.Text = S(GetCellValueIfColumnExists(row, "FirstName", "First Name"));
-                lblLName.Text = S(GetCellValueIfColumnExists(row, "LastName", "Last Name"));
-                lblContact.Text = S(GetCellValueIfColumnExists(row, "ContactNo", "Contact No", "Contact"));
-                lblEmail.Text = S(GetCellValueIfColumnExists(row, "Email"));
+                lblFname.Text = Convert.ToString(GetCellValueIfColumnExists(row, "FirstName") ?? GetCellValueIfColumnExists(row, "First Name") ?? string.Empty);
+                lblLName.Text = Convert.ToString(GetCellValueIfColumnExists(row, "LastName") ?? GetCellValueIfColumnExists(row, "Last Name") ?? string.Empty);
+                lblContact.Text = Convert.ToString(GetCellValueIfColumnExists(row, "ContactNo") ?? GetCellValueIfColumnExists(row, "Contact No") ?? GetCellValueIfColumnExists(row, "Contact") ?? string.Empty);
+                lblEmail.Text = Convert.ToString(GetCellValueIfColumnExists(row, "Email") ?? string.Empty);
 
+                // BirthDate: format if present
                 var bdateObj = GetCellValueIfColumnExists(row, "BirthDate", "Birth Date", "BDate");
-                lblBdate.Text = (bdateObj != null && DateTime.TryParse(bdateObj.ToString(), out DateTime bdt))
-                    ? bdt.ToString("yyyy-MM-dd")
-                    : S(bdateObj);
+                if (bdateObj != null && DateTime.TryParse(bdateObj.ToString(), out DateTime bdt))
+                    lblBdate.Text = bdt.ToString("yyyy-MM-dd");
+                else
+                    lblBdate.Text = bdateObj?.ToString() ?? string.Empty;
 
-                lblGender.Text = S(GetCellValueIfColumnExists(row, "Gender"));
+                lblGender.Text = Convert.ToString(GetCellValueIfColumnExists(row, "Gender") ?? string.Empty);
 
-                // ── Appointment details ─────────────────────────────
-                // Strategy: always query the DB by PatientID for the
-                // freshest data. If patientId is unavailable (e.g. the
-                // grid is showing a filtered appointment list), fall
-                // back to reading columns directly from the row.
-
-                bool appointmentLoaded = false;
-
+                // Appointment details: prefer querying DB for latest appointment if we have patientId
                 if (patientId.HasValue)
                 {
-                    try
+                    var apptDt = DatabaseHelper.ExecuteQuery(
+                        "SELECT TOP(1) AppointmentDateTime, Treatment, Dentist, Status FROM Appointments WHERE PatientID = @id ORDER BY AppointmentDateTime DESC",
+                        new SqlParameter("@id", patientId.Value));
+
+                    if (apptDt.Rows.Count > 0)
                     {
-                        var apptDt = DatabaseHelper.ExecuteQuery(
-                            @"SELECT TOP(1)
-                                  AppointmentDateTime,
-                                  Treatment,
-                                  Dentist,
-                                  [Status]
-                              FROM Appointments
-                              WHERE PatientID = @id
-                              ORDER BY AppointmentDateTime DESC",
-                            new SqlParameter("@id", patientId.Value));
+                        var appt = apptDt.Rows[0];
+                        // Last appointment (date)
+                        if (DateTime.TryParse(Convert.ToString(appt["AppointmentDateTime"]), out DateTime ladate))
+                            lblLastAppointment.Text = ladate.ToString("yyyy-MM-dd");
+                        else
+                            lblLastAppointment.Text = Convert.ToString(appt["AppointmentDateTime"]) ?? "No Appointment";
 
-                        if (apptDt.Rows.Count > 0)
-                        {
-                            var appt = apptDt.Rows[0];
-
-                            // Last Appointment date
-                            lblLastAppointment.Text =
-                                (appt["AppointmentDateTime"] != DBNull.Value &&
-                                 DateTime.TryParse(appt["AppointmentDateTime"].ToString(), out DateTime ladate))
-                                    ? ladate.ToString("yyyy-MM-dd HH:mm")
-                                    : "No Appointment";         // FIX: explicit string, no typo
-
-                            // FIX: show actual value or "—" so labels are never blank
-                            lblTreatment.Text = ColVal(appt, "Treatment");
-                            lblDentist.Text = ColVal(appt, "Dentist");
-                            lblStatus.Text = ColVal(appt, "Status");
-
-                            appointmentLoaded = true;
-                        }
+                        lblTreatment.Text = appt["Treatment"]?.ToString() ?? string.Empty;
+                        lblDentist.Text = appt["Dentist"]?.ToString() ?? string.Empty;
+                        lblStatus.Text = appt["Status"]?.ToString() ?? string.Empty;
                     }
-                    catch { /* fall through to grid-column fallback */ }
+                    else
+                    {
+                        lblLastAppointment.Text = "No Appointment";
+                        lblTreatment.Text = string.Empty;
+                        lblDentist.Text = string.Empty;
+                        lblStatus.Text = string.Empty;
+                    }
                 }
-
-                if (!appointmentLoaded)
+                else
                 {
-                    // Fallback: read from grid columns (works for filtered appointment views)
-                    var lastObj = GetCellValueIfColumnExists(row,
-                        "Last Appointment", "AppointmentDateTime", "Appointment Date", "LastAppointment");
+                    // No patient id in row — try to read appointment columns if present in grid (but do not fallback)
+                    var last = GetCellValueIfColumnExists(row, "Last Appointment", "AppointmentDateTime", "LastAppointment");
+                    if (last != null && DateTime.TryParse(last.ToString(), out DateTime dt))
+                        lblLastAppointment.Text = dt.ToString("yyyy-MM-dd");
+                    else
+                        lblLastAppointment.Text = last?.ToString() ?? "No Appointment";
 
-                    lblLastAppointment.Text =
-                        (lastObj != null && DateTime.TryParse(lastObj.ToString(), out DateTime dt2))
-                            ? dt2.ToString("yyyy-MM-dd HH:mm")
-                            : (lastObj != null ? lastObj.ToString() : "No Appointment"); // FIX: explicit
-
-                    lblTreatment.Text = S(GetCellValueIfColumnExists(row, "Treatment"), "—");
-                    lblDentist.Text = S(GetCellValueIfColumnExists(row, "Dentist"), "—");
-                    lblStatus.Text = S(GetCellValueIfColumnExists(row, "Status"), "—");
+                    lblTreatment.Text = Convert.ToString(GetCellValueIfColumnExists(row, "Treatment") ?? string.Empty);
+                    lblDentist.Text = Convert.ToString(GetCellValueIfColumnExists(row, "Dentist") ?? string.Empty);
+                    lblStatus.Text = Convert.ToString(GetCellValueIfColumnExists(row, "Status") ?? string.Empty);
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error showing details: " + ex.Message, "Error",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Error showing details: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
-        // ─────────────────────────────────────────────────────────────
-        // HELPERS
-        // ─────────────────────────────────────────────────────────────
-
-        /// <summary>Safe string conversion; returns fallback when null/empty.</summary>
-        private static string S(object val, string fallback = "")
-            => (val == null || val == DBNull.Value || string.IsNullOrWhiteSpace(val.ToString()))
-               ? fallback
-               : val.ToString();
-
-        /// <summary>Read a DataRow column safely.</summary>
-        private static string ColVal(DataRow row, string col)
-            => (row.Table.Columns.Contains(col) && row[col] != DBNull.Value)
-               ? row[col].ToString()
-               : "—";
-
+        // Return value only if the grid actually contains a matching column or header.
+        // Does NOT fall back to arbitrary cells.
         private object GetCellValueIfColumnExists(DataGridViewRow row, params string[] names)
         {
             if (row == null || row.DataGridView == null) return null;
 
             foreach (var name in names)
             {
+                // direct column name
                 if (row.DataGridView.Columns.Contains(name))
                 {
                     var val = row.Cells[name].Value;
                     if (val != null && val != DBNull.Value) return val;
                 }
 
+                // match header text or column name (case-insensitive)
                 for (int i = 0; i < row.DataGridView.Columns.Count; i++)
                 {
                     var col = row.DataGridView.Columns[i];
@@ -463,18 +408,24 @@ ORDER BY p.PatientID DESC";
                     }
                 }
             }
+
             return null;
         }
 
+        // Helper to read selected patient id from current row
         private int? GetSelectedPatientId()
         {
             var row = dgvPatientRecord.CurrentRow;
             if (row == null) return null;
+
             var val = GetCellValueIfColumnExists(row, "PatientID", "Patient ID", "PatientId");
             if (val == null) return null;
-            return int.TryParse(val.ToString(), out int id) ? id : (int?)null;
+
+            if (int.TryParse(val.ToString(), out int id)) return id;
+            return null;
         }
 
+        // Clears the details panel labels
         private void ClearDetails()
         {
             lblPatientID.Text = string.Empty;
@@ -490,65 +441,23 @@ ORDER BY p.PatientID DESC";
             lblStatus.Text = string.Empty;
         }
 
-        // ─────────────────────────────────────────────────────────────
-        // GRID EVENTS
-        // ─────────────────────────────────────────────────────────────
-
-        private void dgvPatientRecord_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-            if (e.RowIndex < 0) return;
-            ShowRowSummary(dgvPatientRecord.Rows[e.RowIndex]);
-        }
-
-        private void dgvPatientRecord_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
-        {
-            if (e.RowIndex < 0) return;
-            int? id = GetSelectedPatientId();
-            if (id.HasValue)
-            {
-                try { PatientSelected?.Invoke(id.Value); } catch { }
-                if (this.Modal) this.DialogResult = DialogResult.OK;
-            }
-        }
-
-        private void dgvPatientRecord_SelectionChanged(object sender, EventArgs e)
-        {
-            if (dgvPatientRecord.CurrentRow != null && dgvPatientRecord.CurrentRow.Index >= 0)
-                ShowRowSummary(dgvPatientRecord.CurrentRow);
-            else
-                ClearDetails();
-        }
-
-        // ─────────────────────────────────────────────────────────────
-        // FORM LOAD
-        // ─────────────────────────────────────────────────────────────
-
-        private void frmPatientRecords_Load(object sender, EventArgs e)
-        {
-            try
-            {
-                RefreshFilterLists();
-                LoadPatients();
-            }
-            catch { }
-        }
-
-        // ─────────────────────────────────────────────────────────────
-        // PUBLIC HELPERS (called by other forms)
-        // ─────────────────────────────────────────────────────────────
-
+        // Public helper so other forms can ask this view to refresh and select a patient
         public void RefreshAndSelectPatient(int patientId)
         {
             try
             {
-                try { LoadPatientRecords(); } catch { LoadPatients(); }
+                // Prefer using LoadPatientRecords so appointment info is present
+                try { LoadPatientRecords(); }
+                catch { LoadPatients(); }
 
+                // Find row that contains the patientId
                 for (int i = 0; i < dgvPatientRecord.Rows.Count; i++)
                 {
                     var row = dgvPatientRecord.Rows[i];
                     var val = GetCellValueIfColumnExists(row, "PatientID", "Patient ID", "PatientId");
                     if (val != null && int.TryParse(val.ToString(), out int id) && id == patientId)
                     {
+                        // Select row and ensure current cell is valid so SelectionChanged fires
                         dgvPatientRecord.ClearSelection();
                         if (row.Cells.Count > 0)
                         {
@@ -560,186 +469,110 @@ ORDER BY p.PatientID DESC";
                     }
                 }
             }
-            catch { }
+            catch
+            {
+                // ignore refresh errors
+            }
         }
 
-        // ─────────────────────────────────────────────────────────────
-        // EXPORT
-        // ─────────────────────────────────────────────────────────────
 
-        private void btnExport_Click(object sender, EventArgs e)
+
+        // Quote helper - if missing elsewhere in project, replace with simple CSV escaping here.
+        private static string Quote(string s)
         {
-            var dt = dgvPatientRecord.DataSource as DataTable;
-            if (dt == null || dt.Rows.Count == 0)
-            {
-                MessageBox.Show("No data to export.", "Export",
-                    MessageBoxButtons.OK, MessageBoxIcon.Information);
-                return;
-            }
-
-            using (var sfd = new SaveFileDialog { Filter = "CSV files (*.csv)|*.csv" })
-            {
-                if (sfd.ShowDialog() != DialogResult.OK) return;
-                using (var sw = new StreamWriter(sfd.FileName, false, new UTF8Encoding(true)))
-                {
-                    sw.WriteLine(string.Join(",",
-                        dt.Columns.Cast<DataColumn>().Select(c => Quote(c.ColumnName))));
-                    foreach (DataRow row in dt.Rows)
-                    {
-                        sw.WriteLine(string.Join(",",
-                            dt.Columns.Cast<DataColumn>()
-                              .Select(c => Quote(Convert.ToString(row[c]) ?? string.Empty))));
-                    }
-                }
-            }
-            MessageBox.Show("Export completed.", "Export",
-                MessageBoxButtons.OK, MessageBoxIcon.Information);
-        }
-
-        // ─────────────────────────────────────────────────────────────
-        // BUTTON EVENTS
-        // ─────────────────────────────────────────────────────────────
-
-        private void btnClose_Click(object sender, EventArgs e) => Close();
-
-        private void btnClear_Click(object sender, EventArgs e)
-        {
-            txtSearch.Clear();
-            cmbFilterbyDentist.SelectedIndex = -1;
-            cmbFilterbyStatus.SelectedIndex = -1;
-            LoadPatients();
+            if (s == null) return "\"\"";
+            var escaped = s.Replace("\"", "\"\"");
+            return $"\"{escaped}\"";
         }
 
         private void btnDelete_Click(object sender, EventArgs e)
         {
+
             try
             {
-                if (dgvPatientRecord.SelectedRows.Count == 0)
+                DataGridView patientGrid = this.dgvPatientRecord;
+
+                if (patientGrid == null || patientGrid.SelectedRows.Count == 0)
                 {
-                    MessageBox.Show("Please select a row from the table first.",
-                        "System Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show("Please select a row from the table first.", "System Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     return;
                 }
 
-                var selectedRow = dgvPatientRecord.SelectedRows[0];
+                var selectedRow = patientGrid.SelectedRows[0];
                 string idColumnName = "";
 
-                if (dgvPatientRecord.Columns.Contains("AppointmentID")) idColumnName = "AppointmentID";
-                else if (dgvPatientRecord.Columns.Contains("Appointment ID")) idColumnName = "Appointment ID";
-                else if (dgvPatientRecord.Columns.Contains("PatientID")) idColumnName = "PatientID";
-                else if (dgvPatientRecord.Columns.Contains("Patient ID")) idColumnName = "Patient ID";
 
-                if (string.IsNullOrEmpty(idColumnName) ||
-                    selectedRow.Cells[idColumnName].Value == null)
+                if (patientGrid.Columns.Contains("AppointmentID")) idColumnName = "AppointmentID";
+                else if (patientGrid.Columns.Contains("Appointment ID")) idColumnName = "Appointment ID";
+                else if (patientGrid.Columns.Contains("PatientID")) idColumnName = "PatientID";
+                else if (patientGrid.Columns.Contains("Patient ID")) idColumnName = "Patient ID";
+
+                if (string.IsNullOrEmpty(idColumnName) || selectedRow.Cells[idColumnName].Value == null)
                 {
-                    MessageBox.Show("Could not find a valid ID column.", "Missing Column",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("System Error: Could not find a valid ID column (AppointmentID or PatientID) in your table design.", "Missing Column Identifier", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
 
                 int targetId = Convert.ToInt32(selectedRow.Cells[idColumnName].Value);
 
-                string firstName = dgvPatientRecord.Columns.Contains("FirstName") &&
-                                   selectedRow.Cells["FirstName"].Value != null
-                    ? selectedRow.Cells["FirstName"].Value.ToString() : "";
-                string lastName = dgvPatientRecord.Columns.Contains("LastName") &&
-                                   selectedRow.Cells["LastName"].Value != null
-                    ? selectedRow.Cells["LastName"].Value.ToString() : "";
+                // Safe name retrieval fix
+                string firstName = patientGrid.Columns.Contains("FirstName") && selectedRow.Cells["FirstName"].Value != null ? selectedRow.Cells["FirstName"].Value.ToString() : "";
+                string lastName = patientGrid.Columns.Contains("LastName") && selectedRow.Cells["LastName"].Value != null ? selectedRow.Cells["LastName"].Value.ToString() : "";
                 string patientName = (firstName + " " + lastName).Trim();
                 if (string.IsNullOrEmpty(patientName)) patientName = "this selected row";
 
-                if (MessageBox.Show($"Are you sure you want to delete the record for {patientName}?",
-                        "Confirm Delete", MessageBoxButtons.YesNo, MessageBoxIcon.Warning)
-                    != DialogResult.Yes) return;
+                // 2. Ask user for confirmation
+                DialogResult result = MessageBox.Show($"Are you sure you want to delete the record for {patientName}?", "Confirm Delete", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
 
-                bool hasAppt = dgvPatientRecord.Columns.Contains("AppointmentID") &&
-                                  selectedRow.Cells["AppointmentID"].Value != null;
-                bool hasPatient = (dgvPatientRecord.Columns.Contains("PatientID") ||
-                                   dgvPatientRecord.Columns.Contains("Patient ID"));
-
-                if (hasAppt && hasPatient)
+                if (result == DialogResult.Yes)
                 {
-                    var choice = MessageBox.Show(
-                        "This row has both an appointment and a patient.\n" +
-                        "Yes = delete PATIENT and all related records.\n" +
-                        "No  = delete only the appointment.\n" +
-                        "Cancel = do nothing.",
-                        "Delete Choice", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+                    // 3. Direct SQL Execution without using DatabaseHelper.ExecuteNonQuery
+                    string query = idColumnName.Contains("Appointment")
+                        ? "DELETE FROM Appointments WHERE AppointmentID = @ID"
+                        : "DELETE FROM Appointments WHERE PatientID = @ID";
 
-                    if (choice == DialogResult.Cancel) return;
-
-                    if (choice == DialogResult.No)
+                    using (SqlConnection conn = new SqlConnection(connectionString))
                     {
-                        using (var conn = new SqlConnection(connectionString))
-                        using (var cmd = new SqlCommand(
-                            "DELETE FROM Appointments WHERE AppointmentID = @ID", conn))
+                        using (SqlCommand cmd = new SqlCommand(query, conn))
                         {
                             cmd.Parameters.AddWithValue("@ID", targetId);
-                            conn.Open(); cmd.ExecuteNonQuery();
+                            conn.Open();
+                            cmd.ExecuteNonQuery();
                         }
-                        MessageBox.Show("Appointment deleted.", "Success",
-                            MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        try { DatabaseHelper.RaiseAppointmentsChanged(); } catch { }
                     }
-                    else
-                    {
-                        if (DatabaseHelper.DeletePatient(targetId))
-                        {
-                            MessageBox.Show("Patient deleted.", "Success",
-                                MessageBoxButtons.OK, MessageBoxIcon.Information);
-                            try { DatabaseHelper.RaiseAppointmentsChanged(); } catch { }
-                        }
-                        else
-                            MessageBox.Show("Patient not deleted.", "Info",
-                                MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    }
-                }
-                else if (idColumnName.Contains("Appointment"))
-                {
-                    using (var conn = new SqlConnection(connectionString))
-                    using (var cmd = new SqlCommand(
-                        "DELETE FROM Appointments WHERE AppointmentID = @ID", conn))
-                    {
-                        cmd.Parameters.AddWithValue("@ID", targetId);
-                        conn.Open(); cmd.ExecuteNonQuery();
-                    }
-                    MessageBox.Show("Appointment deleted.", "Success",
-                        MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    try { DatabaseHelper.RaiseAppointmentsChanged(); } catch { }
-                }
-                else
-                {
-                    if (DatabaseHelper.DeletePatient(targetId))
-                    {
-                        MessageBox.Show("Patient deleted.", "Success",
-                            MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        try { DatabaseHelper.RaiseAppointmentsChanged(); } catch { }
-                    }
-                    else
-                        MessageBox.Show("Patient not deleted.", "Info",
-                            MessageBoxButtons.OK, MessageBoxIcon.Information);
-                }
 
-                try { LoadPatientRecords(); } catch { LoadPatients(); }
+                    MessageBox.Show("The selected entry has been successfully deleted.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                    // 4. Force UI clean-up manually to avoid 'does not exist in current context' errors
+                    // This re-runs the search/load logic by mimicking a click on your existing refresh/search button
+                    // Replace 'btnRefresh' or 'btnSearch' with your actual button name if you have one
+                    if (this.Controls.Find("btnRefresh", true).FirstOrDefault() is Button refBtn)
+                    {
+                        refBtn.PerformClick();
+                    }
+                    else if (this.Controls.Find("btnSearch", true).FirstOrDefault() is Button srcBtn)
+                    {
+                        srcBtn.PerformClick();
+                    }
+                    else
+                    {
+                        // Fallback: Manually remove the row visually from the screen right away
+                        if (!patientGrid.AllowUserToAddRows && patientGrid.DataSource == null)
+                        {
+                            patientGrid.Rows.Remove(selectedRow);
+                        }
+                    }
+                }
             }
             catch (Exception ex)
             {
-                MessageBox.Show("An error occurred while deleting:\n\n" + ex.Message,
-                    "SQL/Runtime Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("An error occurred while deleting the row:\n\n" + ex.Message, "SQL/Runtime Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
-        // ─────────────────────────────────────────────────────────────
-        // MISC
-        // ─────────────────────────────────────────────────────────────
-
-        private static string Quote(string s)
+        private void btnClose_Click_1(object sender, EventArgs e)
         {
-            if (s == null) return "\"\"";
-            return $"\"{s.Replace("\"", "\"\"")}\"";
-        }
 
-        private void btnClose_Click_1(object sender, EventArgs e) { }
-        private void label17_Click(object sender, EventArgs e) { }
+        }
     }
 }

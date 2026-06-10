@@ -265,5 +265,12 @@ namespace SmileTrack
                 dv.RowFilter = $"InvoiceDate >= '{fromDate}' AND InvoiceDate <= '{toDate}'";
             }
         }
+
+        private void btnHome_Click(object sender, EventArgs e)
+        {
+            Hide();
+            var receptionistForm = new frmReceptionistDashboard();
+            receptionistForm.Show();
+        }
     }
     }
