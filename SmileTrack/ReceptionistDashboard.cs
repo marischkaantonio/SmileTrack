@@ -214,7 +214,7 @@ namespace SmileTrack
             }
         }
 
-        // Helper para sa malinis na pag-bind ng Data nang hindi nasisira ang control UI
+     
         private void BindGridClean(DataGridView grid, DataTable dt)
         {
             if (grid == null) return;
@@ -226,7 +226,7 @@ namespace SmileTrack
                 grid.AutoGenerateColumns = true;
                 grid.DataSource = dt ?? new DataTable();
 
-                // UI Settings base sa wireframe mo
+             
                 grid.ReadOnly = true;
                 grid.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
                 grid.AllowUserToAddRows = false;
@@ -395,48 +395,55 @@ namespace SmileTrack
 
         }
 
+
        
+        
+
+        private void ReceptionistDashboard_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            DatabaseHelper.AppointmentsChanged -= DatabaseHelper_AppointmentsChanged;
+        }
 
 
     private void DatabaseHelper_NotificationTriggered(string message)
         {
-            // Siguraduhing safe sa Multi-threading (tulad ng ginawa mo sa RefreshDashboard)
+            
             if (this.InvokeRequired)
             {
                 this.Invoke(new Action(() => DatabaseHelper_NotificationTriggered(message)));
                 return;
             }
 
-            // 1. Baguhin ang anyo o text ng labelBell para mapansin ng receptionist
+            
             labelBell.Text = "🔔 New Alert!";
-            labelBell.ForeColor = System.Drawing.Color.Red; // Gawing pula para agaw-pansin
+            labelBell.ForeColor = System.Drawing.Color.Red; 
 
-            // 2. Opsyonal: Magpakita ng Tooltip o notification text sa tabi ng bell
-            // lblNotificationText.Text = message;
-
-            // 3. Auto-refresh din ang Records grid ni receptionist para makita agad ang bago
+          
             LoadReceptionistRecords();
         }
 
-        // Kapag clinick ni Receptionist ang Bell para basahin ang update, ibalik sa normal ang kulay
+       
         private void labelBell_Click(object sender, EventArgs e)
         {
             labelBell.Text = "🔔";
-            labelBell.ForeColor = System.Drawing.Color.Black; // Ibalik sa dati
-
-            // Dito mo rin pwedeng buksan ang Logs o Message box para ipakita kung ano ang nabago
+            labelBell.ForeColor = System.Drawing.Color.Black; 
         }
 
         private void LoadReceptionistRecords()
         {
-            // Code mo dito para mag re-query sa database at mag-update ang Patient Records Grid ni receptionist
+            
         }
 
-        // IWAS MEMORY LEAK: Alisin ang pagka-subscribe kapag sinara ang form
+       
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
             DatabaseHelper.NotificationTriggered -= DatabaseHelper_NotificationTriggered;
             base.OnFormClosing(e);
+        }
+
+        private void panelReceptDashboard_Paint(object sender, PaintEventArgs e)
+        {
+
         }
     }
 }

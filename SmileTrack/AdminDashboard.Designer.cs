@@ -227,6 +227,7 @@
             this.btnHome.TabIndex = 43;
             this.btnHome.Text = "🏠";
             this.btnHome.UseVisualStyleBackColor = true;
+            this.btnHome.Click += new System.EventHandler(this.btnHome_Click);
             // 
             // textBox1
             // 

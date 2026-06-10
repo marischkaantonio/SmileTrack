@@ -688,6 +688,7 @@
             this.panelReceptDashboard.Name = "panelReceptDashboard";
             this.panelReceptDashboard.Size = new System.Drawing.Size(948, 630);
             this.panelReceptDashboard.TabIndex = 15;
+            this.panelReceptDashboard.Paint += new System.Windows.Forms.PaintEventHandler(this.panelReceptDashboard_Paint);
             // 
             // labelBell
             // 

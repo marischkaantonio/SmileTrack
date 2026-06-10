@@ -216,5 +216,10 @@ namespace SmileTrack
                 }
             }
         }
+
+        private void btnHome_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

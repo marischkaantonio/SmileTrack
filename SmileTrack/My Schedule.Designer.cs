@@ -199,6 +199,7 @@
             this.btnHome.TabIndex = 32;
             this.btnHome.Text = "🏠";
             this.btnHome.UseVisualStyleBackColor = false;
+            this.btnHome.Click += new System.EventHandler(this.btnHome_Click);
             // 
             // My_Schedule
             // 
