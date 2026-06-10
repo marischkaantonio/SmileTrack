@@ -37,7 +37,6 @@
             // 
             // pictureBox1
             // 
-            this.pictureBox1.BackgroundImage = global::SmileTrack.Properties.Resources._7fbf6c74_85d6_441b_b2e0_5faf4c8635f6;
             this.pictureBox1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.pictureBox1.Location = new System.Drawing.Point(151, 37);
             this.pictureBox1.Margin = new System.Windows.Forms.Padding(2);

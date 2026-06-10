@@ -15,8 +15,22 @@ namespace SmileTrack
         {
             NotificationTriggered?.Invoke(message);
         }
+        public static int ExecuteNonQuery(string query, params SqlParameter[] parameters)
+        {
+            using (SqlConnection conn = new SqlConnection(@"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=SmileTrackDB;Integrated Security=True;Encrypt=False"))
+            {
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    if (parameters != null)
+                    {
+                        cmd.Parameters.AddRange(parameters);
+                    }
+                    conn.Open();
+                    return cmd.ExecuteNonQuery();
+                }
+            }
+        }
 
-     
         public static void NotifyAppointmentsChanged()
         {
             AppointmentsChanged?.Invoke();

@@ -99,7 +99,6 @@
             // 
             // pictureBox2
             // 
-            this.pictureBox2.BackgroundImage = global::SmileTrack.Properties.Resources._7fbf6c74_85d6_441b_b2e0_5faf4c8635f6;
             this.pictureBox2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.pictureBox2.Location = new System.Drawing.Point(2, 2);
             this.pictureBox2.Margin = new System.Windows.Forms.Padding(2);
@@ -153,7 +152,6 @@
             // pictureBox1
             // 
             this.pictureBox1.BackColor = System.Drawing.Color.Azure;
-            this.pictureBox1.BackgroundImage = global::SmileTrack.Properties.Resources._4209059;
             this.pictureBox1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.pictureBox1.Location = new System.Drawing.Point(2, 215);
             this.pictureBox1.Margin = new System.Windows.Forms.Padding(2);
@@ -527,7 +525,6 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
-            this.BackgroundImage = global::SmileTrack.Properties.Resources.Copilot_20260610_112950;
             this.ClientSize = new System.Drawing.Size(1285, 645);
             this.Controls.Add(this.panelDashboard);
             this.Controls.Add(this.Panel1);

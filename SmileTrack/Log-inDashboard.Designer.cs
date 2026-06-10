@@ -108,7 +108,7 @@
             // 
             // panel1
             // 
-            this.panel1.BackgroundImage = global::SmileTrack.Properties.Resources.Copilot_20260610_103820;
+            this.panel1.BackColor = System.Drawing.Color.Transparent;
             this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.panel1.Controls.Add(this.btnClear);
             this.panel1.Controls.Add(this.btnLogin);
@@ -116,9 +116,9 @@
             this.panel1.Controls.Add(this.txtUname);
             this.panel1.Controls.Add(this.lblPswrd);
             this.panel1.Controls.Add(this.lblUsername);
-            this.panel1.Location = new System.Drawing.Point(107, 65);
+            this.panel1.Location = new System.Drawing.Point(63, 47);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(344, 321);
+            this.panel1.Size = new System.Drawing.Size(354, 349);
             this.panel1.TabIndex = 9;
             // 
             // LoginForm

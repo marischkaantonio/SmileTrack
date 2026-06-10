@@ -175,7 +175,6 @@
             // 
             // pictureBox2
             // 
-            this.pictureBox2.BackgroundImage = global::SmileTrack.Properties.Resources.istockphoto_1281615253_170667a;
             this.pictureBox2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.pictureBox2.Location = new System.Drawing.Point(39, 517);
             this.pictureBox2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
@@ -213,7 +212,6 @@
             // 
             // pictureBox1
             // 
-            this.pictureBox1.BackgroundImage = global::SmileTrack.Properties.Resources._7fbf6c74_85d6_441b_b2e0_5faf4c8635f6;
             this.pictureBox1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.pictureBox1.Location = new System.Drawing.Point(0, 0);
             this.pictureBox1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
@@ -614,7 +612,6 @@
             // 
             // pictureBox7
             // 
-            this.pictureBox7.BackgroundImage = global::SmileTrack.Properties.Resources._7765670;
             this.pictureBox7.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.pictureBox7.Location = new System.Drawing.Point(504, 25);
             this.pictureBox7.Margin = new System.Windows.Forms.Padding(2);
@@ -625,7 +622,6 @@
             // 
             // pictureBox6
             // 
-            this.pictureBox6.BackgroundImage = global::SmileTrack.Properties.Resources._6098813;
             this.pictureBox6.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.pictureBox6.Location = new System.Drawing.Point(626, 25);
             this.pictureBox6.Margin = new System.Windows.Forms.Padding(2);
@@ -636,7 +632,6 @@
             // 
             // pictureBox5
             // 
-            this.pictureBox5.BackgroundImage = global::SmileTrack.Properties.Resources._4439741;
             this.pictureBox5.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.pictureBox5.Location = new System.Drawing.Point(328, 25);
             this.pictureBox5.Margin = new System.Windows.Forms.Padding(2);
@@ -647,7 +642,6 @@
             // 
             // pictureBox4
             // 
-            this.pictureBox4.BackgroundImage = global::SmileTrack.Properties.Resources._10494340;
             this.pictureBox4.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.pictureBox4.Location = new System.Drawing.Point(174, 25);
             this.pictureBox4.Margin = new System.Windows.Forms.Padding(2);
@@ -658,7 +652,6 @@
             // 
             // pictureBox3
             // 
-            this.pictureBox3.BackgroundImage = global::SmileTrack.Properties.Resources._5539724;
             this.pictureBox3.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.pictureBox3.Location = new System.Drawing.Point(14, 25);
             this.pictureBox3.Margin = new System.Windows.Forms.Padding(2);

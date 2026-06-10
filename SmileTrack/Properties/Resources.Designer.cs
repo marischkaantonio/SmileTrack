@@ -63,119 +63,9 @@ namespace SmileTrack.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap _10494340 {
-            get {
-                object obj = ResourceManager.GetObject("10494340", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap _15192779 {
-            get {
-                object obj = ResourceManager.GetObject("15192779", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap _3d_realistic_clock_icon_illustration_vector {
-            get {
-                object obj = ResourceManager.GetObject("3d-realistic-clock-icon-illustration-vector", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap _4209059 {
-            get {
-                object obj = ResourceManager.GetObject("4209059", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap _4439741 {
-            get {
-                object obj = ResourceManager.GetObject("4439741", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap _5539724 {
-            get {
-                object obj = ResourceManager.GetObject("5539724", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap _5694541 {
-            get {
-                object obj = ResourceManager.GetObject("5694541", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap _6098813 {
-            get {
-                object obj = ResourceManager.GetObject("6098813", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap _7765670 {
-            get {
-                object obj = ResourceManager.GetObject("7765670", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap _7fbf6c74_85d6_441b_b2e0_5faf4c8635f6 {
-            get {
-                object obj = ResourceManager.GetObject("7fbf6c74-85d6-441b-b2e0-5faf4c8635f6", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
         internal static System.Drawing.Bitmap ChatGPT_Image_Jun_10__2026__12_47_54_PM {
             get {
                 object obj = ResourceManager.GetObject("ChatGPT Image Jun 10, 2026, 12_47_54 PM", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap ChatGPT_Image_Jun_10__2026__12_50_17_PM {
-            get {
-                object obj = ResourceManager.GetObject("ChatGPT Image Jun 10, 2026, 12_50_17 PM", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -203,70 +93,9 @@ namespace SmileTrack.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Copilot_20260610_112950 {
+        internal static System.Drawing.Bitmap Copilot_20260610_112518 {
             get {
-                object obj = ResourceManager.GetObject("Copilot_20260610_112950", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap dentist_icon_health_checkups_icon_dental_icon_dentistry_patient_oral_hygiene_health_care_therapy_iq_dental_implant_centre_medicine_png_clipart {
-            get {
-                object obj = ResourceManager.GetObject("dentist-icon-health-checkups-icon-dental-icon-dentistry-patient-oral-hygiene-heal" +
-                        "th-care-therapy-iq-dental-implant-centre-medicine-png-clipart", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap Gemini_Generated_Image_6ehh5f6ehh5f6ehh__1_ {
-            get {
-                object obj = ResourceManager.GetObject("Gemini_Generated_Image_6ehh5f6ehh5f6ehh (1)", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap Gemini_Generated_Image_hifa1nhifa1nhifa {
-            get {
-                object obj = ResourceManager.GetObject("Gemini_Generated_Image_hifa1nhifa1nhifa", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap istockphoto_1281615253_170667a {
-            get {
-                object obj = ResourceManager.GetObject("istockphoto-1281615253-170667a", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap pngtree_this_is_a_cute_cartoon_tooth_icon_vector_png_image_12285812 {
-            get {
-                object obj = ResourceManager.GetObject("pngtree-this-is-a-cute-cartoon-tooth-icon-vector-png-image_12285812", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap wp3006057 {
-            get {
-                object obj = ResourceManager.GetObject("wp3006057", resourceCulture);
+                object obj = ResourceManager.GetObject("Copilot_20260610_112518", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

@@ -118,67 +118,16 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="dentist-icon-health-checkups-icon-dental-icon-dentistry-patient-oral-hygiene-health-care-therapy-iq-dental-implant-centre-medicine-png-clipart" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\dentist-icon-health-checkups-icon-dental-icon-dentistry-patient-oral-hygiene-health-care-therapy-iq-dental-implant-centre-medicine-png-clipart.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="4439741" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\4439741.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="5539724" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\5539724.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Copilot_20260610_112950" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Copilot_20260610_112950.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="3d-realistic-clock-icon-illustration-vector" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\3d-realistic-clock-icon-illustration-vector.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="ChatGPT Image Jun 10, 2026, 12_47_54 PM" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\ChatGPT Image Jun 10, 2026, 12_47_54 PM.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="7fbf6c74-85d6-441b-b2e0-5faf4c8635f6" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\7fbf6c74-85d6-441b-b2e0-5faf4c8635f6.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="7765670" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\7765670.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="4209059" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\4209059.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="pngtree-this-is-a-cute-cartoon-tooth-icon-vector-png-image_12285812" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\pngtree-this-is-a-cute-cartoon-tooth-icon-vector-png-image_12285812.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="istockphoto-1281615253-170667a" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\istockphoto-1281615253-170667a.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="15192779" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\15192779.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="5694541" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\5694541.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="wp3006057" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\wp3006057.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="6098813" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\6098813.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="10494340" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\10494340.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Copilot_20260610_104146" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Copilot_20260610_104146.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Gemini_Generated_Image_hifa1nhifa1nhifa" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Gemini_Generated_Image_hifa1nhifa1nhifa.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="Copilot_20260610_112518" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Copilot_20260610_112518.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="Copilot_20260610_103820" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Copilot_20260610_103820.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="Gemini_Generated_Image_6ehh5f6ehh5f6ehh (1)" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Gemini_Generated_Image_6ehh5f6ehh5f6ehh (1).png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="Copilot_20260610_104146" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Copilot_20260610_104146.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="ChatGPT Image Jun 10, 2026, 12_50_17 PM" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\ChatGPT Image Jun 10, 2026, 12_50_17 PM.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="ChatGPT Image Jun 10, 2026, 12_47_54 PM" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\ChatGPT Image Jun 10, 2026, 12_47_54 PM.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>
